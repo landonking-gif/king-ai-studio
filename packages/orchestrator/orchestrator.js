@@ -62,8 +62,7 @@ export class Orchestrator {
     }
 
     async loadQueue() {
-        const pendingTasks = await this.db.db.all("SELECT * FROM tasks WHERE status = 'queued' ORDER BY priority DESC");
-        this.taskQueue = pendingTasks.map(t => ({ ...t, result: JSON.parse(t.result) }));
+        this.taskQueue = await this.db.getQueuedTasks();
     }
 
     /**

@@ -201,6 +201,11 @@ export class Database {
         return result.rows.map(row => ({ ...row, result: row.result ? JSON.parse(row.result) : null }));
     }
 
+    async getQueuedTasks() {
+        const result = await this.pool.query("SELECT * FROM tasks WHERE status = 'queued' ORDER BY priority DESC");
+        return result.rows.map(row => ({ ...row, result: row.result ? JSON.parse(row.result) : null }));
+    }
+
     // --- Approval Methods ---
 
     async saveApproval(approval) {
