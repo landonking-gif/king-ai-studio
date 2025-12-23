@@ -7,6 +7,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
+import crypto from 'crypto';
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -751,6 +752,13 @@ export class ModelRouter {
             cb.failures = 0;
             console.log(`[ModelRouter] Circuit breaker closed for ${provider}`);
         }
+    }
+
+    /**
+     * Hash prompt for caching
+     */
+    hashPrompt(prompt) {
+        return crypto.createHash('md5').update(prompt).digest('hex');
     }
 }
 
