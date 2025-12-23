@@ -67,6 +67,7 @@ export class Database {
                 requires_approval INTEGER,
                 status TEXT,
                 result TEXT,
+                priority REAL DEFAULT 0,
                 created_at TEXT,
                 FOREIGN KEY(business_id) REFERENCES businesses(id)
             )
@@ -133,13 +134,20 @@ export class Database {
         for (const col of columns) {
             try {
                 // Check if column exists, if not ADD it. 
-                // PostgreSQL supports IF NOT EXISTS for ADD COLUMN in some versions, but to be safe, use try/catch
                 await this.pool.query(`ALTER TABLE businesses ADD COLUMN IF NOT EXISTS ${col} REAL DEFAULT 0`);
             } catch (e) {
                 if (e.message.indexOf('duplicate column') === -1) {
-                    // Only log real errors, not "duplicate column"
-                    console.error(`[Database] Migration warning for ${col}: ${e.message}`);
+                    console.error(`[Database] Migration warning for businesses.${col}: ${e.message}`);
                 }
+            }
+        }
+
+        // Migration for tasks.priority
+        try {
+            await this.pool.query(`ALTER TABLE tasks ADD COLUMN IF NOT EXISTS priority REAL DEFAULT 0`);
+        } catch (e) {
+            if (e.message.indexOf('duplicate column') === -1) {
+                console.error(`[Database] Migration warning for tasks.priority: ${e.message}`);
             }
         }
     }
@@ -184,15 +192,15 @@ export class Database {
     // --- Task Methods ---
 
     async saveTask(task) {
-        const { id, business_id, plan_id, phase, name, description, automated, requires_approval, status, result, created_at } = task;
+        const { id, business_id, plan_id, phase, name, description, automated, requires_approval, status, result, priority, created_at } = task;
         await this.pool.query(
-            `INSERT INTO tasks (id, business_id, plan_id, phase, name, description, automated, requires_approval, status, result, created_at) 
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+            `INSERT INTO tasks (id, business_id, plan_id, phase, name, description, automated, requires_approval, status, result, priority, created_at) 
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
              ON CONFLICT (id) DO UPDATE SET
              business_id = EXCLUDED.business_id, plan_id = EXCLUDED.plan_id, phase = EXCLUDED.phase, name = EXCLUDED.name, 
              description = EXCLUDED.description, automated = EXCLUDED.automated, requires_approval = EXCLUDED.requires_approval, 
-             status = EXCLUDED.status, result = EXCLUDED.result, created_at = EXCLUDED.created_at`,
-            [id, business_id, plan_id, phase, name, description, automated ? 1 : 0, requires_approval ? 1 : 0, status, JSON.stringify(result), created_at]
+             status = EXCLUDED.status, result = EXCLUDED.result, priority = EXCLUDED.priority, created_at = EXCLUDED.created_at`,
+            [id, business_id, plan_id, phase, name, description, automated ? 1 : 0, requires_approval ? 1 : 0, status, JSON.stringify(result), priority || 0, created_at]
         );
     }
 
