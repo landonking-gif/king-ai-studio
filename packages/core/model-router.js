@@ -119,7 +119,7 @@ export class ModelRouter {
             // Gemini
             'gemini:gemini-1.5-flash': {
                 provider: 'gemini',
-                model: 'gemini-1.5-flash-latest',
+                model: 'gemini-1.5-flash',
                 type: 'fast',
                 rateLimit: 60,
                 cost: 0,
@@ -127,7 +127,7 @@ export class ModelRouter {
             },
             'gemini:gemini-1.5-pro': {
                 provider: 'gemini',
-                model: 'gemini-1.5-pro-latest',
+                model: 'gemini-1.5-pro',
                 type: 'reasoning',
                 rateLimit: 30,
                 cost: 0,
