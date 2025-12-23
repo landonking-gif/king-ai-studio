@@ -1,0 +1,112 @@
+{
+  "executiveSummary": "A scalable AI-driven business optimized for efficiency.",
+  "mission": "To automate and simplify complex processes for our users.",
+  "vision": "Become the industry standard for AI-integrated services.",
+  "phases": [
+    {
+      "name": "Setup",
+      "duration": "1 week",
+      "objectives": [
+        "Infrastructure readiness"
+      ],
+      "tasks": [
+        {
+          "name": "Register domain",
+          "description": "Acquire domain name",
+          "automated": true,
+          "requiresApproval": false,
+          "estimatedTime": "1 hour",
+          "dependencies": []
+        },
+        {
+          "name": "Setup branding",
+          "description": "Create logo and style",
+          "automated": false,
+          "requiresApproval": true,
+          "approvalReason": "Brand identity review",
+          "estimatedTime": "3 hours",
+          "dependencies": []
+        }
+      ],
+      "milestones": [
+        "Systems live"
+      ],
+      "budget": "$100"
+    },
+    {
+      "name": "Launch",
+      "duration": "2 weeks",
+      "objectives": [
+        "Go to market"
+      ],
+      "tasks": [
+        {
+          "name": "Create landing page",
+          "description": "Deploy Vercel site",
+          "automated": true,
+          "requiresApproval": false,
+          "estimatedTime": "2 hours",
+          "dependencies": [
+            "Register domain"
+          ]
+        },
+        {
+          "name": "Cold outreach",
+          "description": "Initial sales push",
+          "automated": true,
+          "requiresApproval": false,
+          "estimatedTime": "4 hours",
+          "dependencies": [
+            "Create landing page"
+          ]
+        }
+      ],
+      "milestones": [
+        "First customer"
+      ],
+      "budget": "$200"
+    }
+  ],
+  "automationOpportunities": [
+    {
+      "area": "Outreach",
+      "benefit": "Scale",
+      "complexity": "low"
+    }
+  ],
+  "legalRequirements": [
+    {
+      "requirement": "LLC",
+      "when": "At launch",
+      "cost": "$150"
+    }
+  ],
+  "financialProjections": {
+    "month1": {
+      "revenue": 500,
+      "expenses": 300
+    },
+    "month3": {
+      "revenue": 2000,
+      "expenses": 500
+    },
+    "month6": {
+      "revenue": 5000,
+      "expenses": 1000
+    },
+    "month12": {
+      "revenue": 15000,
+      "expenses": 3000
+    }
+  },
+  "kpis": [
+    "Conversion rate",
+    "ARPU",
+    "Churn rate"
+  ],
+  "successCriteria": "LTV > 3x CAC",
+  "id": "plan-1766380206228",
+  "analysisId": "analysis-1766380173133",
+  "status": "draft",
+  "createdAt": "2025-12-22T05:10:06.228Z"
+}

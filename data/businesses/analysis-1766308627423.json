@@ -1,0 +1,28 @@
+{
+  "viability": {
+    "score": 85,
+    "verdict": "Viable"
+  },
+  "swot": {
+    "strengths": [
+      "Low capital"
+    ],
+    "weaknesses": [
+      "Competition"
+    ],
+    "opportunities": [
+      "Growth"
+    ],
+    "threats": [
+      "Saturation"
+    ]
+  },
+  "strategy": {
+    "targetAudience": "Remote workers",
+    "monetization": "Subscription"
+  },
+  "id": "analysis-1766308627423",
+  "ideaDescription": "Digital Planner Bundle: Create one-time productivity assets and sell on Gumroad.",
+  "createdAt": "2025-12-21T09:17:07.423Z",
+  "status": "analyzed"
+}

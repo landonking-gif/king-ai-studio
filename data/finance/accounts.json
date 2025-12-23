@@ -1,0 +1,107 @@
+[
+  {
+    "id": "checking",
+    "name": "Business Checking",
+    "type": "asset",
+    "subtype": "bank",
+    "balance": 0
+  },
+  {
+    "id": "savings",
+    "name": "Business Savings",
+    "type": "asset",
+    "subtype": "bank",
+    "balance": 0
+  },
+  {
+    "id": "ar",
+    "name": "Accounts Receivable",
+    "type": "asset",
+    "subtype": "receivable",
+    "balance": 0
+  },
+  {
+    "id": "ap",
+    "name": "Accounts Payable",
+    "type": "liability",
+    "subtype": "payable",
+    "balance": 0
+  },
+  {
+    "id": "cc",
+    "name": "Business Credit Card",
+    "type": "liability",
+    "subtype": "credit_card",
+    "balance": 0
+  },
+  {
+    "id": "revenue",
+    "name": "Service Revenue",
+    "type": "income",
+    "subtype": "revenue",
+    "balance": 0
+  },
+  {
+    "id": "other-income",
+    "name": "Other Income",
+    "type": "income",
+    "subtype": "other",
+    "balance": 0
+  },
+  {
+    "id": "payroll",
+    "name": "Payroll Expense",
+    "type": "expense",
+    "subtype": "payroll",
+    "balance": 0
+  },
+  {
+    "id": "rent",
+    "name": "Rent Expense",
+    "type": "expense",
+    "subtype": "occupancy",
+    "balance": 0
+  },
+  {
+    "id": "utilities",
+    "name": "Utilities",
+    "type": "expense",
+    "subtype": "utilities",
+    "balance": 0
+  },
+  {
+    "id": "software",
+    "name": "Software & Subscriptions",
+    "type": "expense",
+    "subtype": "technology",
+    "balance": 0
+  },
+  {
+    "id": "marketing",
+    "name": "Marketing Expense",
+    "type": "expense",
+    "subtype": "marketing",
+    "balance": 0
+  },
+  {
+    "id": "supplies",
+    "name": "Office Supplies",
+    "type": "expense",
+    "subtype": "supplies",
+    "balance": 0
+  },
+  {
+    "id": "professional",
+    "name": "Professional Services",
+    "type": "expense",
+    "subtype": "professional",
+    "balance": 0
+  },
+  {
+    "id": "misc",
+    "name": "Miscellaneous Expense",
+    "type": "expense",
+    "subtype": "other",
+    "balance": 0
+  }
+]

@@ -1,0 +1,59 @@
+[
+  {
+    "id": "task-1766375264911-gxzekx",
+    "planId": "plan-1766375263917",
+    "phase": "Setup",
+    "name": "Register domain",
+    "description": "Acquire domain name",
+    "automated": true,
+    "requiresApproval": false,
+    "estimatedTime": "1 hour",
+    "dependencies": [],
+    "status": "pending",
+    "createdAt": "2025-12-22T03:47:44.911Z"
+  },
+  {
+    "id": "task-1766375264911-aq3yvm",
+    "planId": "plan-1766375263917",
+    "phase": "Setup",
+    "name": "Setup branding",
+    "description": "Create logo and style",
+    "automated": false,
+    "requiresApproval": true,
+    "approvalReason": "Brand identity review",
+    "estimatedTime": "3 hours",
+    "dependencies": [],
+    "status": "pending",
+    "createdAt": "2025-12-22T03:47:44.911Z"
+  },
+  {
+    "id": "task-1766375264911-52zghi",
+    "planId": "plan-1766375263917",
+    "phase": "Launch",
+    "name": "Create landing page",
+    "description": "Deploy Vercel site",
+    "automated": true,
+    "requiresApproval": false,
+    "estimatedTime": "2 hours",
+    "dependencies": [
+      "Register domain"
+    ],
+    "status": "pending",
+    "createdAt": "2025-12-22T03:47:44.911Z"
+  },
+  {
+    "id": "task-1766375264911-ubznqr",
+    "planId": "plan-1766375263917",
+    "phase": "Launch",
+    "name": "Cold outreach",
+    "description": "Initial sales push",
+    "automated": true,
+    "requiresApproval": false,
+    "estimatedTime": "4 hours",
+    "dependencies": [
+      "Create landing page"
+    ],
+    "status": "pending",
+    "createdAt": "2025-12-22T03:47:44.911Z"
+  }
+]

@@ -1,0 +1,48 @@
+{
+  "viability": {
+    "score": 9,
+    "reasoning": "Strong market fit and low overhead."
+  },
+  "marketAnalysis": {
+    "targetAudience": "Global users",
+    "marketSize": "Growing/Large",
+    "competition": "Moderate",
+    "differentiator": "AI-driven efficiency"
+  },
+  "revenueModel": {
+    "primary": "Subscription",
+    "secondary": [
+      "Consulting"
+    ],
+    "pricingStrategy": "Tiered pricing"
+  },
+  "requiredSystems": [
+    {
+      "name": "Core Engine",
+      "purpose": "Primary logic",
+      "priority": "high"
+    }
+  ],
+  "estimatedCosts": {
+    "startup": "$500",
+    "monthly": "$50"
+  },
+  "risks": [
+    {
+      "risk": "Market changes",
+      "mitigation": "Stay agile"
+    }
+  ],
+  "timeline": {
+    "mvp": "2 weeks",
+    "profitable": "3 months"
+  },
+  "immediateNextSteps": [
+    "Define MVP",
+    "Register domain"
+  ],
+  "id": "analysis-1766361786580",
+  "ideaDescription": "CRM Setup Service: Hubspot/Salesforce basics.",
+  "createdAt": "2025-12-22T00:03:06.580Z",
+  "status": "analyzed"
+}

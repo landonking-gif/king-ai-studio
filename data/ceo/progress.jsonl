@@ -1,0 +1,920 @@
+{"timestamp":"2025-12-21T04:59:17.415Z","type":"start","message":"🚀 Starting new business analysis: A SaaS platform that uses AI to automatically generate and manage social media content for small businesses. Clients upload their brand guidelines and the AI creates daily posts, responds to comments, and provides analytics."}
+{"timestamp":"2025-12-21T04:59:17.471Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-21T04:59:17.714Z","type":"error","message":"❌ Analysis failed: Ollama error: Not Found"}
+{"timestamp":"2025-12-21T04:59:54.625Z","type":"start","message":"🚀 Starting new business analysis: A SaaS platform that uses AI to automatically generate and manage social media content for small businesses. Clients upload their brand guidelines and the AI creates daily posts, responds to comments, and provides analytics."}
+{"timestamp":"2025-12-21T04:59:54.640Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-21T05:08:17.782Z","type":"error","message":"❌ Analysis failed: fetch failed"}
+{"timestamp":"2025-12-22T01:15:14.931Z","type":"empire_start","message":"🏛️ EMPIRE MODE ACTIVATED\n   Ideas per cycle: 5\n   Max concurrent: 3\n   Loop interval: 60 minutes"}
+{"timestamp":"2025-12-22T01:15:15.036Z","type":"empire_cycle","message":"🔄 Empire Cycle 1 starting..."}
+{"timestamp":"2025-12-22T01:15:15.051Z","type":"progress","message":"💡 Generating business ideas..."}
+{"timestamp":"2025-12-22T01:20:53.528Z","type":"error","message":"❌ Idea generation failed: Failed to parse ideas"}
+{"timestamp":"2025-12-22T01:25:57.453Z","type":"empire_stop","message":"🛑 Empire loop stopped"}
+{"timestamp":"2025-12-22T01:37:15.390Z","type":"start","message":"🚀 Starting new business analysis: Test Newsletter Business"}
+{"timestamp":"2025-12-22T01:37:15.424Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T02:31:31.764Z","type":"start","message":"🚀 Starting new business analysis: AI-Powered Niche Newsletter: Daily digest for remote workers using AI to curate top 5 remote tools."}
+{"timestamp":"2025-12-22T02:31:32.436Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T02:32:05.770Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T02:32:05.804Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T02:32:51.978Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T02:32:53.077Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T02:32:53.449Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T02:34:27.102Z","type":"start","message":"🚀 Starting new business analysis: Faceless YouTube Channel Automation: AI-generated historical shorts channel."}
+{"timestamp":"2025-12-22T02:34:27.600Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T02:35:00.803Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T02:35:00.852Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T02:35:35.105Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T02:35:35.151Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T02:35:35.411Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T02:36:55.794Z","type":"start","message":"🚀 Starting new business analysis: Print-on-Demand Etsy Shop: AI-generated designs for cat lovers."}
+{"timestamp":"2025-12-22T02:36:55.872Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T02:37:29.206Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T02:37:29.262Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T02:37:55.734Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T02:37:55.756Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T02:37:55.909Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T02:38:28.907Z","type":"start","message":"🚀 Starting new business analysis: AI-Powered Niche Newsletter: Daily digest for remote workers using AI to curate top 5 remote tools."}
+{"timestamp":"2025-12-22T02:38:28.970Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T02:39:02.135Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T02:39:02.323Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T02:39:16.241Z","type":"start","message":"🚀 Starting new business analysis: Local SEO Agency for Dentists: Automated audit and reporting service."}
+{"timestamp":"2025-12-22T02:39:16.293Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T02:39:37.880Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T02:39:37.926Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T02:39:38.058Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T02:39:49.500Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T02:39:49.540Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T02:40:22.790Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T02:40:22.854Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T02:40:23.103Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T02:40:47.765Z","type":"start","message":"🚀 Starting new business analysis: Faceless YouTube Channel Automation: AI-generated historical shorts channel."}
+{"timestamp":"2025-12-22T02:40:47.843Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T02:41:28.815Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T02:41:33.435Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T02:42:32.434Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T02:42:33.336Z","type":"start","message":"🚀 Starting new business analysis: AI Resume Rewriter: SaaS wrapper for specific job descriptions."}
+{"timestamp":"2025-12-22T02:42:34.902Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T02:42:39.685Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T02:42:41.649Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T02:43:19.848Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T02:43:19.966Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T02:43:54.095Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T02:43:54.337Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T02:43:54.853Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T02:45:06.304Z","type":"start","message":"🚀 Starting new business analysis: Print-on-Demand Etsy Shop: AI-generated designs for cat lovers."}
+{"timestamp":"2025-12-22T02:45:06.610Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T02:45:39.603Z","type":"start","message":"🚀 Starting new business analysis: Digital Planner Bundle: Create one-time productivity assets and sell on Gumroad."}
+{"timestamp":"2025-12-22T02:45:39.644Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T02:46:14.496Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T02:46:14.659Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T02:46:47.628Z","type":"start","message":"🚀 Starting new business analysis: Simple Test Business"}
+{"timestamp":"2025-12-22T02:46:47.662Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T02:46:47.987Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T02:46:48.153Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T02:46:48.568Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T02:47:22.305Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T02:47:22.561Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T02:48:21.828Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T02:48:22.095Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T02:48:22.608Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T02:48:28.480Z","type":"start","message":"🚀 Starting new business analysis: Podcast Show Notes Service: AI audio-to-text summarization for creators."}
+{"timestamp":"2025-12-22T02:48:28.686Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T02:49:02.333Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T02:49:02.407Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T02:49:36.333Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T02:49:37.875Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T02:49:38.134Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T02:51:02.525Z","type":"start","message":"🚀 Starting new business analysis: Twitter Ghostwriting Agency: AI-generated threads for tech CEOs."}
+{"timestamp":"2025-12-22T02:51:03.061Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T02:51:36.392Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T02:51:36.497Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T02:52:10.463Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T02:52:10.491Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T02:52:10.555Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T02:53:20.990Z","type":"start","message":"🚀 Starting new business analysis: Affiliate Blog for Eco-Friendly Products: SEO-focused reviews."}
+{"timestamp":"2025-12-22T02:53:21.484Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T02:53:54.723Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T02:53:54.756Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T02:54:28.858Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T02:54:28.940Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T02:54:29.067Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T02:55:49.494Z","type":"start","message":"🚀 Starting new business analysis: Real Estate Listing Description Generator: AI tool for realtors."}
+{"timestamp":"2025-12-22T02:55:49.572Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T02:56:22.817Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T02:56:22.905Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T02:56:57.208Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T02:56:57.332Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T02:56:57.488Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T02:58:19.951Z","type":"start","message":"🚀 Starting new business analysis: AI Translation Service for Ebooks: Rapid translation and formatting."}
+{"timestamp":"2025-12-22T02:58:20.493Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T02:58:54.066Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T02:58:54.797Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T03:00:07.819Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T03:00:07.943Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T03:00:08.280Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T03:01:31.521Z","type":"start","message":"🚀 Starting new business analysis: Personalized Children's Book Generator: AI story and image creation."}
+{"timestamp":"2025-12-22T03:01:31.552Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T03:02:05.133Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T03:02:05.321Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T03:02:40.536Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T03:02:40.554Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T03:02:40.605Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T03:04:00.400Z","type":"start","message":"🚀 Starting new business analysis: Course: 'How to use AI for Productivity': Digital info-product."}
+{"timestamp":"2025-12-22T03:04:00.430Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T03:04:36.941Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T03:04:37.574Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T03:05:11.040Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T03:05:11.086Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T03:05:11.262Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T03:06:23.440Z","type":"start","message":"🚀 Starting new business analysis: Virtual Interior Design Service: AI rendering of empty rooms for listings."}
+{"timestamp":"2025-12-22T03:06:23.516Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T03:32:55.250Z","type":"start","message":"🚀 Starting new business analysis: AI-Powered Niche Newsletter: Daily digest for remote workers using AI to curate top 5 remote tools."}
+{"timestamp":"2025-12-22T03:32:55.262Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T03:33:35.215Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T03:33:35.223Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T03:34:09.973Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T03:34:10.055Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T03:34:10.101Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T03:35:20.734Z","type":"start","message":"🚀 Starting new business analysis: Faceless YouTube Channel Automation: AI-generated historical shorts channel."}
+{"timestamp":"2025-12-22T03:35:20.749Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T03:35:53.864Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T03:35:53.891Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T03:36:27.311Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T03:36:27.337Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T03:36:27.972Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T03:46:21.547Z","type":"start","message":"🚀 Starting new business analysis: AI Travel Itinerary Planner: Custom trip planning service."}
+{"timestamp":"2025-12-22T03:46:21.564Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T03:46:36.240Z","type":"start","message":"🚀 Starting new business analysis: Test Business"}
+{"timestamp":"2025-12-22T03:46:36.266Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T03:46:55.412Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T03:46:56.181Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T03:47:09.319Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T03:47:09.328Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T03:47:35.260Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T03:47:41.301Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T03:47:43.923Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T03:47:43.927Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T03:47:44.915Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T03:47:45.074Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T03:48:54.605Z","type":"start","message":"🚀 Starting new business analysis: Automated Pinterest Manager: AI image generation and posting."}
+{"timestamp":"2025-12-22T03:48:54.631Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T03:49:44.139Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T03:49:44.144Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T03:50:17.415Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T03:50:17.450Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T03:50:17.639Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T03:51:32.246Z","type":"start","message":"🚀 Starting new business analysis: LinkedIn Lead Gen Service: Automated outreach scripts."}
+{"timestamp":"2025-12-22T03:51:32.461Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T03:52:12.531Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T03:52:12.578Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T03:52:12.790Z","type":"start","message":"🚀 Starting new business analysis: AI-Powered Niche Newsletter: Daily digest for remote workers using AI to curate top 5 remote tools."}
+{"timestamp":"2025-12-22T03:52:12.934Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T03:52:46.012Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T03:52:46.030Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T03:52:46.582Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T03:52:46.586Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T03:52:46.615Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T03:53:20.084Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T03:53:20.098Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T03:53:20.122Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T03:53:53.214Z","type":"start","message":"🚀 Starting new business analysis: Stock Image Library: AI-generated niche stock photos (e.g., cyber-punk office)."}
+{"timestamp":"2025-12-22T03:53:53.245Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T03:54:26.333Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T03:54:26.343Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T03:54:26.373Z","type":"start","message":"🚀 Starting new business analysis: Faceless YouTube Channel Automation: AI-generated historical shorts channel."}
+{"timestamp":"2025-12-22T03:54:26.423Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T03:54:59.536Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T03:54:59.535Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T03:54:59.543Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T03:54:59.550Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T03:54:59.594Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T03:55:32.762Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T03:55:32.809Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T03:55:32.873Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T03:56:12.461Z","type":"start","message":"🚀 Starting new business analysis: Discord Community Manager: AI bot for moderation and engagement."}
+{"timestamp":"2025-12-22T03:56:12.477Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T03:56:45.998Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T03:56:46.010Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T03:56:57.778Z","type":"start","message":"🚀 Starting new business analysis: Print-on-Demand Etsy Shop: AI-generated designs for cat lovers."}
+{"timestamp":"2025-12-22T03:56:57.784Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T03:57:19.230Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T03:57:19.241Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T03:57:19.310Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T03:57:30.880Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T03:57:30.892Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T03:57:55.389Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T03:57:55.394Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T03:57:55.401Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T03:58:28.388Z","type":"start","message":"🚀 Starting new business analysis: Recipe Generator App: Based on ingredients in fridge."}
+{"timestamp":"2025-12-22T03:58:28.434Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T03:59:01.489Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T03:59:01.493Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T03:59:08.244Z","type":"start","message":"🚀 Starting new business analysis: Local SEO Agency for Dentists: Automated audit and reporting service."}
+{"timestamp":"2025-12-22T03:59:08.258Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T03:59:24.490Z","type":"empire_start","message":"🏛️ EMPIRE MODE ACTIVATED\n   Ideas per cycle: 5\n   Max concurrent: 3\n   Loop interval: 60 minutes"}
+{"timestamp":"2025-12-22T03:59:26.067Z","type":"empire_cycle","message":"🔄 Empire Cycle 1 starting..."}
+{"timestamp":"2025-12-22T03:59:26.070Z","type":"progress","message":"💡 Generating business ideas..."}
+{"timestamp":"2025-12-22T03:59:34.614Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T03:59:34.634Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T03:59:37.234Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T03:59:37.239Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T03:59:37.540Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:00:00.768Z","type":"error","message":"❌ Idea generation failed: Failed to parse ideas"}
+{"timestamp":"2025-12-22T04:00:11.217Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:00:11.259Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:00:11.270Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:00:45.728Z","type":"start","message":"🚀 Starting new business analysis: Wedding Vow Writer: AI helper for stressed couples."}
+{"timestamp":"2025-12-22T04:00:45.737Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:01:18.844Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:01:18.866Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:01:19.222Z","type":"start","message":"🚀 Starting new business analysis: AI Resume Rewriter: SaaS wrapper for specific job descriptions."}
+{"timestamp":"2025-12-22T04:01:19.236Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:01:53.923Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:01:53.927Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:01:53.926Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:01:53.933Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:01:54.005Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:02:27.056Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:02:27.061Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:02:27.159Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:03:04.416Z","type":"start","message":"🚀 Starting new business analysis: Study Notes Summarizer: Target students with fast summary tools."}
+{"timestamp":"2025-12-22T04:03:04.639Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:03:38.504Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:03:38.596Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:03:55.691Z","type":"start","message":"🚀 Starting new business analysis: Digital Planner Bundle: Create one-time productivity assets and sell on Gumroad."}
+{"timestamp":"2025-12-22T04:03:55.865Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:04:12.020Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:04:12.067Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:04:12.207Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:04:29.091Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:04:29.102Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:05:02.179Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:05:02.190Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:05:02.223Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:05:24.126Z","type":"start","message":"🚀 Starting new business analysis: Email Warmup Service: Technical setup for sales teams."}
+{"timestamp":"2025-12-22T04:05:24.176Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:05:57.318Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:05:57.331Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:06:11.940Z","type":"start","message":"🚀 Starting new business analysis: Podcast Show Notes Service: AI audio-to-text summarization for creators."}
+{"timestamp":"2025-12-22T04:06:11.952Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:06:30.448Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:06:30.465Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:06:30.506Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:06:52.878Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:06:52.936Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:07:26.342Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:07:26.350Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:07:26.369Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:07:48.342Z","type":"start","message":"🚀 Starting new business analysis: User Testing Agency: Recruit testers for UI/UX feedback."}
+{"timestamp":"2025-12-22T04:07:48.350Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:08:21.421Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:08:21.437Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:08:42.184Z","type":"start","message":"🚀 Starting new business analysis: Twitter Ghostwriting Agency: AI-generated threads for tech CEOs."}
+{"timestamp":"2025-12-22T04:08:42.764Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:08:54.664Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:08:54.765Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:08:54.897Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:09:16.012Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:09:16.022Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:09:49.145Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:09:49.167Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:09:49.218Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:10:06.971Z","type":"start","message":"🚀 Starting new business analysis: Influencer Media Kit Creator: Templates and auto-population."}
+{"timestamp":"2025-12-22T04:10:07.030Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:10:40.165Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:10:40.215Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:11:00.862Z","type":"start","message":"🚀 Starting new business analysis: Affiliate Blog for Eco-Friendly Products: SEO-focused reviews."}
+{"timestamp":"2025-12-22T04:11:01.454Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:11:13.297Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:11:13.322Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:11:13.349Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:11:35.166Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:11:35.283Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:12:08.672Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:12:08.697Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:12:08.763Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:12:26.523Z","type":"start","message":"🚀 Starting new business analysis: Domain Name Flipper: Micro-niche domain research."}
+{"timestamp":"2025-12-22T04:12:26.596Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:12:59.748Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:12:59.828Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:13:22.916Z","type":"start","message":"🚀 Starting new business analysis: Real Estate Listing Description Generator: AI tool for realtors."}
+{"timestamp":"2025-12-22T04:13:22.977Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:13:36.186Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:13:36.329Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:13:36.482Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:13:56.237Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:13:56.254Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:14:29.480Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:14:29.552Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:14:29.578Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:14:52.302Z","type":"start","message":"🚀 Starting new business analysis: Virtual Event Planner: Zoom coordination for corporate retreats."}
+{"timestamp":"2025-12-22T04:14:52.338Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:15:25.587Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:15:25.659Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:15:39.880Z","type":"start","message":"🚀 Starting new business analysis: AI Translation Service for Ebooks: Rapid translation and formatting."}
+{"timestamp":"2025-12-22T04:15:39.903Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:15:58.875Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:15:58.894Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:15:58.959Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:16:13.022Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:16:13.034Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:16:46.437Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:16:46.454Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:16:46.513Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:17:11.632Z","type":"start","message":"🚀 Starting new business analysis: AI Music Generator for Streamers: Royalty-free background beats."}
+{"timestamp":"2025-12-22T04:17:11.753Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:17:45.266Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:17:46.288Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:17:59.215Z","type":"start","message":"🚀 Starting new business analysis: Personalized Children's Book Generator: AI story and image creation."}
+{"timestamp":"2025-12-22T04:17:59.257Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:18:19.574Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:18:19.590Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:18:19.630Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:18:46.393Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:18:47.865Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:19:21.537Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:19:21.541Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:19:21.601Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:19:32.296Z","type":"start","message":"🚀 Starting new business analysis: Compliance Checker: Simple AI tool to scan websites for GDPR issues."}
+{"timestamp":"2025-12-22T04:19:32.310Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:20:00.916Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:20:00.924Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:20:38.790Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:20:38.798Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:20:38.821Z","type":"start","message":"🚀 Starting new business analysis: Course: 'How to use AI for Productivity': Digital info-product."}
+{"timestamp":"2025-12-22T04:20:38.830Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:20:38.830Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:21:11.904Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:21:11.910Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:21:45.034Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:21:45.043Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:21:45.093Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:21:45.346Z","type":"start","message":"🚀 Starting new business analysis: Grant Writing Assistant: AI for non-profits."}
+{"timestamp":"2025-12-22T04:21:45.364Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:22:18.452Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:22:18.466Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:22:51.568Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:22:51.575Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:22:51.613Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:22:51.797Z","type":"start","message":"🚀 Starting new business analysis: Virtual Interior Design Service: AI rendering of empty rooms for listings."}
+{"timestamp":"2025-12-22T04:22:51.805Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:23:24.963Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:23:25.022Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:23:58.110Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:23:58.123Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:23:58.140Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:23:58.528Z","type":"start","message":"🚀 Starting new business analysis: Airbnb Guest Guide Creator: Digital assets for hosts."}
+{"timestamp":"2025-12-22T04:23:58.564Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:24:57.061Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:24:57.079Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:25:30.830Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:25:30.875Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:25:30.949Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:25:48.078Z","type":"start","message":"🚀 Starting new business analysis: Code Documentation Generator: SaaS for developers."}
+{"timestamp":"2025-12-22T04:25:48.086Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:26:21.143Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:26:21.151Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:26:43.869Z","type":"start","message":"🚀 Starting new business analysis: Fitness Plan Generator: AI personalized workouts."}
+{"timestamp":"2025-12-22T04:26:43.878Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:26:54.410Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:26:54.417Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:26:54.462Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:27:17.141Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:27:17.147Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:27:50.234Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:27:50.243Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:27:50.266Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:28:05.575Z","type":"start","message":"🚀 Starting new business analysis: AI Travel Itinerary Planner: Custom trip planning service."}
+{"timestamp":"2025-12-22T04:28:05.584Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:28:38.674Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:28:38.681Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:29:00.522Z","type":"start","message":"🚀 Starting new business analysis: Pet Portrait Service: AI style transfer (photo to painting)."}
+{"timestamp":"2025-12-22T04:29:00.530Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:29:11.755Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:29:11.768Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:29:11.829Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:29:33.638Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:29:33.651Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:30:07.084Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:30:07.217Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:30:07.724Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:30:23.273Z","type":"start","message":"🚀 Starting new business analysis: Automated Pinterest Manager: AI image generation and posting."}
+{"timestamp":"2025-12-22T04:30:23.286Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:30:57.318Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:30:57.326Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:31:19.317Z","type":"start","message":"🚀 Starting new business analysis: Chatbot implementation for Shopify Stores: Setup service."}
+{"timestamp":"2025-12-22T04:31:19.325Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:31:30.414Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:31:30.420Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:31:30.463Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:31:54.064Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:31:54.555Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:32:28.328Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:32:28.334Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:32:28.357Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:32:40.760Z","type":"start","message":"🚀 Starting new business analysis: Chatbot implementation for Shopify Stores: Setup service."}
+{"timestamp":"2025-12-22T04:32:40.872Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:33:06.190Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:33:06.201Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:33:40.167Z","type":"start","message":"🚀 Starting new business analysis: Language Learning Flashcards: AI generated decks for Anki."}
+{"timestamp":"2025-12-22T04:33:40.180Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:33:40.431Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:33:40.435Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:33:40.817Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:34:13.540Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:34:13.548Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:34:46.725Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:34:46.751Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:34:46.797Z","type":"start","message":"🚀 Starting new business analysis: Language Learning Flashcards: AI generated decks for Anki."}
+{"timestamp":"2025-12-22T04:34:46.825Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:34:46.863Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:35:20.575Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:35:21.610Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:36:01.609Z","type":"start","message":"🚀 Starting new business analysis: Spreadsheet Automation Consultant: Fixing Excel/Sheets for SMBs."}
+{"timestamp":"2025-12-22T04:36:01.454Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:36:01.785Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:36:01.790Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:36:01.857Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:36:34.890Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:36:34.898Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:37:07.987Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:37:07.993Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:37:08.063Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:37:08.268Z","type":"start","message":"🚀 Starting new business analysis: Spreadsheet Automation Consultant: Fixing Excel/Sheets for SMBs."}
+{"timestamp":"2025-12-22T04:37:08.286Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:37:41.445Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:37:41.452Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:38:15.054Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:38:15.060Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:38:15.079Z","type":"start","message":"🚀 Starting new business analysis: Logo Design Service: AI + Manual polish."}
+{"timestamp":"2025-12-22T04:38:15.091Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:38:15.093Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:38:48.352Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:38:48.360Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:39:23.586Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:39:23.587Z","type":"start","message":"🚀 Starting new business analysis: Logo Design Service: AI + Manual polish."}
+{"timestamp":"2025-12-22T04:39:23.593Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:39:23.603Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:39:23.646Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:39:56.704Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:39:56.716Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:40:29.900Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:40:29.907Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:40:29.979Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:40:30.142Z","type":"start","message":"🚀 Starting new business analysis: Voiceover Service: AI text-to-speech for ads."}
+{"timestamp":"2025-12-22T04:40:30.166Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:41:03.280Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:41:03.287Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:41:36.417Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:41:36.436Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:41:36.501Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:41:36.620Z","type":"start","message":"🚀 Starting new business analysis: Voiceover Service: AI text-to-speech for ads."}
+{"timestamp":"2025-12-22T04:41:36.633Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:42:09.722Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:42:09.733Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:42:42.842Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:42:42.850Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:42:42.919Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:42:43.226Z","type":"start","message":"🚀 Starting new business analysis: Video Captioning Service: Short-form video editing."}
+{"timestamp":"2025-12-22T04:42:43.245Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:43:16.470Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:43:16.527Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:43:49.733Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:43:49.747Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:43:49.815Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:43:49.990Z","type":"start","message":"🚀 Starting new business analysis: Video Captioning Service: Short-form video editing."}
+{"timestamp":"2025-12-22T04:43:49.999Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:44:23.081Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:44:23.088Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:44:56.162Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:44:56.180Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:44:56.197Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:44:56.705Z","type":"start","message":"🚀 Starting new business analysis: Thumbnail Design Agency: High CTR thumbnails."}
+{"timestamp":"2025-12-22T04:44:56.713Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:45:29.900Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:45:29.912Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:46:03.182Z","type":"start","message":"🚀 Starting new business analysis: Thumbnail Design Agency: High CTR thumbnails."}
+{"timestamp":"2025-12-22T04:46:03.204Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:46:03.478Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:46:03.491Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:46:03.526Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:46:36.314Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:46:36.329Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:47:09.524Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:47:09.591Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:47:09.868Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:47:10.149Z","type":"start","message":"🚀 Starting new business analysis: Influencer Audit Service: Fake follower detection."}
+{"timestamp":"2025-12-22T04:47:10.278Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:47:43.433Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:47:43.549Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:48:16.788Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:48:16.883Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:48:16.921Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:48:33.985Z","type":"start","message":"🚀 Starting new business analysis: Influencer Audit Service: Fake follower detection."}
+{"timestamp":"2025-12-22T04:48:34.131Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:49:07.255Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:49:07.260Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:49:30.714Z","type":"start","message":"🚀 Starting new business analysis: Podcast Guest Booker: Outreach to guests."}
+{"timestamp":"2025-12-22T04:49:30.864Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:49:43.289Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:49:43.295Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:49:43.310Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:50:03.931Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:50:03.941Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:50:37.030Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:50:37.045Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:50:37.084Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:50:56.005Z","type":"start","message":"🚀 Starting new business analysis: Podcast Guest Booker: Outreach to guests."}
+{"timestamp":"2025-12-22T04:50:56.023Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:51:29.223Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:51:29.236Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:51:47.170Z","type":"start","message":"🚀 Starting new business analysis: SaaS churn reduction consultant: Email sequences."}
+{"timestamp":"2025-12-22T04:51:47.185Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:52:02.684Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:52:02.689Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:52:02.731Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:52:20.259Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:52:20.269Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:52:53.495Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:52:53.521Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:52:53.562Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:53:13.591Z","type":"start","message":"🚀 Starting new business analysis: SaaS churn reduction consultant: Email sequences."}
+{"timestamp":"2025-12-22T04:53:13.693Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:53:46.936Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:53:46.997Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:54:04.988Z","type":"start","message":"🚀 Starting new business analysis: Notion Template Creator: Specialized dashboards (e.g., Finance)."}
+{"timestamp":"2025-12-22T04:54:05.079Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:54:20.277Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:54:20.428Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:54:21.145Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:54:40.369Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:54:40.383Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:55:13.596Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:55:13.615Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:55:13.663Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:55:35.049Z","type":"start","message":"🚀 Starting new business analysis: Notion Template Creator: Specialized dashboards (e.g., Finance)."}
+{"timestamp":"2025-12-22T04:55:35.316Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:56:08.462Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:56:08.477Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:56:23.653Z","type":"start","message":"🚀 Starting new business analysis: Data Scraping Service: Lead list building."}
+{"timestamp":"2025-12-22T04:56:23.688Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:56:41.822Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:56:41.852Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:56:41.894Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:56:56.760Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:56:56.770Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:57:29.906Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:57:29.914Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:57:29.934Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:57:53.533Z","type":"start","message":"🚀 Starting new business analysis: Data Scraping Service: Lead list building."}
+{"timestamp":"2025-12-22T04:57:53.565Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:58:26.637Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:58:26.647Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:58:43.679Z","type":"start","message":"🚀 Starting new business analysis: Infographic Design Service: Turning blog posts into visuals."}
+{"timestamp":"2025-12-22T04:58:43.905Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T04:58:59.730Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:58:59.740Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:58:59.767Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T04:59:17.021Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T04:59:17.040Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T04:59:50.229Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T04:59:50.275Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T04:59:50.303Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T05:00:02.079Z","type":"empire_cycle","message":"🔄 Empire Cycle 2 starting..."}
+{"timestamp":"2025-12-22T05:00:03.100Z","type":"progress","message":"💡 Generating business ideas..."}
+{"timestamp":"2025-12-22T05:00:09.239Z","type":"start","message":"🚀 Starting new business analysis: Infographic Design Service: Turning blog posts into visuals."}
+{"timestamp":"2025-12-22T05:00:09.309Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T05:00:36.536Z","type":"error","message":"❌ Idea generation failed: Failed to parse ideas"}
+{"timestamp":"2025-12-22T05:00:42.363Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T05:00:42.367Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T05:01:00.532Z","type":"start","message":"🚀 Starting new business analysis: Web Accessibility Audit: Basic compliance checks."}
+{"timestamp":"2025-12-22T05:01:00.558Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T05:01:15.436Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T05:01:15.444Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T05:01:15.486Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T05:01:33.656Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T05:01:33.665Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T05:02:06.756Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T05:02:06.767Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T05:02:06.791Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T05:02:24.270Z","type":"start","message":"🚀 Starting new business analysis: Web Accessibility Audit: Basic compliance checks."}
+{"timestamp":"2025-12-22T05:02:24.290Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T05:02:57.609Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T05:02:57.619Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T05:03:16.726Z","type":"start","message":"🚀 Starting new business analysis: Technical Writing Service: API docs."}
+{"timestamp":"2025-12-22T05:03:16.755Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T05:03:30.764Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T05:03:30.768Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T05:03:30.795Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T05:03:49.878Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T05:03:49.933Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T05:04:22.980Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T05:04:22.988Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T05:04:23.001Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T05:04:41.365Z","type":"start","message":"🚀 Starting new business analysis: Technical Writing Service: API docs."}
+{"timestamp":"2025-12-22T05:04:41.375Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T05:05:14.504Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T05:05:14.513Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T05:05:31.345Z","type":"start","message":"🚀 Starting new business analysis: Newsletter Sponsorship Broker: Connecting newsletters with advertisers."}
+{"timestamp":"2025-12-22T05:05:31.391Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T05:05:47.628Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T05:05:47.638Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T05:05:47.650Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T05:06:04.516Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T05:06:04.530Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T05:06:37.808Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T05:06:37.828Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T05:06:37.907Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T05:06:57.884Z","type":"start","message":"🚀 Starting new business analysis: Newsletter Sponsorship Broker: Connecting newsletters with advertisers."}
+{"timestamp":"2025-12-22T05:06:57.900Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T05:07:30.978Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T05:07:30.990Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T05:07:48.228Z","type":"start","message":"🚀 Starting new business analysis: AI Dating Profile Optimizer: Bio writing and photo selection."}
+{"timestamp":"2025-12-22T05:07:48.249Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T05:08:04.082Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T05:08:04.095Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T05:08:04.119Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T05:08:21.370Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T05:08:21.381Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T05:08:54.536Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T05:08:54.562Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T05:08:54.602Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T05:09:12.684Z","type":"start","message":"🚀 Starting new business analysis: AI Dating Profile Optimizer: Bio writing and photo selection."}
+{"timestamp":"2025-12-22T05:09:12.693Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T05:09:45.776Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T05:09:45.782Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T05:10:08.973Z","type":"start","message":"🚀 Starting new business analysis: Custom Meal Prep Guide: Diet-specific plans."}
+{"timestamp":"2025-12-22T05:10:11.443Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T05:10:18.869Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T05:10:18.876Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T05:10:18.973Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T05:10:44.491Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T05:10:44.500Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T05:11:17.615Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T05:11:17.624Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T05:11:17.637Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T05:11:34.271Z","type":"start","message":"🚀 Starting new business analysis: Custom Meal Prep Guide: Diet-specific plans."}
+{"timestamp":"2025-12-22T05:11:34.277Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T05:12:07.340Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T05:12:07.345Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T05:12:24.579Z","type":"start","message":"🚀 Starting new business analysis: Budgeting Template Seller: Excel/Sheets."}
+{"timestamp":"2025-12-22T05:12:24.587Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T05:12:40.441Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T05:12:40.446Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T05:12:40.460Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T05:12:57.668Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T05:12:57.674Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T05:13:30.740Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T05:13:30.747Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T05:13:30.774Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T05:13:48.912Z","type":"start","message":"🚀 Starting new business analysis: Budgeting Template Seller: Excel/Sheets."}
+{"timestamp":"2025-12-22T05:13:48.922Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T05:14:22.127Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T05:14:22.135Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T05:14:40.698Z","type":"start","message":"🚀 Starting new business analysis: Social Media Caption Writer: Bulk creation."}
+{"timestamp":"2025-12-22T05:14:40.963Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T05:14:55.190Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T05:14:55.195Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T05:14:55.225Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T05:15:14.067Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T05:15:14.075Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T05:15:47.198Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T05:15:47.204Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T05:15:47.272Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T05:16:10.264Z","type":"start","message":"🚀 Starting new business analysis: Social Media Caption Writer: Bulk creation."}
+{"timestamp":"2025-12-22T05:16:12.272Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T05:16:48.850Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T05:16:49.143Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T05:17:41.556Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T05:17:48.149Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T05:17:48.479Z","type":"start","message":"🚀 Starting new business analysis: Hashtag Research Service: Niche specific tags."}
+{"timestamp":"2025-12-22T05:17:48.873Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T05:17:50.907Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T05:18:37.488Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T05:18:42.912Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T05:19:34.043Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T05:19:35.133Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T05:19:47.743Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T05:21:54.316Z","type":"start","message":"🚀 Starting new business analysis: Video Script Writer: TikTok/Reels hooks."}
+{"timestamp":"2025-12-22T05:21:54.317Z","type":"start","message":"🚀 Starting new business analysis: Video Script Writer: TikTok/Reels hooks."}
+{"timestamp":"2025-12-22T05:21:54.333Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T05:21:54.333Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T05:22:27.956Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T05:22:27.955Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T05:22:27.964Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T05:22:28.708Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T05:23:01.819Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T05:23:01.823Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T05:23:01.942Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T05:23:01.961Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T05:23:02.179Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T05:23:02.383Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T05:24:52.482Z","type":"start","message":"🚀 Starting new business analysis: E-book Ghostwriting: Non-fiction niches."}
+{"timestamp":"2025-12-22T05:24:53.121Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T05:24:53.368Z","type":"start","message":"🚀 Starting new business analysis: E-book Ghostwriting: Non-fiction niches."}
+{"timestamp":"2025-12-22T05:24:53.377Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T05:25:28.898Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T05:25:28.901Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T05:25:29.163Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T05:25:29.166Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T05:26:06.513Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T05:26:06.535Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T05:26:06.574Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T05:26:06.580Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T05:26:06.636Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T05:26:06.638Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T05:27:27.971Z","type":"start","message":"🚀 Starting new business analysis: Meditation Script Generator: Custom guided audio scripts."}
+{"timestamp":"2025-12-22T05:27:27.972Z","type":"start","message":"🚀 Starting new business analysis: Meditation Script Generator: Custom guided audio scripts."}
+{"timestamp":"2025-12-22T05:27:27.984Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T05:27:27.988Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T05:28:03.025Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T05:28:03.037Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T05:28:03.043Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T05:28:03.049Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T05:28:36.182Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T05:28:36.198Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T05:28:36.256Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T05:28:36.258Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T05:28:36.336Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T05:28:36.340Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T05:29:45.750Z","type":"start","message":"🚀 Starting new business analysis: Online Quiz Maker: Lead gen quizzes for brands."}
+{"timestamp":"2025-12-22T05:29:45.750Z","type":"start","message":"🚀 Starting new business analysis: Online Quiz Maker: Lead gen quizzes for brands."}
+{"timestamp":"2025-12-22T05:29:45.767Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T05:29:45.767Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T05:30:19.133Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T05:30:19.147Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T05:30:19.154Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T05:30:19.157Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T05:30:52.263Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T05:30:52.265Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T05:30:52.277Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T05:30:52.282Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T05:30:52.402Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T05:30:52.407Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T05:32:01.237Z","type":"start","message":"🚀 Starting new business analysis: Press Release Writer: AI news formatting."}
+{"timestamp":"2025-12-22T05:32:01.233Z","type":"start","message":"🚀 Starting new business analysis: Press Release Writer: AI news formatting."}
+{"timestamp":"2025-12-22T05:32:01.257Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T05:32:01.253Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T05:32:34.362Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T05:32:34.359Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T05:32:34.378Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T05:32:34.379Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T05:33:07.491Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T05:33:07.500Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T05:33:07.603Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T05:33:07.610Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T05:33:07.885Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T05:33:07.888Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T05:34:18.818Z","type":"start","message":"🚀 Starting new business analysis: competitor Monitoring Service: Weekly reports."}
+{"timestamp":"2025-12-22T05:34:18.818Z","type":"start","message":"🚀 Starting new business analysis: competitor Monitoring Service: Weekly reports."}
+{"timestamp":"2025-12-22T05:34:18.828Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T05:34:18.828Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T05:34:52.097Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T05:34:52.096Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T05:34:52.229Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T05:34:52.229Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T05:35:25.545Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T05:35:25.555Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T05:35:26.323Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T05:35:26.325Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T05:35:26.601Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T05:35:26.613Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T05:36:37.366Z","type":"start","message":"🚀 Starting new business analysis: Customer Review Responder: Managing GMB reviews."}
+{"timestamp":"2025-12-22T05:36:37.378Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T05:37:00.182Z","type":"start","message":"🚀 Starting new business analysis: Customer Review Responder: Managing GMB reviews."}
+{"timestamp":"2025-12-22T05:37:00.189Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T05:37:10.466Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T05:37:10.471Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T05:37:33.305Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T05:37:33.312Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T05:37:43.873Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T05:37:43.955Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T05:37:44.015Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T05:38:06.460Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T05:38:06.475Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T05:38:06.559Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T05:38:58.489Z","type":"start","message":"🚀 Starting new business analysis: Gift Recommendation Engine: Affiliate site."}
+{"timestamp":"2025-12-22T05:38:59.139Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T05:39:15.002Z","type":"start","message":"🚀 Starting new business analysis: Gift Recommendation Engine: Affiliate site."}
+{"timestamp":"2025-12-22T05:39:15.012Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-22T05:39:32.422Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T05:39:32.430Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T05:39:48.126Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9/10\n   Target Market: Global users\n   Revenue Model: Subscription"}
+{"timestamp":"2025-12-22T05:39:48.140Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-22T05:40:05.787Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T05:40:05.804Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T05:40:05.988Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T05:40:21.960Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 2\n   Mission: To automate and simplify complex processes for our users."}
+{"timestamp":"2025-12-22T05:40:22.226Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-22T05:40:22.461Z","type":"milestone","message":"✅ Found 4 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-22T06:00:37.759Z","type":"empire_cycle","message":"🔄 Empire Cycle 3 starting..."}
+{"timestamp":"2025-12-22T06:00:38.834Z","type":"progress","message":"💡 Generating business ideas..."}
+{"timestamp":"2025-12-22T14:23:10.947Z","type":"empire_start","message":"🏛️ EMPIRE MODE ACTIVATED\n   Ideas per cycle: 5\n   Max concurrent: 3\n   Loop interval: 60 minutes"}
+{"timestamp":"2025-12-22T14:23:10.954Z","type":"empire_cycle","message":"🔄 Empire Cycle 1 starting..."}
+{"timestamp":"2025-12-22T14:23:10.958Z","type":"progress","message":"💡 Generating business ideas..."}
+{"timestamp":"2025-12-22T14:23:29.508Z","type":"empire_start","message":"🏛️ EMPIRE MODE ACTIVATED\n   Ideas per cycle: 5\n   Max concurrent: 3\n   Loop interval: 60 minutes"}
+{"timestamp":"2025-12-22T14:23:29.544Z","type":"empire_cycle","message":"🔄 Empire Cycle 1 starting..."}
+{"timestamp":"2025-12-22T14:23:29.549Z","type":"progress","message":"💡 Generating business ideas..."}
+{"timestamp":"2025-12-22T14:29:20.309Z","type":"error","message":"❌ Idea generation failed: Failed to parse ideas"}
+{"timestamp":"2025-12-22T14:40:02.631Z","type":"empire_start","message":"🏛️ EMPIRE MODE ACTIVATED\n   Ideas per cycle: 5\n   Max concurrent: 3\n   Loop interval: 60 minutes"}
+{"timestamp":"2025-12-22T14:40:04.471Z","type":"empire_cycle","message":"🔄 Empire Cycle 1 starting..."}
+{"timestamp":"2025-12-22T14:40:04.497Z","type":"progress","message":"💡 Generating business ideas..."}
+{"timestamp":"2025-12-22T14:46:08.151Z","type":"error","message":"❌ Idea generation failed: Failed to parse ideas"}
+{"timestamp":"2025-12-22T14:54:46.642Z","type":"empire_start","message":"🏛️ EMPIRE MODE ACTIVATED\n   Ideas per cycle: 5\n   Max concurrent: 3\n   Loop interval: 60 minutes"}
+{"timestamp":"2025-12-22T14:54:46.655Z","type":"empire_cycle","message":"🔄 Empire Cycle 1 starting..."}
+{"timestamp":"2025-12-22T14:54:46.662Z","type":"progress","message":"💡 Generating business ideas..."}
+{"timestamp":"2025-12-22T15:00:52.986Z","type":"error","message":"❌ Idea generation failed: Failed to parse ideas"}
+{"timestamp":"2025-12-22T15:06:15.594Z","type":"empire_start","message":"🏛️ EMPIRE MODE ACTIVATED\n   Ideas per cycle: 5\n   Max concurrent: 3\n   Loop interval: 60 minutes"}
+{"timestamp":"2025-12-22T15:06:15.626Z","type":"empire_cycle","message":"🔄 Empire Cycle 1 starting..."}
+{"timestamp":"2025-12-22T15:06:15.632Z","type":"progress","message":"💡 Generating business ideas..."}
+{"timestamp":"2025-12-22T15:12:00.579Z","type":"milestone","message":"✅ Generated undefined ideas"}
+{"timestamp":"2025-12-22T15:12:00.584Z","type":"progress","message":"📊 Ranking ideas..."}
+{"timestamp":"2025-12-22T15:18:48.410Z","type":"error","message":"❌ Empire cycle error: Cannot read properties of undefined (reading 'name')"}
+{"timestamp":"2025-12-22T15:18:48.439Z","type":"info","message":"💤 Next cycle in 60 minutes..."}
+{"timestamp":"2025-12-22T15:24:56.275Z","type":"empire_start","message":"🏛️ EMPIRE MODE ACTIVATED\n   Ideas per cycle: 5\n   Max concurrent: 3\n   Loop interval: 60 minutes"}
+{"timestamp":"2025-12-22T15:24:56.399Z","type":"empire_cycle","message":"🔄 Empire Cycle 1 starting..."}
+{"timestamp":"2025-12-22T15:24:56.402Z","type":"progress","message":"💡 Generating business ideas..."}
+{"timestamp":"2025-12-22T15:31:08.918Z","type":"milestone","message":"✅ Generated undefined ideas"}
+{"timestamp":"2025-12-22T15:31:08.922Z","type":"progress","message":"📊 Ranking ideas..."}
+{"timestamp":"2025-12-22T15:37:46.494Z","type":"error","message":"❌ Top idea is malformed or missing name. Skipping..."}
+{"timestamp":"2025-12-22T16:37:46.593Z","type":"empire_cycle","message":"🔄 Empire Cycle 2 starting..."}
+{"timestamp":"2025-12-22T16:37:46.697Z","type":"progress","message":"💡 Generating business ideas..."}
+{"timestamp":"2025-12-22T16:40:56.093Z","type":"milestone","message":"✅ Generated undefined ideas"}
+{"timestamp":"2025-12-22T16:40:56.423Z","type":"progress","message":"📊 Ranking ideas..."}
+{"timestamp":"2025-12-22T18:18:31.128Z","type":"empire_start","message":"🏛️ EMPIRE MODE ACTIVATED\n   Ideas per cycle: 5\n   Max concurrent: 3\n   Loop interval: 60 minutes"}
+{"timestamp":"2025-12-23T02:02:58.604Z","type":"start","message":"🚀 Starting new business analysis: A SaaS platform that uses AI to automatically generate and manage social media content for small businesses. Clients upload their brand guidelines and the AI creates daily posts, responds to comments, and provides analytics."}
+{"timestamp":"2025-12-23T02:03:10.004Z","type":"start","message":"🚀 Starting new business analysis: A SaaS platform that uses AI to automatically generate and manage social media content for small businesses. Clients upload their brand guidelines and the AI creates daily posts, responds to comments, and provides analytics."}
+{"timestamp":"2025-12-23T02:03:28.726Z","type":"start","message":"🚀 Starting new business analysis: A SaaS platform that uses AI to automatically generate and manage social media content for small businesses. Clients upload their brand guidelines and the AI creates daily posts, responds to comments, and provides analytics."}
+{"timestamp":"2025-12-23T02:16:23.142Z","type":"start","message":"🚀 Starting new business analysis: A SaaS platform that uses AI to automatically generate and manage social media content for small businesses. Clients upload their brand guidelines and the AI creates daily posts, responds to comments, and provides analytics."}
+{"timestamp":"2025-12-23T02:17:12.384Z","type":"start","message":"🚀 Starting new business analysis: A SaaS platform that uses AI to automatically generate and manage social media content for small businesses. Clients upload their brand guidelines and the AI creates daily posts, responds to comments, and provides analytics."}
+{"timestamp":"2025-12-23T02:17:12.526Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-23T02:17:13.416Z","type":"error","message":"❌ Analysis failed: Ollama error: 404"}
+{"timestamp":"2025-12-23T02:17:30.477Z","type":"start","message":"🚀 Starting new business analysis: A SaaS platform that uses AI to automatically generate and manage social media content for small businesses. Clients upload their brand guidelines and the AI creates daily posts, responds to comments, and provides analytics."}
+{"timestamp":"2025-12-23T02:17:33.636Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-23T02:17:34.728Z","type":"error","message":"❌ Analysis failed: Ollama error: 404"}
+{"timestamp":"2025-12-23T02:17:48.741Z","type":"start","message":"🚀 Starting new business analysis: A SaaS platform that uses AI to automatically generate and manage social media content for small businesses. Clients upload their brand guidelines and the AI creates daily posts, responds to comments, and provides analytics."}
+{"timestamp":"2025-12-23T02:17:48.828Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-23T02:17:49.542Z","type":"error","message":"❌ Analysis failed: Ollama error: 404"}
+{"timestamp":"2025-12-23T02:18:01.137Z","type":"start","message":"🚀 Starting new business analysis: A SaaS platform that uses AI to automatically generate and manage social media content for small businesses. Clients upload their brand guidelines and the AI creates daily posts, responds to comments, and provides analytics."}
+{"timestamp":"2025-12-23T02:18:01.222Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-23T02:18:01.810Z","type":"error","message":"❌ Analysis failed: Ollama error: 404"}
+{"timestamp":"2025-12-23T02:18:37.354Z","type":"start","message":"🚀 Starting new business analysis: A SaaS platform that uses AI to automatically generate and manage social media content for small businesses. Clients upload their brand guidelines and the AI creates daily posts, responds to comments, and provides analytics."}
+{"timestamp":"2025-12-23T02:18:37.400Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-23T02:18:37.893Z","type":"error","message":"❌ Analysis failed: Ollama error: 404"}
+{"timestamp":"2025-12-23T02:19:26.869Z","type":"start","message":"🚀 Starting new business analysis: A SaaS platform that uses AI to automatically generate and manage social media content for small businesses. Clients upload their brand guidelines and the AI creates daily posts, responds to comments, and provides analytics."}
+{"timestamp":"2025-12-23T02:19:26.894Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-23T02:19:27.325Z","type":"error","message":"❌ Analysis failed: Ollama error: 404"}
+{"timestamp":"2025-12-23T02:20:08.357Z","type":"start","message":"🚀 Starting new business analysis: A SaaS platform that uses AI to automatically generate and manage social media content for small businesses. Clients upload their brand guidelines and the AI creates daily posts, responds to comments, and provides analytics."}
+{"timestamp":"2025-12-23T02:20:08.433Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-23T02:20:09.055Z","type":"error","message":"❌ Analysis failed: Ollama error: 404"}
+{"timestamp":"2025-12-23T02:21:40.044Z","type":"start","message":"🚀 Starting new business analysis: A SaaS platform that uses AI to automatically generate and manage social media content for small businesses. Clients upload their brand guidelines and the AI creates daily posts, responds to comments, and provides analytics."}
+{"timestamp":"2025-12-23T02:21:40.134Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-23T02:21:40.718Z","type":"error","message":"❌ Analysis failed: Ollama error: 404"}
+{"timestamp":"2025-12-23T02:22:16.520Z","type":"start","message":"🚀 Starting new business analysis: A SaaS platform that uses AI to automatically generate and manage social media content for small businesses. Clients upload their brand guidelines and the AI creates daily posts, responds to comments, and provides analytics."}
+{"timestamp":"2025-12-23T02:22:16.573Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-23T02:22:17.235Z","type":"error","message":"❌ Analysis failed: Ollama error: 404"}
+{"timestamp":"2025-12-23T02:23:13.355Z","type":"start","message":"🚀 Starting new business analysis: A SaaS platform that uses AI to automatically generate and manage social media content for small businesses. Clients upload their brand guidelines and the AI creates daily posts, responds to comments, and provides analytics."}
+{"timestamp":"2025-12-23T02:23:13.505Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-23T02:29:04.463Z","type":"error","message":"❌ Analysis failed: fetch failed"}
+{"timestamp":"2025-12-23T03:25:00.968Z","type":"start","message":"🚀 Starting new business analysis: A SaaS platform that uses AI to automatically generate and manage social media content for small businesses. Clients upload their brand guidelines and the AI creates daily posts, responds to comments, and provides analytics."}
+{"timestamp":"2025-12-23T03:25:04.302Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-23T03:25:57.335Z","type":"start","message":"🚀 Starting new business analysis: A SaaS platform that uses AI to automatically generate and manage social media content for small businesses. Clients upload their brand guidelines and the AI creates daily posts, responds to comments, and provides analytics."}
+{"timestamp":"2025-12-23T03:25:57.370Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-23T03:26:54.546Z","type":"start","message":"🚀 Starting new business analysis: A SaaS platform that uses AI to automatically generate and manage social media content for small businesses. Clients upload their brand guidelines and the AI creates daily posts, responds to comments, and provides analytics."}
+{"timestamp":"2025-12-23T03:26:54.699Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-23T03:27:26.814Z","type":"start","message":"🚀 Starting new business analysis: A SaaS platform that uses AI to automatically generate and manage social media content for small businesses. Clients upload their brand guidelines and the AI creates daily posts, responds to comments, and provides analytics."}
+{"timestamp":"2025-12-23T03:27:28.043Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-23T03:30:25.578Z","type":"error","message":"❌ Analysis failed: fetch failed"}
+{"timestamp":"2025-12-23T03:30:30.835Z","type":"start","message":"🚀 Starting new business analysis: A SaaS platform that uses AI to automatically generate and manage social media content for small businesses. Clients upload their brand guidelines and the AI creates daily posts, responds to comments, and provides analytics."}
+{"timestamp":"2025-12-23T03:30:31.454Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-23T03:31:20.109Z","type":"error","message":"❌ Analysis failed: fetch failed"}
+{"timestamp":"2025-12-23T03:32:59.927Z","type":"error","message":"❌ Analysis failed: fetch failed"}
+{"timestamp":"2025-12-23T03:32:59.821Z","type":"error","message":"❌ Analysis failed: fetch failed"}
+{"timestamp":"2025-12-23T03:35:37.858Z","type":"start","message":"🚀 Starting new business analysis: A SaaS platform that uses AI to automatically generate and manage social media content for small businesses. Clients upload their brand guidelines and the AI creates daily posts, responds to comments, and provides analytics."}
+{"timestamp":"2025-12-23T03:35:40.001Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-23T03:35:59.309Z","type":"error","message":"❌ Analysis failed: fetch failed"}
+{"timestamp":"2025-12-23T03:36:46.601Z","type":"start","message":"🚀 Starting new business analysis: A SaaS platform that uses AI to automatically generate and manage social media content for small businesses. Clients upload their brand guidelines and the AI creates daily posts, responds to comments, and provides analytics."}
+{"timestamp":"2025-12-23T03:36:46.810Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-23T03:41:30.369Z","type":"error","message":"❌ Analysis failed: fetch failed"}
+{"timestamp":"2025-12-23T03:42:07.224Z","type":"error","message":"❌ Analysis failed: fetch failed"}
+{"timestamp":"2025-12-23T04:28:25.217Z","type":"start","message":"🚀 Starting new business analysis: A micro-SaaS for automated test generation."}
+{"timestamp":"2025-12-23T04:28:26.627Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-23T04:31:42.329Z","type":"start","message":"🚀 Starting new business analysis: A micro-SaaS for automated test generation."}
+{"timestamp":"2025-12-23T04:31:43.265Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-23T04:33:58.769Z","type":"error","message":"❌ Analysis failed: fetch failed"}
+{"timestamp":"2025-12-23T04:37:12.360Z","type":"error","message":"❌ Analysis failed: fetch failed"}
+{"timestamp":"2025-12-23T04:51:14.168Z","type":"start","message":"🚀 Starting new business analysis: A micro-SaaS for automated test generation."}
+{"timestamp":"2025-12-23T04:51:16.220Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-23T05:02:40.862Z","type":"start","message":"🚀 Starting new business analysis: A micro-SaaS for automated test generation."}
+{"timestamp":"2025-12-23T05:02:41.960Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-23T05:02:42.109Z","type":"start","message":"🚀 Starting new business analysis: A micro-SaaS for automated test generation."}
+{"timestamp":"2025-12-23T05:02:42.662Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-23T05:02:44.330Z","type":"error","message":"❌ Analysis failed: fetch failed"}
+{"timestamp":"2025-12-23T05:05:59.740Z","type":"start","message":"🚀 Starting new business analysis: A micro-SaaS for automated test generation."}
+{"timestamp":"2025-12-23T05:05:59.946Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-23T05:06:00.413Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 9.5/10\n   Target Market: Global\n   Revenue Model: SaaS"}
+{"timestamp":"2025-12-23T05:06:00.571Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-23T05:06:00.786Z","type":"milestone","message":"✅ Business plan created!\n   Phases: 1\n   Mission: Build a seamless empire."}
+{"timestamp":"2025-12-23T05:06:00.998Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-23T05:06:01.711Z","type":"milestone","message":"✅ Found 0 tasks to execute\n   Ready to begin execution phase"}
+{"timestamp":"2025-12-23T05:14:06.920Z","type":"error","message":"❌ Analysis failed: fetch failed"}
+{"timestamp":"2025-12-23T05:14:06.893Z","type":"error","message":"❌ Analysis failed: fetch failed"}

@@ -1,0 +1,74 @@
+[
+  {
+    "id": "approval-1766411829323-b91iqv",
+    "type": "general",
+    "title": "Form LLC",
+    "description": "Task in phase: foundation",
+    "impact": "Using tool: manual",
+    "recommendation": "AI recommends proceeding with this task",
+    "alternatives": [],
+    "phase": "foundation",
+    "status": "pending",
+    "createdAt": "2025-12-22T13:57:09.323Z"
+  },
+  {
+    "id": "approval-1766411830492-58tnlj",
+    "type": "general",
+    "title": "Get EIN from IRS",
+    "description": "Task in phase: foundation",
+    "impact": "Using tool: claude_browser",
+    "recommendation": "AI recommends proceeding with this task",
+    "alternatives": [],
+    "phase": "foundation",
+    "status": "pending",
+    "createdAt": "2025-12-22T13:57:10.492Z"
+  },
+  {
+    "id": "approval-1766411831505-zzg0ez",
+    "type": "general",
+    "title": "Business license",
+    "description": "Task in phase: foundation",
+    "impact": "Using tool: claude_browser",
+    "recommendation": "AI recommends proceeding with this task",
+    "alternatives": [],
+    "phase": "foundation",
+    "status": "pending",
+    "createdAt": "2025-12-22T13:57:11.505Z"
+  },
+  {
+    "id": "approval-1766411832559-se0irj",
+    "type": "general",
+    "title": "Create service agreement template",
+    "description": "Task in phase: foundation",
+    "impact": "Using tool: ollama",
+    "recommendation": "AI recommends proceeding with this task",
+    "alternatives": [],
+    "phase": "foundation",
+    "status": "pending",
+    "createdAt": "2025-12-22T13:57:12.559Z"
+  },
+  {
+    "id": "approval-1766411833619-6nb3o2",
+    "type": "general",
+    "title": "Create privacy policy",
+    "description": "Task in phase: foundation",
+    "impact": "Using tool: ollama",
+    "recommendation": "AI recommends proceeding with this task",
+    "alternatives": [],
+    "phase": "foundation",
+    "status": "pending",
+    "createdAt": "2025-12-22T13:57:13.619Z"
+  },
+  {
+    "id": "approval-1766411834689-3czq0d",
+    "type": "general",
+    "title": "Create terms of service",
+    "description": "Task in phase: foundation",
+    "impact": "Using tool: ollama",
+    "recommendation": "AI recommends proceeding with this task",
+    "alternatives": [],
+    "phase": "foundation",
+    "status": "pending",
+    "createdAt": "2025-12-22T13:57:14.689Z"
+  }
+]

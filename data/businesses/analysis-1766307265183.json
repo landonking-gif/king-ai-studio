@@ -1,0 +1,28 @@
+{
+  "viability": {
+    "score": 85,
+    "verdict": "Viable"
+  },
+  "swot": {
+    "strengths": [
+      "Low capital"
+    ],
+    "weaknesses": [
+      "Competition"
+    ],
+    "opportunities": [
+      "Growth"
+    ],
+    "threats": [
+      "Saturation"
+    ]
+  },
+  "strategy": {
+    "targetAudience": "Remote workers",
+    "monetization": "Subscription"
+  },
+  "id": "analysis-1766307265183",
+  "ideaDescription": "AI-Powered Niche Newsletter: Daily digest for remote workers using AI to curate top 5 remote tools.",
+  "createdAt": "2025-12-21T08:54:25.936Z",
+  "status": "analyzed"
+}

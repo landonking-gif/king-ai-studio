@@ -1,0 +1,10 @@
+{
+  "isRunning": true,
+  "startedAt": "2025-12-22T15:24:56.314Z",
+  "cycleCount": 0,
+  "businessesStarted": [],
+  "config": {
+    "loopInterval": 3600000,
+    "ideasPerCycle": 5
+  }
+}

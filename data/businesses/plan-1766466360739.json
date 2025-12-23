@@ -1,0 +1,34 @@
+{
+  "score": 0.9,
+  "critique": "Passed system test.",
+  "issues": [],
+  "needs_rewrite": false,
+  "strategy_update": [
+    "Keep systems seamless."
+  ],
+  "verified": true,
+  "notes": "Mocked for system verification.",
+  "improvements": [
+    "All systems operational"
+  ],
+  "viability": {
+    "score": 9.5
+  },
+  "marketAnalysis": {
+    "targetAudience": "Global"
+  },
+  "revenueModel": {
+    "primary": "SaaS"
+  },
+  "phases": [
+    {
+      "name": "Launch",
+      "tasks": []
+    }
+  ],
+  "mission": "Build a seamless empire.",
+  "id": "plan-1766466360739",
+  "analysisId": "analysis-1766466360389",
+  "status": "draft",
+  "createdAt": "2025-12-23T05:06:00.740Z"
+}

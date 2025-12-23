@@ -1,0 +1,40 @@
+{
+  "gemini:gemini-1.5-pro": {
+    "requests": [
+      1766466162795
+    ],
+    "totalCost": 0
+  },
+  "openai:gpt-4o": {
+    "requests": [
+      1766466163063
+    ],
+    "totalCost": 0
+  },
+  "anthropic:claude-3-5-sonnet": {
+    "requests": [
+      1766466163218
+    ],
+    "totalCost": 0
+  },
+  "ollama:llama3.1:8b": {
+    "requests": [
+      1766466163408
+    ],
+    "totalCost": 0
+  },
+  "private:llama-3-70b-stealth": {
+    "requests": [
+      1766466509210
+    ],
+    "totalCost": 0
+  },
+  "ollama:fast": {
+    "requests": [
+      1766467126721,
+      1766467213875,
+      1766467220403
+    ],
+    "totalCost": 0
+  }
+}

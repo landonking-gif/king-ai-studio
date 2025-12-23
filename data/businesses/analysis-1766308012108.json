@@ -1,0 +1,28 @@
+{
+  "viability": {
+    "score": 85,
+    "verdict": "Viable"
+  },
+  "swot": {
+    "strengths": [
+      "Low capital"
+    ],
+    "weaknesses": [
+      "Competition"
+    ],
+    "opportunities": [
+      "Growth"
+    ],
+    "threats": [
+      "Saturation"
+    ]
+  },
+  "strategy": {
+    "targetAudience": "Remote workers",
+    "monetization": "Subscription"
+  },
+  "id": "analysis-1766308012108",
+  "ideaDescription": "Local SEO Agency for Dentists: Automated audit and reporting service.",
+  "createdAt": "2025-12-21T09:06:52.108Z",
+  "status": "analyzed"
+}

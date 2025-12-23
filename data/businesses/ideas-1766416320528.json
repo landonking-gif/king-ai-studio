@@ -1,0 +1,7 @@
+{
+  "generatedAt": "2025-12-22T15:12:00.537Z",
+  "criteria": {},
+  "ideas": {
+    "$": "{\"name\":\"Digital Content Hub\",\"description\":\"A subscription-based digital content platform that offers exclusive content and discounts for users based on their purchase history and viewing habits.\",\"industry\":\"Service-Based,\",\"targetMarket\":\"Users who regularly purchase products online and are interested in exclusive deals and content.\",\"revenueModel\":\"Subscription-based model where users pay a monthly fee to access premium content.\",\"estimatedStartupCost\":\"$2,000 - $5,000\",\"estimatedMonthlyRevenue\":\"$500 - $1,500 (after 6 months),\",\"automationPotential\":\"high\",\"competitionLevel\":\"medium\",\"uniqueAngle\":\"The use of machine learning algorithms and customer data analytics to personalize content recommendations and offers.\",\"firstStep\":\"Create a referral program to incentivize users to refer friends and family to the platform.\"\"}"
+  }
+}

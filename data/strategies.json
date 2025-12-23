@@ -1,0 +1,14 @@
+{
+  "general": [
+    "Always verify external links before including them.",
+    "Ensure JSON output is valid and follows requested schema.",
+    "Prioritize safety and legal compliance in all business plans."
+  ],
+  "marketing": [
+    "Always include a competitor SWOT analysis in marketing plans."
+  ],
+  "development": [
+    "Mock improvement"
+  ],
+  "testing": []
+}

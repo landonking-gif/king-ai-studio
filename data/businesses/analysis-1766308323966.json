@@ -1,0 +1,28 @@
+{
+  "viability": {
+    "score": 85,
+    "verdict": "Viable"
+  },
+  "swot": {
+    "strengths": [
+      "Low capital"
+    ],
+    "weaknesses": [
+      "Competition"
+    ],
+    "opportunities": [
+      "Growth"
+    ],
+    "threats": [
+      "Saturation"
+    ]
+  },
+  "strategy": {
+    "targetAudience": "Remote workers",
+    "monetization": "Subscription"
+  },
+  "id": "analysis-1766308323966",
+  "ideaDescription": "AI Resume Rewriter: SaaS wrapper for specific job descriptions.",
+  "createdAt": "2025-12-21T09:12:03.966Z",
+  "status": "analyzed"
+}

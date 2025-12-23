@@ -1,0 +1,3 @@
+{"timestamp":"2025-12-23T05:18:48.518Z","type":"start","message":"🚀 Starting new business analysis: AI for testing system integrity"}
+{"timestamp":"2025-12-23T05:18:48.552Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-23T05:21:30.520Z","type":"error","message":"❌ Analysis failed: The operation was aborted due to timeout"}

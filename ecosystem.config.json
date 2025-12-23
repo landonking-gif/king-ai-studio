@@ -1,0 +1,32 @@
+{
+    "apps": [
+        {
+            "name": "king-ai-empire",
+            "script": "empire.js",
+            "args": "--daemon",
+            "cwd": "./",
+            "instances": 1,
+            "autorestart": true,
+            "watch": false,
+            "max_memory_restart": "1G",
+            "env": {
+                "NODE_ENV": "production"
+            },
+            "error_file": "./data/logs/empire-error.log",
+            "out_file": "./data/logs/empire-out.log",
+            "merge_logs": true,
+            "time": true
+        },
+        {
+            "name": "king-ai-approval",
+            "script": "packages/core/approval-server-standalone.js",
+            "cwd": "./",
+            "instances": 1,
+            "autorestart": true,
+            "watch": false,
+            "env": {
+                "APPROVAL_PORT": "3847"
+            }
+        }
+    ]
+}

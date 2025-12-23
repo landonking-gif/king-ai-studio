@@ -1,0 +1,41 @@
+{
+  "modules": [
+    {
+      "name": "compliance",
+      "path": "C:\\Users\\dmilner.AGV-040318-PC\\Downloads\\landon\\king-ai-studio\\packages\\modules\\compliance\\index.js",
+      "status": "available",
+      "lastScanned": "2025-12-21T04:40:00.341Z",
+      "description": "Compliance Module - Track filings, deadlines, and regulatory requirements",
+      "className": "ComplianceModule",
+      "methodCount": 1
+    },
+    {
+      "name": "contracts",
+      "path": "C:\\Users\\dmilner.AGV-040318-PC\\Downloads\\landon\\king-ai-studio\\packages\\modules\\contracts\\index.js",
+      "status": "available",
+      "lastScanned": "2025-12-21T04:40:00.343Z",
+      "description": "Contracts & AR Module - Template management, status tracking, receivables",
+      "className": "ContractsModule",
+      "methodCount": 1
+    },
+    {
+      "name": "document-hub",
+      "path": "C:\\Users\\dmilner.AGV-040318-PC\\Downloads\\landon\\king-ai-studio\\packages\\modules\\document-hub\\index.js",
+      "status": "available",
+      "lastScanned": "2025-12-21T04:40:00.344Z",
+      "description": "Document Hub Module - Central document management",
+      "className": "DocumentHub",
+      "methodCount": 1
+    },
+    {
+      "name": "finance",
+      "path": "C:\\Users\\dmilner.AGV-040318-PC\\Downloads\\landon\\king-ai-studio\\packages\\modules\\finance\\index.js",
+      "status": "available",
+      "lastScanned": "2025-12-21T04:40:00.345Z",
+      "description": "Finance Module - Financial tracking, budgets, and reporting",
+      "className": "FinanceModule",
+      "methodCount": 1
+    }
+  ],
+  "lastScan": "2025-12-21T04:40:00.346Z"
+}

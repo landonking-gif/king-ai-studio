@@ -1,0 +1,185 @@
+[
+  {
+    "id": "filing-1766256810143-b184q3",
+    "name": "Annual Report",
+    "description": "State annual report filing",
+    "entity": "King Holdings",
+    "jurisdiction": "TX",
+    "filingType": "annual",
+    "dueDate": "2026-12-20",
+    "frequency": "yearly",
+    "status": "pending",
+    "documents": [],
+    "notes": "",
+    "reminderDays": [
+      60,
+      30,
+      14,
+      7
+    ],
+    "createdAt": "2025-12-20T18:53:30.143Z",
+    "updatedAt": "2025-12-20T18:53:30.143Z"
+  },
+  {
+    "id": "filing-1766256810395-x3lmfo",
+    "name": "Franchise Tax",
+    "description": "State franchise tax filing",
+    "entity": "King Holdings",
+    "jurisdiction": "TX",
+    "filingType": "annual",
+    "dueDate": "2026-05-15",
+    "frequency": "yearly",
+    "status": "pending",
+    "documents": [],
+    "notes": "",
+    "reminderDays": [
+      60,
+      30,
+      14,
+      7
+    ],
+    "createdAt": "2025-12-20T18:53:30.395Z",
+    "updatedAt": "2025-12-20T18:53:30.395Z"
+  },
+  {
+    "id": "filing-1766256810630-4n1h21",
+    "name": "Registered Agent Update",
+    "description": "Verify and update registered agent information",
+    "entity": "King Holdings",
+    "jurisdiction": "TX",
+    "filingType": "annual",
+    "dueDate": "2026-12-20",
+    "frequency": "yearly",
+    "status": "pending",
+    "documents": [],
+    "notes": "",
+    "reminderDays": [
+      30,
+      14
+    ],
+    "createdAt": "2025-12-20T18:53:30.630Z",
+    "updatedAt": "2025-12-20T18:53:30.630Z"
+  },
+  {
+    "id": "filing-1766290570108-g35q40",
+    "name": "Annual Report",
+    "description": "State annual report filing",
+    "entity": "King Holdings",
+    "jurisdiction": "TX",
+    "filingType": "annual",
+    "dueDate": "2026-12-21",
+    "frequency": "yearly",
+    "status": "pending",
+    "documents": [],
+    "notes": "",
+    "reminderDays": [
+      60,
+      30,
+      14,
+      7
+    ],
+    "createdAt": "2025-12-21T04:16:10.108Z",
+    "updatedAt": "2025-12-21T04:16:10.108Z"
+  },
+  {
+    "id": "filing-1766290570351-puon6h",
+    "name": "Franchise Tax",
+    "description": "State franchise tax filing",
+    "entity": "King Holdings",
+    "jurisdiction": "TX",
+    "filingType": "annual",
+    "dueDate": "2026-05-16",
+    "frequency": "yearly",
+    "status": "pending",
+    "documents": [],
+    "notes": "",
+    "reminderDays": [
+      60,
+      30,
+      14,
+      7
+    ],
+    "createdAt": "2025-12-21T04:16:10.351Z",
+    "updatedAt": "2025-12-21T04:16:10.351Z"
+  },
+  {
+    "id": "filing-1766290570486-36awjr",
+    "name": "Registered Agent Update",
+    "description": "Verify and update registered agent information",
+    "entity": "King Holdings",
+    "jurisdiction": "TX",
+    "filingType": "annual",
+    "dueDate": "2026-12-21",
+    "frequency": "yearly",
+    "status": "pending",
+    "documents": [],
+    "notes": "",
+    "reminderDays": [
+      30,
+      14
+    ],
+    "createdAt": "2025-12-21T04:16:10.486Z",
+    "updatedAt": "2025-12-21T04:16:10.486Z"
+  },
+  {
+    "id": "filing-1766291630868-hazpy1",
+    "name": "Annual Report",
+    "description": "State annual report filing",
+    "entity": "King Holdings",
+    "jurisdiction": "TX",
+    "filingType": "annual",
+    "dueDate": "2026-12-21",
+    "frequency": "yearly",
+    "status": "pending",
+    "documents": [],
+    "notes": "",
+    "reminderDays": [
+      60,
+      30,
+      14,
+      7
+    ],
+    "createdAt": "2025-12-21T04:33:50.868Z",
+    "updatedAt": "2025-12-21T04:33:50.868Z"
+  },
+  {
+    "id": "filing-1766291630933-phg335",
+    "name": "Franchise Tax",
+    "description": "State franchise tax filing",
+    "entity": "King Holdings",
+    "jurisdiction": "TX",
+    "filingType": "annual",
+    "dueDate": "2026-05-16",
+    "frequency": "yearly",
+    "status": "pending",
+    "documents": [],
+    "notes": "",
+    "reminderDays": [
+      60,
+      30,
+      14,
+      7
+    ],
+    "createdAt": "2025-12-21T04:33:50.933Z",
+    "updatedAt": "2025-12-21T04:33:50.933Z"
+  },
+  {
+    "id": "filing-1766291630976-y4k2dh",
+    "name": "Registered Agent Update",
+    "description": "Verify and update registered agent information",
+    "entity": "King Holdings",
+    "jurisdiction": "TX",
+    "filingType": "annual",
+    "dueDate": "2026-12-21",
+    "frequency": "yearly",
+    "status": "pending",
+    "documents": [],
+    "notes": "",
+    "reminderDays": [
+      30,
+      14
+    ],
+    "createdAt": "2025-12-21T04:33:50.976Z",
+    "updatedAt": "2025-12-21T04:33:50.976Z"
+  }
+]

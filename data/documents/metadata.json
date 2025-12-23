@@ -1,0 +1,50 @@
+{
+  "documents": [
+    {
+      "id": "doc-1766256811048-pdnm8x",
+      "title": "Welcome to King AI Studio",
+      "category": "general",
+      "filename": "welcome.md",
+      "filepath": "C:\\Users\\dmilner.AGV-040318-PC\\Downloads\\landon\\king-ai-studio\\data\\documents\\general\\welcome.md",
+      "tags": [
+        "welcome",
+        "getting-started"
+      ],
+      "version": 1,
+      "createdAt": "2025-12-20T18:53:31.119Z",
+      "updatedAt": "2025-12-20T18:53:31.119Z",
+      "createdBy": "system"
+    },
+    {
+      "id": "doc-1766290570536-x29mkk",
+      "title": "Welcome to King AI Studio",
+      "category": "general",
+      "filename": "welcome.md",
+      "filepath": "C:\\Users\\dmilner.AGV-040318-PC\\Downloads\\landon\\king-ai-studio\\data\\documents\\general\\welcome.md",
+      "tags": [
+        "welcome",
+        "getting-started"
+      ],
+      "version": 1,
+      "createdAt": "2025-12-21T04:16:10.542Z",
+      "updatedAt": "2025-12-21T04:16:10.542Z",
+      "createdBy": "system"
+    },
+    {
+      "id": "doc-1766291631013-taf4e4",
+      "title": "Welcome to King AI Studio",
+      "category": "general",
+      "filename": "welcome.md",
+      "filepath": "C:\\Users\\dmilner.AGV-040318-PC\\Downloads\\landon\\king-ai-studio\\data\\documents\\general\\welcome.md",
+      "tags": [
+        "welcome",
+        "getting-started"
+      ],
+      "version": 1,
+      "createdAt": "2025-12-21T04:33:51.019Z",
+      "updatedAt": "2025-12-21T04:33:51.019Z",
+      "createdBy": "system"
+    }
+  ],
+  "version": 1
+}
