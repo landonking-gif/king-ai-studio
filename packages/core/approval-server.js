@@ -100,9 +100,9 @@ Or visit the approval dashboard: http://${this.host}:${this.port}/
 
     async approve(id, notes = '') {
         if (this.db) {
-            const approvals = await this.db.db.all('SELECT * FROM approvals WHERE task_id = ? AND status = "pending"', [id]);
-            if (approvals.length > 0) {
-                const app = approvals[0];
+            const result = await this.db.pool.query('SELECT * FROM approvals WHERE id = $1 AND status = $2', [id, 'pending']);
+            if (result.rows.length > 0) {
+                const app = result.rows[0];
                 app.status = 'approved';
                 app.decided_at = new Date().toISOString();
                 app.notes = notes;
@@ -116,9 +116,9 @@ Or visit the approval dashboard: http://${this.host}:${this.port}/
 
     async reject(id, reason = '') {
         if (this.db) {
-            const approvals = await this.db.db.all('SELECT * FROM approvals WHERE task_id = ? AND status = "pending"', [id]);
-            if (approvals.length > 0) {
-                const app = approvals[0];
+            const result = await this.db.pool.query('SELECT * FROM approvals WHERE id = $1 AND status = $2', [id, 'pending']);
+            if (result.rows.length > 0) {
+                const app = result.rows[0];
                 app.status = 'rejected';
                 app.decided_at = new Date().toISOString();
                 app.notes = reason;
@@ -327,7 +327,8 @@ Or visit the approval dashboard: http://${this.host}:${this.port}/
             const businesses = await this.db.getAllBusinesses();
             const approvals = await this.db.getPendingApprovals();
             // Fetch recent logs
-            const logs = await this.db.db.all('SELECT * FROM logs ORDER BY timestamp DESC LIMIT 100');
+            const logResult = await this.db.pool.query('SELECT * FROM logs ORDER BY timestamp DESC LIMIT 100');
+            const logs = logResult.rows;
 
             // Calculate total profit (heuristic for demo)
             const totalProfit = businesses.length * 1500; // Mock calculation
@@ -374,9 +375,7 @@ Or visit the approval dashboard: http://${this.host}:${this.port}/
      */
     start() {
         return new Promise((resolve, reject) => {
-            // Start searching from a random offset to reduce collision probability in batch runs
-            const randomOffset = Math.floor(Math.random() * 50);
-            const basePort = parseInt(this.port) + randomOffset;
+            const basePort = parseInt(this.port);
 
             const tryListen = (attempt = 0) => {
                 const currentPort = basePort + attempt;

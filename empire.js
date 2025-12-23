@@ -147,7 +147,7 @@ class Empire {
         console.log(`   • AI: ${ollamaStatus.available ? '✅ Local Ready' : '🌐 Cloud Only'}`);
         console.log(`   • Email: ${this.emailNotifier ? '✅ Configured' : '⚠️ Not configured'}`);
         console.log(`   • Dashboard: http://localhost:${this.approvalServer.port}`);
-        console.log('   • Database: SQLite (data/king-ai.db)');
+        console.log('   • Database: ✅ PostgreSQL (king_ai)');
         console.log('');
 
         return true;

@@ -150,6 +150,13 @@ export class Database {
                 console.error(`[Database] Migration warning for tasks.priority: ${e.message}`);
             }
         }
+
+        // Ensure 'system' business exists for system-level tasks
+        await this.pool.query(`
+            INSERT INTO businesses (id, name, idea, status, started_at)
+            VALUES ('system', 'System', 'System Operations', 'active', $1)
+            ON CONFLICT (id) DO NOTHING
+        `, [new Date().toISOString()]);
     }
 
     // --- Business Methods ---
