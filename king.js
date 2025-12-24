@@ -4,6 +4,7 @@
  */
 
 import { execSync, spawn } from 'child_process';
+import open from 'open';
 import readline from 'readline';
 import fs from 'fs';
 import path from 'path';
@@ -53,6 +54,17 @@ async function run() {
         process.exit(1);
     }
 
+    // New: Securely sync .env (bypass GitHub)
+    if (fs.existsSync(path.join(ROOT_DIR, '.env'))) {
+        console.log('\n🔐 [Syncing Secrets] Sending .env to AWS via secure tunnel...');
+        try {
+            execSync(`scp -i "${keyFile}" ".env" ubuntu@${serverIP}:~/king-ai-studio/.env`, { stdio: 'inherit' });
+            console.log('✅ Secrets synced successfully.');
+        } catch (e) {
+            console.warn('⚠️ Could not sync .env securely. You may need to set it manually on the server.');
+        }
+    }
+
     console.log(`\n🔗 [3/4] Preparing remote setup on ${serverIP}...`);
 
     // Remote sequence: Update -> Install -> Init -> Daemon (in screen)
@@ -85,6 +97,14 @@ async function run() {
     console.log('═══════════════════════════════════════');
     console.log(`👉 DASHBOARD: http://${serverIP}:3847`);
     console.log(`👉 TO VIEW LIVE LOGS: ssh -i "${keyFile}" ubuntu@${serverIP} "screen -r empire"`);
+
+    // Auto-open dashboard locally
+    try {
+        console.log('\n🌐 Opening dashboard on your local computer...');
+        await open(`http://${serverIP}:3847`);
+    } catch (e) {
+        // Silently fail if browser can't open
+    }
 
     rl.close();
 }
