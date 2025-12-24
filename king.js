@@ -89,9 +89,13 @@ async function run() {
         console.log('═══════════════════════════════════════════════════════════');
 
         const sshOpts = '-o StrictHostKeyChecking=no';
+        // Run the script and stream output
+        execSync(`ssh -i "${keyFile}" ${sshOpts} ubuntu@${serverIP} "./deploy.sh"`, { stdio: 'inherit' });
+
+        console.log('═══════════════════════════════════════════════════════════');
     } catch (e) {
-        console.error('\n❌ Connection Failed or Remote Error.');
-        console.error('   Ensure your .pem key is valid and the server is reachable.');
+        console.error('\n❌ Deployment failed on the remote server.');
+        console.error('   Please check the logs above for details.');
         process.exit(1);
     }
 
