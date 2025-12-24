@@ -17,7 +17,7 @@ const __dirname = path.dirname(__filename);
 export class ApprovalServer {
     constructor(config = {}) {
         this.port = config.port || process.env.APPROVAL_PORT || 3847;
-        this.host = config.host || 'localhost';
+        this.host = config.host || '0.0.0.0';
         this.dataDir = config.dataDir || path.join(__dirname, '../../data/ceo');
         this.dashboardDir = path.join(__dirname, '../infrastructure/dashboard');
         this.db = config.db || new Database(config);
@@ -397,7 +397,7 @@ Or visit the approval dashboard: http://${this.host}:${this.port}/
                 });
 
                 this.server.listen(currentPort, () => {
-                    console.log(`[ApprovalServer] Running at http://${this.host}:${currentPort}`);
+                    console.log(`[ApprovalServer] Running at http://0.0.0.0:${currentPort}`);
                     // Update instance port to the actual bound port
                     this.port = currentPort;
                     resolve({ success: true, url: `http://${this.host}:${currentPort}` });
