@@ -100,12 +100,43 @@ async function run() {
 
     // Auto-open dashboard locally
     try {
-        console.log('\n🌐 Opening dashboard on your local computer...');
-        await open(`http://${serverIP}:3847`);
+        console.log('\n🌐 Waiting for dashboard to go live on AWS...');
+        const dashboardUrl = `http://${serverIP}:3847`;
+
+        // Wait up to 30 seconds for the server to bind
+        let attempts = 0;
+        const maxAttempts = 15;
+        const checkInterval = 2000;
+
+        const checkServer = async () => {
+            while (attempts < maxAttempts) {
+                attempts++;
+                try {
+                    const res = await fetch(dashboardUrl, { method: 'HEAD', signal: AbortSignal.timeout(1000) });
+                    if (res.status < 500) {
+                        console.log('\n✅ Dashboard detected! Opening browser...');
+                        await open(dashboardUrl);
+                        return true;
+                    }
+                } catch (e) {
+                    // Not ready yet
+                }
+                process.stdout.write('.');
+                await new Promise(r => setTimeout(r, checkInterval));
+            }
+            return false;
+        };
+
+        const ready = await checkServer();
+        if (!ready) {
+            console.log(`\n⚠️ Dashboard taking a while to boot. 
+👉 You can open it manually at: ${dashboardUrl}`);
+        }
     } catch (e) {
         // Silently fail if browser can't open
     }
 
+    console.log('\n👑 Long Live the King! (Press Ctrl+C to exit)');
     rl.close();
 }
 
