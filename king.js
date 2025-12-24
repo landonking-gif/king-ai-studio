@@ -81,45 +81,49 @@ async function run() {
     ].join(' && ');
 
     try {
-        console.log('⏳ Running remote update... (This may take a minute)');
+        console.log('\n⏳ Initiating remote update & environment synchronization...');
+        console.log('   (This may take a minute while the server pulls data)');
         execSync(`ssh -i "${keyFile}" ubuntu@${serverIP} "${remoteCmd}"`, { stdio: 'inherit' });
     } catch (e) {
-        console.error('\n❌ Connection Failed. Ensure your .pem key is in the folder and IP is correct.');
+        console.error('\n❌ Connection Failed. Check your network, server IP, and .pem key.');
         process.exit(1);
     }
 
-    console.log('\n🌟 [4/4] COMPLETE!');
+    console.log('\n🌟 [4/4] EMPIRE INITIALIZED!');
     console.log('═══════════════════════════════════════');
-    console.log(`✅ Code Updated on AWS`);
-    console.log(`✅ Database Migrated to SQLite`);
-    console.log(`✅ Llama 3.1 & DeepSeek Models Ready`);
-    console.log(`✅ Empire running in background screen "empire"`);
+    console.log(`✅ Code Sync: OK`);
+    console.log(`✅ Persistence: SQLite Ready`);
+    console.log(`✅ Models: Llama/DeepSeek Online`);
     console.log('═══════════════════════════════════════');
-    console.log(`👉 DASHBOARD: http://${serverIP}:3847`);
-    console.log(`👉 TO VIEW LIVE LOGS: ssh -i "${keyFile}" ubuntu@${serverIP} "screen -r empire"`);
 
-    // Auto-open dashboard locally
+    // Auto-open dashboard locally with enhanced retry
     try {
-        console.log('\n🌐 Waiting for dashboard to go live on AWS...');
         const dashboardUrl = `http://${serverIP}:3847`;
+        console.log(`\n🔍 Monitoring status: ${dashboardUrl}`);
+        process.stdout.write('   Waiting for engine to warm up');
 
-        // Wait up to 30 seconds for the server to bind
+        // Wait up to 60 seconds (Empire mode can take a bit to start everything)
         let attempts = 0;
-        const maxAttempts = 15;
+        const maxAttempts = 30;
         const checkInterval = 2000;
 
         const checkServer = async () => {
             while (attempts < maxAttempts) {
                 attempts++;
                 try {
-                    const res = await fetch(dashboardUrl, { method: 'HEAD', signal: AbortSignal.timeout(1000) });
-                    if (res.status < 500) {
-                        console.log('\n✅ Dashboard detected! Opening browser...');
+                    // Try to fetch the dashboard index
+                    const res = await fetch(dashboardUrl, {
+                        method: 'GET',
+                        signal: AbortSignal.timeout(1500)
+                    });
+
+                    if (res.status === 200) {
+                        console.log('\n\n✅ 👑 THE KING IS LIVE! Opening Command Center...');
                         await open(dashboardUrl);
                         return true;
                     }
                 } catch (e) {
-                    // Not ready yet
+                    // Server not ready or connection reset while starting
                 }
                 process.stdout.write('.');
                 await new Promise(r => setTimeout(r, checkInterval));
@@ -129,14 +133,14 @@ async function run() {
 
         const ready = await checkServer();
         if (!ready) {
-            console.log(`\n⚠️ Dashboard taking a while to boot. 
-👉 You can open it manually at: ${dashboardUrl}`);
+            console.log(`\n\n⚠️  The dashboard is taking longer than expected to respond.`);
+            console.log(`👉 You can try opening it manually: ${dashboardUrl}`);
         }
     } catch (e) {
-        // Silently fail if browser can't open
+        console.warn('\n❌ Local browser could not be launched. Please open manually.');
     }
 
-    console.log('\n👑 Long Live the King! (Press Ctrl+C to exit)');
+    console.log('\n✨ Automation complete. Long live the King!');
     rl.close();
 }
 
