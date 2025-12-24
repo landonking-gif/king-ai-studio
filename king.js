@@ -58,6 +58,8 @@ async function run() {
     if (fs.existsSync(path.join(ROOT_DIR, '.env'))) {
         console.log('\n🔐 [Syncing Secrets] Sending .env to AWS via secure tunnel...');
         try {
+            // Ensure directory exists before scp
+            execSync(`ssh -i "${keyFile}" ubuntu@${serverIP} "mkdir -p ~/king-ai-studio"`, { stdio: 'ignore' });
             execSync(`scp -i "${keyFile}" ".env" ubuntu@${serverIP}:~/king-ai-studio/.env`, { stdio: 'inherit' });
             console.log('✅ Secrets synced successfully.');
         } catch (e) {
@@ -67,8 +69,9 @@ async function run() {
 
     console.log(`\n🔗 [3/4] Preparing remote setup on ${serverIP}...`);
 
-    // Remote sequence: Update -> Install -> Init -> Daemon (in screen)
+    // Remote sequence: Clone/Update -> Install -> Init -> Daemon (in screen)
     const remoteCmd = [
+        'if [ ! -d "~/king-ai-studio" ]; then git clone https://github.com/landonking-gif/king-ai-studio.git ~/king-ai-studio; fi',
         'cd ~/king-ai-studio',
         'git fetch origin main',
         'git reset --hard origin/main',
