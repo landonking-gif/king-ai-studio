@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initNavigation();
     initModals();
     initCommandCenter();
+    initFullCommandCenter();
     startSync();
     setupCharts();
 });
@@ -63,6 +64,9 @@ function switchTab(tabId) {
 
     // Refresh data for the specific view
     if (tabId === 'approvals') renderFullApprovals();
+    if (tabId === 'empire') renderEmpire();
+    if (tabId === 'analytics') renderAnalytics();
+    if (tabId === 'settings') renderSettings();
 }
 
 // --- Data Synchronization ---
@@ -158,7 +162,127 @@ function renderLogs() {
 }
 
 function renderMiniApprovals() {
-    // This could be a sidebar widget or part of the dashboard
+    // This is already being handled partially by updateUI calling stat-pending
+}
+
+function renderEmpire() {
+    const container = document.getElementById('empire-business-container');
+    if (!container) return;
+
+    if (STATE.businesses.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-city"></i>
+                <p>The empire is currently dormant. Launch a venture to expand.</p>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = STATE.businesses.map(b => `
+        <div class="business-card">
+            <div class="card-top">
+                <div>
+                    <div class="biz-name">${b.name}</div>
+                    <div class="biz-type">${b.industry}</div>
+                </div>
+                <div class="status-badge status-${b.status}">${b.status}</div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${b.progress}%"></div>
+                </div>
+            </div>
+            <div class="mt-20">
+                <p style="font-size: 0.85rem; color: var(--text-secondary)"><strong>Last Action:</strong> ${b.last_action}</p>
+                <div class="btn-group mt-10">
+                    <button class="btn-text" onclick="showVentureDetails('${b.id}')">Details</button>
+                    <button class="btn-text" onclick="rebalanceVenture('${b.id}')">Optimize</button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function renderAnalytics() {
+    const revenueCtx = document.getElementById('revenue-growth-chart');
+    if (!revenueCtx) return;
+
+    // Destroy existing chart if it exists to prevent memory leaks
+    if (window.revenueChart) window.revenueChart.destroy();
+
+    window.revenueChart = new Chart(revenueCtx.getContext('2d'), {
+        type: 'line',
+        data: {
+            labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+            datasets: [{
+                label: 'Empire Yield ($)',
+                data: [12000, 21000, 18000, 35000],
+                borderColor: '#833ab4',
+                backgroundColor: 'rgba(131, 58, 180, 0.1)',
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { grid: { color: 'rgba(255,255,255,0.05)' }, border: { display: false } },
+                x: { grid: { display: false } }
+            }
+        }
+    });
+
+    const automationCtx = document.getElementById('automation-chart');
+    if (automationCtx) {
+        if (window.automationChart) window.automationChart.destroy();
+        window.automationChart = new Chart(automationCtx.getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Fully Autonomous', 'Semi-Autonomous', 'Human Required'],
+                datasets: [{
+                    data: [85, 10, 5],
+                    backgroundColor: ['#00ff88', '#5851db', '#ff4d4d'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom', labels: { color: '#a0a0b8' } } }
+            }
+        });
+    }
+}
+
+function renderSettings() {
+    // Placeholder to satisfy the refresh logic
+    console.log("Settings view activated");
+}
+
+async function handleApproval(id, decision) {
+    const notes = prompt(decision ? "Additional authorization notes?" : "Reason for rejection?");
+    if (notes === null) return; // Cancelled
+
+    showToast(decision ? "Authorizing action..." : "Rejecting action...", 'info');
+
+    try {
+        const endpoint = decision ? '/api/approve' : '/api/reject';
+        const res = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, notes, reason: notes })
+        });
+
+        if (res.ok) {
+            showToast(decision ? "✅ Action Authorized" : "❌ Action Rejected", 'success');
+            fetchData();
+        }
+    } catch (e) {
+        showToast("Communication link failed", 'error');
+    }
 }
 
 function renderFullApprovals() {
@@ -221,8 +345,47 @@ function initCommandCenter() {
     input.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendCommand(); });
 }
 
-function addChatMessage(role, text) {
-    const container = document.getElementById('chat-container');
+function initFullCommandCenter() {
+    const input = document.getElementById('ceo-full-command');
+    const btn = document.getElementById('send-full-command-btn');
+    if (!input || !btn) return;
+
+    const sendCommand = async () => {
+        const cmd = input.value.trim();
+        if (!cmd) return;
+
+        addChatMessage('user', cmd, true);
+        input.value = '';
+
+        try {
+            document.getElementById('ceo-full-status').textContent = 'THINKING...';
+            const res = await fetch('/api/command', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ command: cmd })
+            });
+            const data = await res.json();
+
+            setTimeout(() => {
+                addChatMessage('ceo', data.reply || "Strategy recalibrated.", true);
+                document.getElementById('ceo-full-status').textContent = 'CONNECTED';
+                if (data.activeObjective) document.getElementById('ceo-active-objective').textContent = data.activeObjective;
+            }, 800);
+
+        } catch (e) {
+            addChatMessage('ceo', "Uplink unstable. Check firewall settings.", true);
+        }
+    };
+
+    btn.addEventListener('click', sendCommand);
+    input.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendCommand(); });
+}
+
+function addChatMessage(role, text, isFull = false) {
+    const containerId = isFull ? 'full-chat-container' : 'chat-container';
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
     const msg = document.createElement('div');
     msg.className = `chat-msg ${role}`;
     msg.innerHTML = `

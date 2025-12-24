@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,10 +8,13 @@
     <link rel="stylesheet" href="/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body class="dark-theme">
     <div class="app-container">
         <!-- Sidebar Navigation -->
@@ -21,7 +25,7 @@
                     <span class="logo-text">KING-AI</span>
                 </div>
             </div>
-            
+
             <nav class="sidebar-nav">
                 <div class="nav-group">
                     <span class="nav-group-title">MAIN MENU</span>
@@ -156,7 +160,7 @@
                                 <div class="loading-skeleton"></div>
                             </div>
                         </div>
-                        
+
                         <div class="content-panel mt-30">
                             <div class="panel-header">
                                 <h2 class="panel-title">Task Stream</h2>
@@ -181,7 +185,8 @@
                             </div>
                             <div class="ceo-thought-box">
                                 <div class="thought-label">CURRENT FOCUS:</div>
-                                <p id="ceo-thoughts">Analyzing portfolio for high-dividend reinvestment opportunities...</p>
+                                <p id="ceo-thoughts">Analyzing portfolio for high-dividend reinvestment opportunities...
+                                </p>
                             </div>
                             <div class="mini-chat" id="chat-container">
                                 <!-- Chat messages -->
@@ -195,7 +200,7 @@
                 </div>
             </section>
 
-            <!-- Approvals View (Hidden by default) -->
+            <!-- Approvals View -->
             <section id="approvals-view" class="view hidden">
                 <div class="view-header">
                     <h1>Human Oversight</h1>
@@ -206,9 +211,117 @@
                 </div>
             </section>
 
-            <!-- CEO Chat View (Full Screen) -->
+            <!-- My Empire View -->
+            <section id="empire-view" class="view hidden">
+                <div class="view-header">
+                    <div>
+                        <h1>Empire Portfolio</h1>
+                        <p class="subtitle">Global asset and project distribution</p>
+                    </div>
+                </div>
+                <div class="business-grid" id="empire-business-container">
+                    <!-- Cards injected here -->
+                </div>
+            </section>
+
+            <!-- CEO Full View -->
             <section id="ceo-view" class="view hidden">
-              <!-- Full screen chat logic -->
+                <div class="view-header">
+                    <div>
+                        <h1>CEO Direct Uplink</h1>
+                        <p class="subtitle">High-bandwidth neural connection to the King AI</p>
+                    </div>
+                    <span class="status-badge" id="ceo-full-status">CONNECTED</span>
+                </div>
+                <div class="full-chat-layout">
+                    <div class="chat-main">
+                        <div class="full-chat-history" id="full-chat-container">
+                            <!-- Full chat messages -->
+                        </div>
+                        <div class="full-chat-input">
+                            <input type="text" id="ceo-full-command" placeholder="Type instructions for the CEO...">
+                            <button id="send-full-command-btn"><i class="fas fa-paper-plane"></i> Send</button>
+                        </div>
+                    </div>
+                    <div class="chat-info-sidebar">
+                        <div class="content-panel">
+                            <h3>CEO Active Focus</h3>
+                            <div id="ceo-active-objective" class="mt-10">Optimizing cross-border liquidity...</div>
+                            <hr class="mt-20">
+                            <h3>Resource Allocation</h3>
+                            <div class="resource-meter mt-10">
+                                <label>CPU</label>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 85%"></div>
+                                </div>
+                            </div>
+                            <div class="resource-meter mt-10">
+                                <label>RAM</label>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 42%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Analytics View -->
+            <section id="analytics-view" class="view hidden">
+                <div class="view-header">
+                    <h1>Intelligence & Growth</h1>
+                    <p class="subtitle">Real-time performance metrics across the empire</p>
+                </div>
+                <div class="grid-layout">
+                    <div class="grid-span-6">
+                        <div class="content-panel">
+                            <h3>Revenue Growth</h3>
+                            <canvas id="revenue-growth-chart" height="300"></canvas>
+                        </div>
+                    </div>
+                    <div class="grid-span-6">
+                        <div class="content-panel">
+                            <h3>Automation Efficiency</h3>
+                            <canvas id="automation-chart" height="300"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings View -->
+            <section id="settings-view" class="view hidden">
+                <div class="view-header">
+                    <h1>System Configuration</h1>
+                    <p class="subtitle">Fine-tune the weights and measures of your empire</p>
+                </div>
+                <div class="content-panel max-w-800">
+                    <div class="settings-group">
+                        <h3>AI Model Routing</h3>
+                        <div class="form-group mt-10">
+                            <label>Default Model Provider</label>
+                            <select id="setting-ai-provider">
+                                <option value="anthropic">Anthropic (Claude 3.5 Sonnet)</option>
+                                <option value="openai">OpenAI (GPT-4o)</option>
+                                <option value="gemini" selected>Google Gemini Pro</option>
+                                <option value="ollama">Ollama (Local Stealth)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="settings-group mt-30">
+                        <h3>Risk Management</h3>
+                        <div class="form-group mt-10">
+                            <label>Autonomous spending limit (per transaction)</label>
+                            <input type="number" value="100" id="setting-spending-limit">
+                        </div>
+                        <div class="form-check mt-10">
+                            <input type="checkbox" checked id="setting-require-approval">
+                            <label>Require human approval for high-risk actions</label>
+                        </div>
+                    </div>
+                    <div class="mt-30">
+                        <button class="btn btn-primary" id="save-settings-btn">Save Changes</button>
+                    </div>
+                </div>
             </section>
         </main>
 
@@ -222,7 +335,8 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Business Idea / Objective</label>
-                        <textarea id="new-business-idea" placeholder="e.g. A digital agency focusing on local SEO for plumbers..."></textarea>
+                        <textarea id="new-business-idea"
+                            placeholder="e.g. A digital agency focusing on local SEO for plumbers..."></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -238,4 +352,5 @@
 
     <script src="/dashboard.js"></script>
 </body>
+
 </html>
