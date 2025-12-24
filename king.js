@@ -70,73 +70,25 @@ async function run() {
 
     console.log(`\n🔗 [3/4] Preparing remote setup on ${serverIP}...`);
 
-    // Remote sequence: Force-Clear Locks -> Install Node -> Clone/Update -> Install Deps -> Init -> Daemon -> Verify
-    const remoteCmd = [
-        'export DEBIAN_FRONTEND=noninteractive',
-        'set -e', // Fail fast
+    // Remote sequence: Sync deploy script -> Run it
+    const deployScript = 'deploy.sh';
 
-        // --- 1. ROBUST LOCK CLEARING ---
-        'echo "🛡️ [Remote] Diagnostic: Clearing package manager locks..."',
-        'sudo systemctl stop unattended-upgrades.service 2>/dev/null || true',
-        '# Kill potential hung processes from auto-updates',
-        'sudo pkill -9 apt-get 2>/dev/null || true',
-        'sudo pkill -9 dpkg 2>/dev/null || true',
-        '# Remove lock files manually to ensure we can install',
-        'sudo rm -f /var/lib/dpkg/lock-frontend',
-        'sudo rm -f /var/lib/dpkg/lock',
-        'sudo rm -f /var/cache/apt/archives/lock',
-        'sudo rm -f /var/lib/apt/lists/lock',
-        'sudo dpkg --configure -a', // Fix any interrupted installations
-
-        // --- 2. NODE.JS INSTALLATION ---
-        'if ! command -v node &> /dev/null; then',
-        '  echo "📦 [Remote] Node.js missing. Installing 20.x..."',
-        '  curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -',
-        '  sudo apt-get install -y nodejs',
-        'fi',
-        'echo "✅ [Remote] Node Version: $(node -v)"',
-
-        // --- 3. REPOSITORY SYNC ---
-        'if [ ! -d "$HOME/king-ai-studio/.git" ]; then',
-        '  echo "📂 [Remote] Cloning fresh repository..."',
-        '  rm -rf $HOME/king-ai-studio', // Clear partial directory if exists
-        '  git clone https://github.com/landonking-gif/king-ai-studio.git $HOME/king-ai-studio',
-        'fi',
-
-        'cd $HOME/king-ai-studio',
-        'echo "🔄 [Remote] Pulling latest code..."',
-        'git fetch origin main',
-        'git reset --hard origin/main',
-
-        // --- 4. DEPENDENCIES & INIT ---
-        'echo "📥 [Remote] Installing NPM Packages..."',
-        'npm install --no-audit --no-fund',
-
-        'echo "🧠 [Remote] Initializing Database & Brain..."',
-        'npm run init',
-
-        // --- 5. LAUNCH & VERIFY ---
-        'echo "🚀 [Remote] Starting Empire via Screen..."',
-        'screen -S empire -X quit 2>/dev/null || true',
-        'screen -dmS empire npm run empire:daemon',
-
-        'echo "⏱️ [Remote] Verifying startup (5s warm-up)..."',
-        'sleep 5',
-        'if screen -list | grep -q "empire"; then',
-        '   echo "✅ [Remote] Empire Daemon is ACTIVE."',
-        'else',
-        '   echo "❌ [Remote] Empire Daemon failed to start!"',
-        '   exit 1',
-        'fi',
-
-        'echo "🌐 [Remote] READY: http://' + serverIP + ':3847"'
-    ].join('\n');
+    console.log(`\n📦 [3.5/4] Uploading deployment script...`);
+    try {
+        const sshOpts = '-o StrictHostKeyChecking=no -o ConnectTimeout=10';
+        execSync(`scp -i "${keyFile}" ${sshOpts} "${deployScript}" ubuntu@${serverIP}:~/deploy.sh`, { stdio: 'inherit' });
+        execSync(`ssh -i "${keyFile}" ${sshOpts} ubuntu@${serverIP} "chmod +x ~/deploy.sh"`, { stdio: 'ignore' });
+    } catch (e) {
+        console.error('❌ Failed to upload deployment script.');
+        process.exit(1);
+    }
 
     try {
-        console.log('\n⏳ Initiating remote update & environment synchronization...');
-        console.log('   (First-time setup on a new server will take about 2-3 minutes)');
+        console.log('\n⏳ Initiating remote deployment (checking locks, installing node, updating code)...');
+        console.log('   (Output is streaming directly from the server)');
+        console.log('═══════════════════════════════════════════════════════════');
+
         const sshOpts = '-o StrictHostKeyChecking=no';
-        execSync(`ssh -i "${keyFile}" ${sshOpts} ubuntu@${serverIP} "${remoteCmd}"`, { stdio: 'inherit' });
     } catch (e) {
         console.error('\n❌ Connection Failed or Remote Error.');
         console.error('   Ensure your .pem key is valid and the server is reachable.');
