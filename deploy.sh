@@ -1,22 +1,22 @@
 #!/bin/bash
 set -e
 
+# Logging helper
 log() {
-    echo "[DEPLOY] $(date +'%Y-%m-%d %H:%M:%S') - $1" | tee -a deploy.log
+    echo "[DEPLOY] $(date +'%Y-%m-%d %H:%M:%S') - $1" | tee -a $HOME/deploy.log
 }
 
-log "Starting Deployment on $(hostname)..."
+log "=== DEPLOYMENT START ==="
+log "Host: $(hostname)"
 
-# 1. CLEANUP & LOCKS
-log "Ensuring package manager is free..."
+# 1. PACKAGE MANAGER CLEANUP
+log "Clearing package manager locks..."
 export DEBIAN_FRONTEND=noninteractive
 sudo systemctl stop unattended-upgrades.service 2>/dev/null || true
-
-# Force unlock if needed
 sudo rm -f /var/lib/dpkg/lock-frontend /var/lib/dpkg/lock /var/cache/apt/archives/lock /var/lib/apt/lists/lock
-sudo dpkg --configure -a || true
+sudo dpkg --configure -a 2>/dev/null || true
 
-# 2. NODE.JS (Check)
+# 2. NODE.JS CHECK
 if ! command -v node &> /dev/null; then
     log "Installing Node.js 20.x..."
     sudo apt-get update -qq
@@ -24,37 +24,68 @@ if ! command -v node &> /dev/null; then
     curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
     sudo apt-get install -y -qq nodejs
 else
-    log "Node.js ready: $(node -v)"
+    log "Node.js: $(node -v)"
 fi
 
-# 3. DIRECTORY & DEPENDENCIES
+# 3. APP DIRECTORY
 APP_DIR="$HOME/king-ai-studio"
 cd "$APP_DIR"
 
-log "Installing dependencies (clean)..."
-npm install --no-audit --no-fund --production
+# 4. DEPENDENCIES
+log "Installing NPM packages..."
+npm install --no-audit --no-fund --production 2>&1 | tail -5
 
-# 4. INITIALIZATION (Fast Track)
-log "Running quick-start migrations..."
-# Only run the database part of init, skip the ollama pulls
-node scripts/migrate-to-sqlite.js || log "Migration skipped (already present)."
+# 5. DATABASE MIGRATION
+log "Running database migration..."
+node scripts/migrate-to-sqlite.js 2>&1 || log "Migration skipped or already done."
 
-# 5. STARTUP
-log "Launching King AI Empire Daemon..."
-# Kill existing screen
+# 6. STOP OLD PROCESS
+log "Stopping any existing Empire process..."
+pkill -f "npm run empire:daemon" 2>/dev/null || true
+pkill -f "node empire.js" 2>/dev/null || true
 screen -S empire -X quit 2>/dev/null || true
-# Start a fresh daemon session
-screen -dmS empire npm run empire:daemon
+sleep 2
 
-# 6. VERIFICATION
-log "Verifying process..."
-sleep 8
-if screen -list | grep -q "empire"; then
-    log "✅ SUCCESS: Empire process is alive in background."
-    log "🌐 Dashboard access: http://$(curl -s ifconfig.me):3847"
+# 7. START WITH NOHUP (Resilient)
+log "Starting Empire Daemon via nohup..."
+nohup npm run empire:daemon > $HOME/empire.log 2>&1 &
+EMPIRE_PID=$!
+log "Empire PID: $EMPIRE_PID"
+
+# 8. HEALTH CHECK (Wait for HTTP)
+log "Waiting for dashboard to respond (up to 30s)..."
+MAX_ATTEMPTS=15
+ATTEMPT=0
+DASHBOARD_UP=false
+
+while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
+    ATTEMPT=$((ATTEMPT + 1))
+    sleep 2
+    
+    # Check if process is still alive
+    if ! ps -p $EMPIRE_PID > /dev/null 2>&1; then
+        log "ERROR: Empire process crashed! Check $HOME/empire.log"
+        tail -30 $HOME/empire.log
+        exit 1
+    fi
+    
+    # Check HTTP response
+    HTTP_CODE=$(curl -s -o /dev/null -w '%{http_code}' http://localhost:3847 2>/dev/null || echo "000")
+    if [ "$HTTP_CODE" = "200" ]; then
+        DASHBOARD_UP=true
+        break
+    fi
+    log "  Attempt $ATTEMPT/$MAX_ATTEMPTS - HTTP $HTTP_CODE"
+done
+
+if [ "$DASHBOARD_UP" = true ]; then
+    PUBLIC_IP=$(curl -s ifconfig.me 2>/dev/null || echo "YOUR_SERVER_IP")
+    log "✅ SUCCESS: Dashboard is LIVE!"
+    log "🌐 Dashboard URL: http://$PUBLIC_IP:3847"
 else
-    log "❌ ERROR: Process died after launch. Check logs."
-    exit 1
+    log "⚠️ WARNING: Dashboard not responding after 30s. Check $HOME/empire.log"
+    tail -20 $HOME/empire.log
+    # Don't exit 1 here - process might still be starting
 fi
 
-log "Deployment Complete!"
+log "=== DEPLOYMENT COMPLETE ==="
