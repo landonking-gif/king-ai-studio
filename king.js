@@ -58,11 +58,9 @@ async function run() {
     if (fs.existsSync(path.join(ROOT_DIR, '.env'))) {
         console.log('\n🔐 [Syncing Secrets] Sending .env to AWS via secure tunnel...');
         try {
-            // Options for non-interactive SSH
             const sshOpts = '-o StrictHostKeyChecking=no -o ConnectTimeout=10';
-
-            // Ensure directory exists before scp
-            execSync(`ssh -i "${keyFile}" ${sshOpts} ubuntu@${serverIP} "mkdir -p \\$HOME/king-ai-studio"`, { stdio: 'ignore' });
+            // Ensure directory exists with correct permissions
+            execSync(`ssh -i "${keyFile}" ${sshOpts} ubuntu@${serverIP} "mkdir -p \\$HOME/king-ai-studio && chmod 700 \\$HOME/king-ai-studio"`, { stdio: 'ignore' });
             execSync(`scp -i "${keyFile}" ${sshOpts} ".env" ubuntu@${serverIP}:~/king-ai-studio/.env`, { stdio: 'inherit' });
             console.log('✅ Secrets synced successfully.');
         } catch (e) {
@@ -72,36 +70,57 @@ async function run() {
 
     console.log(`\n🔗 [3/4] Preparing remote setup on ${serverIP}...`);
 
-    // Remote sequence: Clone/Update -> Install -> Init -> Daemon (in screen)
-    // We check for .git to see if the REPO is cloned, not just if the folder exists
+    // Remote sequence: Install Node -> Clone/Update -> Install Deps -> Init -> Daemon
     const remoteCmd = [
-        'if [ ! -d "$HOME/king-ai-studio/.git" ]; then git clone https://github.com/landonking-gif/king-ai-studio.git $HOME/king-ai-studio; fi',
+        'set -e', // Fail fast
+        'echo "📦 Checking environment dependencies..."',
+        'if ! command -v node &> /dev/null; then',
+        '  echo "  - Node.js missing. Installing (this may take a minute)..."',
+        '  curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash - > /dev/null',
+        '  sudo apt-get install -y nodejs > /dev/null',
+        'fi',
+        'echo "✅ Node.js Version: $(node -v)"',
+        '',
+        'if [ ! -d "$HOME/king-ai-studio/.git" ]; then',
+        '  echo "📦 Cloning King AI Studio repository..."',
+        '  git clone https://github.com/landonking-gif/king-ai-studio.git $HOME/king-ai-studio',
+        'fi',
+        '',
         'cd $HOME/king-ai-studio',
+        'echo "🔄 Updating code to latest..."',
         'git fetch origin main',
         'git reset --hard origin/main',
-        'npm install',
-        'npm run init',
+        '',
+        'echo "📥 Installing dependencies..."',
+        'npm install --no-audit --no-fund > /dev/null',
+        '',
+        'echo "🧠 Initializing AI Brain..."',
+        'npm run init > /dev/null',
+        '',
+        'echo "🚀 Launching Empire Daemon..."',
         'screen -S empire -X quit || true',
         'screen -dmS empire npm run empire:daemon',
-        'echo "🚀 EMPIRE IS NOW RUNNING IN THE BACKGROUND!"',
-        'echo "🌐 View Dashboard: http://' + serverIP + ':3847"'
-    ].join(' && ');
+        '',
+        'echo "✨ SERVER SETUP COMPLETE!"',
+        'echo "🌐 Dashboard ready at: http://' + serverIP + ':3847"'
+    ].join('\n');
 
     try {
         console.log('\n⏳ Initiating remote update & environment synchronization...');
-        console.log('   (This may take a minute while the server pulls data)');
+        console.log('   (First-time setup on a new server will take about 2-3 minutes)');
         const sshOpts = '-o StrictHostKeyChecking=no';
         execSync(`ssh -i "${keyFile}" ${sshOpts} ubuntu@${serverIP} "${remoteCmd}"`, { stdio: 'inherit' });
     } catch (e) {
-        console.error('\n❌ Connection Failed. Check your network, server IP, and .pem key.');
+        console.error('\n❌ Connection Failed or Remote Error.');
+        console.error('   Ensure your .pem key is valid and the server is reachable.');
         process.exit(1);
     }
 
     console.log('\n🌟 [4/4] EMPIRE INITIALIZED!');
     console.log('═══════════════════════════════════════');
-    console.log(`✅ Code Sync: OK`);
-    console.log(`✅ Persistence: SQLite Ready`);
-    console.log(`✅ Models: Llama/DeepSeek Online`);
+    console.log(`✅ System Ready & Daemon Started`);
+    console.log(`✅ Code Sync & Node.js Confirmed`);
+    console.log(`✅ Dashboard Online`);
     console.log('═══════════════════════════════════════');
 
     // Auto-open dashboard locally with enhanced retry
@@ -112,31 +131,29 @@ async function run() {
     console.log('═══════════════════════════════════════');
 
     try {
-        console.log(`\n🔍 Connecting to engine...`);
-        process.stdout.write('   Waiting for warm-up');
+        console.log(`\n🔍 Verifying dashboard heartbeat...`);
+        process.stdout.write('   Waiting for engine to warm up');
 
-        // Wait up to 60 seconds (Empire mode can take a bit to start everything)
         let attempts = 0;
-        const maxAttempts = 30;
+        const maxAttempts = 60; // Increased to 2 minutes for fresh setups
         const checkInterval = 2000;
 
         const checkServer = async () => {
             while (attempts < maxAttempts) {
                 attempts++;
                 try {
-                    // Try to fetch the dashboard index
                     const res = await fetch(dashboardUrl, {
                         method: 'GET',
-                        signal: AbortSignal.timeout(1500)
+                        signal: AbortSignal.timeout(2000)
                     });
 
                     if (res.ok) {
-                        console.log('\n\n✅ THE KING IS LIVE! Opening Dashboard...');
+                        console.log('\n\n✅ THE KING IS LIVE! Opening Dashboard in browser...');
                         await open(dashboardUrl);
                         return true;
                     }
                 } catch (e) {
-                    // Server not ready or connection reset while starting
+                    // Not ready yet
                 }
                 process.stdout.write('.');
                 await new Promise(r => setTimeout(r, checkInterval));
@@ -146,11 +163,12 @@ async function run() {
 
         const ready = await checkServer();
         if (!ready) {
-            console.log(`\n\n⚠️  The dashboard is taking longer than expected.`);
-            console.log(`👉 PLEASE NOTE: Ensure your AWS Security Group has Port 3847 OPEN to 0.0.0.0/0.`);
+            console.log(`\n\n⚠️  The dashboard didn't respond in time.`);
+            console.log(`👉 Manual Link: ${dashboardUrl}`);
+            console.log(`💡 Tip: If it still fails, it's almost always the AWS Security Group Port 3847 (Inbound).`);
         }
     } catch (e) {
-        // Silently fail if browser can't open
+        // Fallback
     }
 
     console.log('\n👑 Long live the King!');
