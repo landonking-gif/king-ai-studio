@@ -43,8 +43,19 @@ export class AuditLogger {
         };
 
         const logPath = this.getTodayLogPath();
-        const compressed = zlib.gzipSync(JSON.stringify(enrichedEntry) + '\n');
-        fs.appendFileSync(logPath + '.gz', compressed);
+        let content = '';
+        if (fs.existsSync(logPath)) {
+            try {
+                const compressedContent = fs.readFileSync(logPath);
+                content = zlib.gunzipSync(compressedContent).toString('utf-8');
+            } catch (e) {
+                console.error(`[AuditLogger] Error reading existing log: ${e.message}`);
+            }
+        }
+
+        content += JSON.stringify(enrichedEntry) + '\n';
+        const compressed = zlib.gzipSync(content);
+        fs.writeFileSync(logPath, compressed);
 
         return enrichedEntry;
     }

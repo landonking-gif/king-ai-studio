@@ -1,21 +1,20 @@
 /**
- * Database Module - PostgreSQL persistence for King AI Studio
+ * Database Module - SQLite persistence for King AI Studio
  * Handles businesses, tasks, approvals, and logging
  */
 
-import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import pkg from 'pg';
-const { Pool } = pkg;
+import sqlite3 from 'sqlite3';
+import { open } from 'sqlite';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export class Database {
     constructor(config = {}) {
-        this.connectionString = config.connectionString || process.env.DATABASE_URL || 'postgresql://localhost:5432/king_ai';
-        this.pool = null;
+        this.dbPath = config.dbPath || path.join(__dirname, '../../data/king-ai.db');
+        this.db = null;
         this.queryCache = new Map(); // Simple in-memory cache for read queries
     }
 
@@ -23,12 +22,13 @@ export class Database {
      * Initialize the database and create tables
      */
     async init() {
-        this.pool = new Pool({
-            connectionString: this.connectionString,
+        this.db = await open({
+            filename: this.dbPath,
+            driver: sqlite3.Database
         });
 
         await this.createTables();
-        console.log(`[Database] Initialized with PostgreSQL`);
+        console.log(`[Database] Initialized at ${this.dbPath}`);
         return this;
     }
 
@@ -36,9 +36,8 @@ export class Database {
      * Create necessary tables if they don't exist
      */
     async createTables() {
-        console.log('[Database] Creating tables (Schema V3)...');
         // Businesses table
-        await this.pool.query(`
+        await this.db.exec(`
             CREATE TABLE IF NOT EXISTS businesses (
                 id TEXT PRIMARY KEY,
                 name TEXT,
@@ -55,7 +54,7 @@ export class Database {
         `);
 
         // Tasks table
-        await this.pool.query(`
+        await this.db.exec(`
             CREATE TABLE IF NOT EXISTS tasks (
                 id TEXT PRIMARY KEY,
                 business_id TEXT,
@@ -74,7 +73,7 @@ export class Database {
         `);
 
         // Approvals table
-        await this.pool.query(`
+        await this.db.exec(`
             CREATE TABLE IF NOT EXISTS approvals (
                 id TEXT PRIMARY KEY,
                 task_id TEXT,
@@ -93,9 +92,9 @@ export class Database {
         `);
 
         // System/Execution Logs
-        await this.pool.query(`
+        await this.db.exec(`
             CREATE TABLE IF NOT EXISTS logs (
-                id SERIAL PRIMARY KEY,
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 business_id TEXT,
                 timestamp TEXT,
                 type TEXT,
@@ -106,7 +105,7 @@ export class Database {
         `);
 
         // Empire State
-        await this.pool.query(`
+        await this.db.exec(`
             CREATE TABLE IF NOT EXISTS empire_state (
                 key TEXT PRIMARY KEY,
                 value TEXT
@@ -114,7 +113,7 @@ export class Database {
         `);
 
         // Negotiations table for ROI #2
-        await this.pool.query(`
+        await this.db.exec(`
             CREATE TABLE IF NOT EXISTS negotiations (
                 id TEXT PRIMARY KEY,
                 business_id TEXT,
@@ -133,52 +132,40 @@ export class Database {
         const columns = ['revenue', 'expenses', 'priority'];
         for (const col of columns) {
             try {
-                // Check if column exists, if not ADD it. 
-                await this.pool.query(`ALTER TABLE businesses ADD COLUMN IF NOT EXISTS ${col} REAL DEFAULT 0`);
+                await this.db.exec(`ALTER TABLE businesses ADD COLUMN ${col} REAL DEFAULT 0`);
             } catch (e) {
-                if (e.message.indexOf('duplicate column') === -1) {
-                    console.error(`[Database] Migration warning for businesses.${col}: ${e.message}`);
-                }
+                // Ignore if column already exists
             }
         }
 
         // Migration for tasks.priority
         try {
-            await this.pool.query(`ALTER TABLE tasks ADD COLUMN IF NOT EXISTS priority REAL DEFAULT 0`);
+            await this.db.exec(`ALTER TABLE tasks ADD COLUMN priority REAL DEFAULT 0`);
         } catch (e) {
-            if (e.message.indexOf('duplicate column') === -1) {
-                console.error(`[Database] Migration warning for tasks.priority: ${e.message}`);
-            }
+            // Ignore
         }
 
-        // Ensure 'system' business exists for system-level tasks
-        await this.pool.query(`
-            INSERT INTO businesses (id, name, idea, status, started_at)
-            VALUES ('system', 'System', 'System Operations', 'active', $1)
-            ON CONFLICT (id) DO NOTHING
-        `, [new Date().toISOString()]);
+        // Ensure 'system' business exists
+        await this.db.run(`
+            INSERT OR IGNORE INTO businesses (id, name, idea, status, started_at)
+            VALUES (?, ?, ?, ?, ?)
+        `, ['system', 'System', 'System Operations', 'active', new Date().toISOString()]);
     }
 
     // --- Business Methods ---
 
     async saveBusiness(business) {
         const { id, name, idea, analysis_id, plan_id, status, started_at, revenue, expenses, priority, ...metadata } = business;
-        await this.pool.query(
-            `INSERT INTO businesses (id, name, idea, analysis_id, plan_id, status, started_at, revenue, expenses, priority, metadata) 
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-             ON CONFLICT (id) DO UPDATE SET
-             name = EXCLUDED.name, idea = EXCLUDED.idea, analysis_id = EXCLUDED.analysis_id, plan_id = EXCLUDED.plan_id, 
-             status = EXCLUDED.status, started_at = EXCLUDED.started_at, revenue = EXCLUDED.revenue, 
-             expenses = EXCLUDED.expenses, priority = EXCLUDED.priority, metadata = EXCLUDED.metadata`,
+        await this.db.run(
+            `INSERT OR REPLACE INTO businesses (id, name, idea, analysis_id, plan_id, status, started_at, revenue, expenses, priority, metadata) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [id, name, idea, analysis_id, plan_id, status, started_at, revenue || 0, expenses || 0, priority || 1.0, JSON.stringify(metadata)]
         );
-        // Invalidate cache
         this.queryCache.delete('all_businesses');
     }
 
     async getBusiness(id) {
-        const result = await this.pool.query('SELECT * FROM businesses WHERE id = $1', [id]);
-        const row = result.rows[0];
+        const row = await this.db.get('SELECT * FROM businesses WHERE id = ?', [id]);
         if (row && row.metadata) {
             return { ...row, ...JSON.parse(row.metadata) };
         }
@@ -190,62 +177,53 @@ export class Database {
         if (this.queryCache.has(cacheKey)) {
             return this.queryCache.get(cacheKey);
         }
-        const result = await this.pool.query('SELECT * FROM businesses');
-        const rows = result.rows.map(row => ({ ...row, ...(row.metadata ? JSON.parse(row.metadata) : {}) }));
-        this.queryCache.set(cacheKey, rows);
-        return rows;
+        const rows = await this.db.all('SELECT * FROM businesses');
+        const results = rows.map(row => ({ ...row, ...(row.metadata ? JSON.parse(row.metadata) : {}) }));
+        this.queryCache.set(cacheKey, results);
+        return results;
     }
 
     // --- Task Methods ---
 
     async saveTask(task) {
         const { id, business_id, plan_id, phase, name, description, automated, requires_approval, status, result, priority, created_at } = task;
-        await this.pool.query(
-            `INSERT INTO tasks (id, business_id, plan_id, phase, name, description, automated, requires_approval, status, result, priority, created_at) 
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
-             ON CONFLICT (id) DO UPDATE SET
-             business_id = EXCLUDED.business_id, plan_id = EXCLUDED.plan_id, phase = EXCLUDED.phase, name = EXCLUDED.name, 
-             description = EXCLUDED.description, automated = EXCLUDED.automated, requires_approval = EXCLUDED.requires_approval, 
-             status = EXCLUDED.status, result = EXCLUDED.result, priority = EXCLUDED.priority, created_at = EXCLUDED.created_at`,
+        await this.db.run(
+            `INSERT OR REPLACE INTO tasks (id, business_id, plan_id, phase, name, description, automated, requires_approval, status, result, priority, created_at) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [id, business_id, plan_id, phase, name, description, automated ? 1 : 0, requires_approval ? 1 : 0, status, JSON.stringify(result), priority || 0, created_at]
         );
     }
 
     async getTasksForBusiness(businessId) {
-        const result = await this.pool.query('SELECT * FROM tasks WHERE business_id = $1', [businessId]);
-        return result.rows.map(row => ({ ...row, result: row.result ? JSON.parse(row.result) : null }));
+        const rows = await this.db.all('SELECT * FROM tasks WHERE business_id = ?', [businessId]);
+        return rows.map(row => ({ ...row, result: row.result ? JSON.parse(row.result) : null }));
     }
 
     async getQueuedTasks() {
-        const result = await this.pool.query("SELECT * FROM tasks WHERE status = 'queued' ORDER BY priority DESC");
-        return result.rows.map(row => ({ ...row, result: row.result ? JSON.parse(row.result) : null }));
+        const rows = await this.db.all("SELECT * FROM tasks WHERE status = 'queued' ORDER BY priority DESC");
+        return rows.map(row => ({ ...row, result: row.result ? JSON.parse(row.result) : null }));
     }
 
     // --- Approval Methods ---
 
     async saveApproval(approval) {
         const { id, task_id, type, title, description, amount, impact, recommendation, status, created_at, decided_at, notes } = approval;
-        await this.pool.query(
-            `INSERT INTO approvals (id, task_id, type, title, description, amount, impact, recommendation, status, created_at, decided_at, notes) 
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
-             ON CONFLICT (id) DO UPDATE SET
-             task_id = EXCLUDED.task_id, type = EXCLUDED.type, title = EXCLUDED.title, description = EXCLUDED.description, 
-             amount = EXCLUDED.amount, impact = EXCLUDED.impact, recommendation = EXCLUDED.recommendation, 
-             status = EXCLUDED.status, created_at = EXCLUDED.created_at, decided_at = EXCLUDED.decided_at, notes = EXCLUDED.notes`,
+        await this.db.run(
+            `INSERT OR REPLACE INTO approvals (id, task_id, type, title, description, amount, impact, recommendation, status, created_at, decided_at, notes) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [id, task_id, type, title, description, amount, impact, recommendation, status, created_at, decided_at, notes]
         );
     }
 
     async getPendingApprovals() {
-        const result = await this.pool.query("SELECT * FROM approvals WHERE status = 'pending'");
-        return result.rows;
+        return await this.db.all("SELECT * FROM approvals WHERE status = 'pending'");
     }
 
     // --- Logging Methods ---
 
     async log(businessId, type, message, phase = null) {
-        await this.pool.query(
-            'INSERT INTO logs (business_id, timestamp, type, message, phase) VALUES ($1, $2, $3, $4, $5)',
+        await this.db.run(
+            'INSERT INTO logs (business_id, timestamp, type, message, phase) VALUES (?, ?, ?, ?, ?)',
             [businessId, new Date().toISOString(), type, message, phase]
         );
     }
@@ -253,21 +231,20 @@ export class Database {
     // --- Empire State Methods ---
 
     async setEmpireState(key, value) {
-        await this.pool.query(
-            'INSERT INTO empire_state (key, value) VALUES ($1, $2) ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value',
+        await this.db.run(
+            'INSERT OR REPLACE INTO empire_state (key, value) VALUES (?, ?)',
             [key, JSON.stringify(value)]
         );
     }
 
     async getEmpireState(key) {
-        const result = await this.pool.query('SELECT value FROM empire_state WHERE key = $1', [key]);
-        const row = result.rows[0];
+        const row = await this.db.get('SELECT value FROM empire_state WHERE key = ?', [key]);
         return row ? JSON.parse(row.value) : null;
     }
 
     async close() {
-        if (this.pool) {
-            await this.pool.end();
+        if (this.db) {
+            await this.db.close();
         }
     }
 }
