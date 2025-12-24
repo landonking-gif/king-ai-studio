@@ -16,7 +16,7 @@ Your studio is hosted on a high-performance **m7i.4xlarge** AWS instance.
 cd C:\Users\dmilner.AGV-040318-PC\Downloads\landon\king-ai-studio
 
 # 2. Login to the AWS Ubuntu Server
-ssh -i "king-ai-studio.pem" ubuntu@ec2-18-218-174-196.us-east-2.compute.amazonaws.com
+ssh -i "king-ai-studio.pem" ubuntu@ec2-18-216-0-221.us-east-2.compute.amazonaws.com
 ```
 
 ### 2. Updating the Studio
