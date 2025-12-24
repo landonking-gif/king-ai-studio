@@ -1,0 +1,45 @@
+{
+  "generatedAt": "2025-12-24T17:19:36.558Z",
+  "criteria": {},
+  "ideas": {
+    "viability": {
+      "score": 8.5,
+      "reasoning": "Strong market potential identified via heuristic analysis."
+    },
+    "marketAnalysis": {
+      "targetAudience": "Niche B2B",
+      "marketSize": "Scaling",
+      "competition": "Moderate",
+      "differentiator": "AI Automation"
+    },
+    "revenueModel": {
+      "primary": "SaaS",
+      "secondary": [
+        "Commission"
+      ],
+      "pricingStrategy": "Value-based"
+    },
+    "requiredSystems": [
+      "EngineCore",
+      "LeadGen-v1"
+    ],
+    "estimatedCosts": {
+      "startup": "$1,200",
+      "monthly": "$240"
+    },
+    "risks": [
+      {
+        "risk": "Regulatory",
+        "mitigation": "Compliance first"
+      }
+    ],
+    "timeline": {
+      "mvp": "3 weeks",
+      "profitable": "4 months"
+    },
+    "immediateNextSteps": [
+      "Verify domain availability",
+      "Deploy landing page"
+    ]
+  }
+}

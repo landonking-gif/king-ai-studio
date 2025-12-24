@@ -1,0 +1,36 @@
+{
+  "name": "King AI Studio - Empire Command Center",
+  "short_name": "King AI",
+  "description": "Autonomous AI system for building and managing business empires",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#07070e",
+  "theme_color": "#833ab4",
+  "orientation": "portrait-primary",
+  "categories": ["business", "productivity", "finance"],
+  "lang": "en-US",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle cx='256' cy='256' r='256' fill='%23833ab4'/><text x='256' y='320' font-family='Arial, sans-serif' font-size='300' font-weight='bold' text-anchor='middle' fill='white'>👑</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "View empire overview",
+      "url": "/#dashboard",
+      "icons": [{ "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z' fill='white'/></svg>", "sizes": "96x96" }]
+    },
+    {
+      "name": "Approvals",
+      "short_name": "Approvals",
+      "description": "Manage pending approvals",
+      "url": "/#approvals",
+      "icons": [{ "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.1 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z' fill='white'/></svg>", "sizes": "96x96" }]
+    }
+  ]
+}
