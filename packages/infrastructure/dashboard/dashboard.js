@@ -194,7 +194,7 @@ function renderEmpire() {
                 </div>
             </div>
             <div class="mt-20">
-                <p style="font-size: 0.85rem; color: var(--text-secondary)"><strong>Last Action:</strong> ${b.last_action}</p>
+                <p style="font-size: 0.85rem; color: var(--text-secondary)"><strong>Last Action:</strong> ${b.last_action || 'Awaiting autonomous pulse...'}</p>
                 <div class="btn-group mt-10">
                     <button class="btn-text" onclick="showVentureDetails('${b.id}')">Details</button>
                     <button class="btn-text" onclick="rebalanceVenture('${b.id}')">Optimize</button>
