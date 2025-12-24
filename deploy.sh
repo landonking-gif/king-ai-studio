@@ -40,20 +40,12 @@ else
     log "Node.js is already installed: $(node -v)"
 fi
 
-# 3. DIRECTORY SETUP
+# 3. DIRECTORY SETUP - Code is synced via rsync from local, no git clone needed
 APP_DIR="$HOME/king-ai-studio"
-if [ ! -d "$APP_DIR/.git" ]; then
-    log "Project directory missing or invalid. Cloning fresh..."
-    rm -rf "$APP_DIR"
-    git clone https://github.com/landonking-gif/king-ai-studio.git "$APP_DIR"
-else
-    log "Project directory exists. Pulling latest..."
-    cd "$APP_DIR"
-    git fetch origin main || { log "Git fetch failed, re-cloning..."; cd ..; rm -rf "$APP_DIR"; git clone https://github.com/landonking-gif/king-ai-studio.git "$APP_DIR"; }
-    cd "$APP_DIR"
-    # Ensure we are on main
-    git checkout main
-    git reset --hard origin/main
+if [ ! -d "$APP_DIR" ]; then
+    log "ERROR: Project directory not found at $APP_DIR"
+    log "The code should be synced from local machine first."
+    exit 1
 fi
 
 cd "$APP_DIR"
@@ -77,9 +69,9 @@ screen -dmS empire npm run empire:daemon
 log "Verifying deployment..."
 sleep 5
 if screen -list | grep -q "empire"; then
-    log "✅ SUCCESS: Empire process is running."
+    log "SUCCESS: Empire process is running."
 else
-    log "❌ ERROR: Empire process failed to start."
+    log "ERROR: Empire process failed to start."
     exit 1
 fi
 
