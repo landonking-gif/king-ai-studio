@@ -70,43 +70,66 @@ async function run() {
 
     console.log(`\n🔗 [3/4] Preparing remote setup on ${serverIP}...`);
 
-    // Remote sequence: Install Node -> Clone/Update -> Install Deps -> Init -> Daemon
+    // Remote sequence: Force-Clear Locks -> Install Node -> Clone/Update -> Install Deps -> Init -> Daemon -> Verify
     const remoteCmd = [
+        'export DEBIAN_FRONTEND=noninteractive',
         'set -e', // Fail fast
-        'echo "📦 [Remote] Checking environment dependencies..."',
-        '# Wait for any background apt-get locks to clear',
-        'sudo systemctl stop unattended-upgrades || true',
-        'while fuser /var/lib/dpkg/lock >/dev/null 2>&1 ; do echo "   - Waiting for other package managers to finish..."; sleep 5; done',
-        '',
+
+        // --- 1. ROBUST LOCK CLEARING ---
+        'echo "🛡️ [Remote] Diagnostic: Clearing package manager locks..."',
+        'sudo systemctl stop unattended-upgrades.service 2>/dev/null || true',
+        '# Kill potential hung processes from auto-updates',
+        'sudo pkill -9 apt-get 2>/dev/null || true',
+        'sudo pkill -9 dpkg 2>/dev/null || true',
+        '# Remove lock files manually to ensure we can install',
+        'sudo rm -f /var/lib/dpkg/lock-frontend',
+        'sudo rm -f /var/lib/dpkg/lock',
+        'sudo rm -f /var/cache/apt/archives/lock',
+        'sudo rm -f /var/lib/apt/lists/lock',
+        'sudo dpkg --configure -a', // Fix any interrupted installations
+
+        // --- 2. NODE.JS INSTALLATION ---
         'if ! command -v node &> /dev/null; then',
-        '  echo "  - Node.js missing. Installing (this is a one-time process)..."',
+        '  echo "📦 [Remote] Node.js missing. Installing 20.x..."',
         '  curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -',
-        '  sudo DEBIAN_FRONTEND=noninteractive apt-get install -y nodejs',
+        '  sudo apt-get install -y nodejs',
         'fi',
-        'echo "✅ [Remote] Node.js Version: $(node -v)"',
-        '',
+        'echo "✅ [Remote] Node Version: $(node -v)"',
+
+        // --- 3. REPOSITORY SYNC ---
         'if [ ! -d "$HOME/king-ai-studio/.git" ]; then',
-        '  echo "📦 [Remote] Cloning King AI Studio repository..."',
+        '  echo "📂 [Remote] Cloning fresh repository..."',
+        '  rm -rf $HOME/king-ai-studio', // Clear partial directory if exists
         '  git clone https://github.com/landonking-gif/king-ai-studio.git $HOME/king-ai-studio',
         'fi',
-        '',
+
         'cd $HOME/king-ai-studio',
-        'echo "🔄 [Remote] Updating code to latest..."',
+        'echo "🔄 [Remote] Pulling latest code..."',
         'git fetch origin main',
         'git reset --hard origin/main',
-        '',
-        'echo "📥 [Remote] Installing dependencies (this may take a minute)..."',
+
+        // --- 4. DEPENDENCIES & INIT ---
+        'echo "📥 [Remote] Installing NPM Packages..."',
         'npm install --no-audit --no-fund',
-        '',
-        'echo "🧠 [Remote] Initializing AI Brain..."',
+
+        'echo "🧠 [Remote] Initializing Database & Brain..."',
         'npm run init',
-        '',
-        'echo "🚀 [Remote] Launching Empire Daemon (Screen)..."',
-        'screen -list | grep empire && screen -S empire -X quit || true',
+
+        // --- 5. LAUNCH & VERIFY ---
+        'echo "🚀 [Remote] Starting Empire via Screen..."',
+        'screen -S empire -X quit 2>/dev/null || true',
         'screen -dmS empire npm run empire:daemon',
-        '',
-        'echo "✨ [Remote] SERVER SETUP COMPLETE!"',
-        'echo "🌐 Dashboard ready at: http://' + serverIP + ':3847"'
+
+        'echo "⏱️ [Remote] Verifying startup (5s warm-up)..."',
+        'sleep 5',
+        'if screen -list | grep -q "empire"; then',
+        '   echo "✅ [Remote] Empire Daemon is ACTIVE."',
+        'else',
+        '   echo "❌ [Remote] Empire Daemon failed to start!"',
+        '   exit 1',
+        'fi',
+
+        'echo "🌐 [Remote] READY: http://' + serverIP + ':3847"'
     ].join('\n');
 
     try {
