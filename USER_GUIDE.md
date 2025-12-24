@@ -27,17 +27,31 @@ cd ~/king-ai-studio
 git reset --hard origin/main
 ```
 
-### 3. Launching the Engine
-There are two ways to run the studio:
+### 3. Launching the Engine (The King's Way 👑)
+The easiest way to keep your studio updated and running is to use the **Master Controller** from your local machine (Windows).
+
+From your local project folder, run:
+```bash
+node king.js
+```
+This script will:
+1.  **Sync** your local code/fixes to GitHub.
+2.  **SSH** into your AWS server automatically.
+3.  **Update** the server with the latest code.
+4.  **Initialize** the database and AI models.
+5.  **Restart** the Empire in a background session.
+
+---
+
+### 4. Manual Launch (Advanced)
+If you prefer to run things manually or in interactive mode:
 
 #### **A. Interactive Mode (For Chatting/Commands)**
-Use this to talk directly to the CEO and watch it brainstorm in real-time.
 ```bash
 npm start
 ```
 
-#### **B. Daemon/Empire Mode (Standard Production)**
-Use this to let the AI build businesses in the background while you sleep.
+#### **B. Daemon/Empire Mode (Background)**
 ```bash
 npm run empire:daemon
 ```
