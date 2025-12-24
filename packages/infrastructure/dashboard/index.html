@@ -1,130 +1,241 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>King AI | Empire Dashboard</title>
-  <link rel="stylesheet" href="/style.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;500;700;800&display=swap" rel="stylesheet">
-  <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>King AI | Empire Command Center</title>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body>
-  <nav>
-    <div class="logo">
-      <i class="fas fa-crown"></i> King AI
-    </div>
-    <ul class="nav-links">
-      <li><a href="#" class="nav-link active"><i class="fas fa-chart-line"></i> Dashboard</a></li>
-      <li><a href="#" class="nav-link"><i class="fas fa-briefcase"></i> My Empire</a></li>
-      <li><a href="#" class="nav-link"><i class="fas fa-check-circle"></i> Approvals</a></li>
-      <li><a href="#" class="nav-link"><i class="fas fa-cog"></i> Settings</a></li>
-    </ul>
-    
-    <div style="margin-top: auto; padding: 20px; background: var(--card-bg); border-radius: 15px;">
-      <div style="font-size: 0.8rem; color: var(--text-dim);">SYSTEM STATUS</div>
-      <div style="font-size: 0.9rem; color: var(--accent-profit); font-weight: 700;">🟢 AUTONOMOUS</div>
-    </div>
-  </nav>
-
-  <main>
-    <header>
-      <div>
-        <h1 style="font-size: 2.5rem; letter-spacing: -1px;">Empire Overview</h1>
-        <p style="color: var(--text-dim); margin-top: 5px;">Managing 124 concurrent business entities</p>
-      </div>
-      <div class="btn-group">
-        <button class="btn btn-secondary" onclick="location.reload()">🔄 Refresh</button>
-        <button class="btn btn-primary">➕ New Business</button>
-      </div>
-    </header>
-
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-value" id="stat-roi">$12,450</div>
-        <div class="stat-label">Total Profit (MTD)</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" id="stat-active">8</div>
-        <div class="stat-label">Active Businesses</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" id="stat-tasks">1,204</div>
-        <div class="stat-label">Tasks Automated</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" id="stat-pending">6</div>
-        <div class="stat-label" style="color: var(--accent-warning);">Pending Approvals</div>
-      </div>
-    </div>
-
-    <div class="dashboard-layout">
-      <!-- Left Column: Business Grid & Logs -->
-      <div style="display: flex; flex-direction: column; gap: 40px;">
-        <section>
-          <h2 class="panel-title"><i class="fas fa-rocket"></i> Active Operations</h2>
-          <div class="business-grid" id="business-container">
-            <!-- Business cards will be injected here -->
-            <div class="business-card">
-              <div class="card-header">
-                <div>
-                  <div class="business-name">SocialPulse Agency</div>
-                  <div class="business-industry">Digital Marketing</div>
+<body class="dark-theme">
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon"><i class="fas fa-crown"></i></div>
+                    <span class="logo-text">KING-AI</span>
                 </div>
-                <span class="status-badge status-running">Running</span>
-              </div>
-              <div class="card-body">
-                <div class="progress-container">
-                  <div class="progress-label">
-                    <span>Alpha Phase</span>
-                    <span>65%</span>
-                  </div>
-                  <div class="progress-bar">
-                    <div class="progress-fill" style="width: 65%;"></div>
-                  </div>
-                </div>
-                <div style="margin-top: 20px; font-size: 0.85rem; color: var(--text-dim);">
-                  Next: Post content to 12 Instagram accounts
-                </div>
-              </div>
             </div>
-          </div>
-        </section>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-group">
+                    <span class="nav-group-title">MAIN MENU</span>
+                    <a href="#dashboard" class="nav-item active" data-tab="dashboard">
+                        <i class="fas fa-grid-2"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="#empire" class="nav-item" data-tab="empire">
+                        <i class="fas fa-fort-awesome"></i>
+                        <span>My Empire</span>
+                    </a>
+                    <a href="#approvals" class="nav-item" data-tab="approvals">
+                        <i class="fas fa-signature"></i>
+                        <span>Approvals</span>
+                        <span class="badge" id="pending-count">0</span>
+                    </a>
+                </div>
 
-        <section class="panel">
-          <h2 class="panel-title"><i class="fas fa-terminal"></i> Live Task Feed</h2>
-          <div class="log-feed" id="log-container">
-              <div class="log-entry info">
-                <span class="log-time">14:02:11</span>
-                CEO Agent scanning for high-growth SaaS opportunities...
-              </div>
-              <div class="log-entry success">
-                <span class="log-time">14:03:45</span>
-                New business "CloudDocu" validated with viability score of 8.5/10
-              </div>
-          </div>
-        </section>
-      </div>
+                <div class="nav-group">
+                    <span class="nav-group-title">INTELLIGENCE</span>
+                    <a href="#ceo" class="nav-item" data-tab="ceo">
+                        <i class="fas fa-user-tie"></i>
+                        <span>Talk to CEO</span>
+                    </a>
+                    <a href="#analytics" class="nav-item" data-tab="analytics">
+                        <i class="fas fa-chart-mixed"></i>
+                        <span>Analytics</span>
+                    </a>
+                </div>
 
-      <!-- Right Column: Approvals -->
-      <aside class="panel">
-        <h2 class="panel-title"><i class="fas fa-shield-alt"></i> Human Oversight</h2>
-        <div id="approval-container">
-          <!-- Approval items will be injected here -->
-          <div class="approval-item">
-            <div class="approval-title">Incorporate "CloudDocu" LLC</div>
-            <div class="approval-desc">Legal registration in Delaware requires $450 in filing fees.</div>
-            <div class="btn-group">
-              <button class="btn btn-primary">Approve</button>
-              <button class="btn btn-secondary">Reject</button>
+                <div class="nav-group">
+                    <span class="nav-group-title">SYSTEM</span>
+                    <a href="#settings" class="nav-item" data-tab="settings">
+                        <i class="fas fa-sliders"></i>
+                        <span>Settings</span>
+                    </a>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="system-status">
+                    <div class="status-indicator online"></div>
+                    <div class="status-details">
+                        <div class="status-label">EMPIRE STATUS</div>
+                        <div class="status-value">AUTONOMOUS</div>
+                    </div>
+                </div>
             </div>
-          </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="top-bar">
+                <div class="search-wrapper">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search businesses, tasks, logs...">
+                </div>
+                <div class="top-bar-actions">
+                    <button class="btn-icon" title="Notifications"><i class="fas fa-bell"></i></button>
+                    <button class="btn btn-primary" id="new-business-btn">
+                        <i class="fas fa-plus"></i>
+                        <span>New Venture</span>
+                    </button>
+                    <div class="user-profile">
+                        <img src="https://ui-avatars.com/api/?name=King&background=833ab4&color=fff" alt="User">
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Tab -->
+            <section id="dashboard-view" class="view visible">
+                <div class="view-header">
+                    <div>
+                        <h1>Empire Overview</h1>
+                        <p class="subtitle">Managing <span id="entity-count">0</span> business entities worldwide</p>
+                    </div>
+                    <div class="time-filter">
+                        <button class="filter-btn active">Live</button>
+                        <button class="filter-btn">24h</button>
+                        <button class="filter-btn">7d</button>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card profit">
+                        <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
+                        <div class="stat-content">
+                            <span class="stat-label">TOTAL PROFIT (MTD)</span>
+                            <div class="stat-value" id="stat-roi">$0</div>
+                            <span class="stat-trend positive"><i class="fas fa-arrow-up"></i> 12.5%</span>
+                        </div>
+                        <canvas id="roi-sparkline" class="sparkline"></canvas>
+                    </div>
+                    <div class="stat-card businesses">
+                        <div class="stat-icon"><i class="fas fa-briefcase"></i></div>
+                        <div class="stat-content">
+                            <span class="stat-label">ACTIVE BUSINESSES</span>
+                            <div class="stat-value" id="stat-active">0</div>
+                            <span class="stat-trend"><i class="fas fa-minus"></i> Stable</span>
+                        </div>
+                    </div>
+                    <div class="stat-card automation">
+                        <div class="stat-icon"><i class="fas fa-bolt"></i></div>
+                        <div class="stat-content">
+                            <span class="stat-label">TASKS AUTOMATED</span>
+                            <div class="stat-value" id="stat-tasks">0</div>
+                            <span class="stat-trend positive"><i class="fas fa-arrow-up"></i> 437x</span>
+                        </div>
+                    </div>
+                    <div class="stat-card pending">
+                        <div class="stat-icon"><i class="fas fa-user-check"></i></div>
+                        <div class="stat-content">
+                            <span class="stat-label">PENDING APPROVALS</span>
+                            <div class="stat-value" id="stat-pending">0</div>
+                            <span class="stat-trend warning">Action Required</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-layout">
+                    <!-- Operations List -->
+                    <div class="grid-span-8">
+                        <div class="content-panel">
+                            <div class="panel-header">
+                                <h2 class="panel-title">Active Operations</h2>
+                                <button class="btn-text">View All</button>
+                            </div>
+                            <div class="business-grid" id="business-container">
+                                <!-- Cards injected here -->
+                                <div class="loading-skeleton"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="content-panel mt-30">
+                            <div class="panel-header">
+                                <h2 class="panel-title">Task Stream</h2>
+                                <div class="filter-chips">
+                                    <span class="chip active">All</span>
+                                    <span class="chip">Errors</span>
+                                    <span class="chip">Milestones</span>
+                                </div>
+                            </div>
+                            <div class="log-feed" id="log-container">
+                                <!-- Logs injected here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Side Panel -->
+                    <div class="grid-span-4">
+                        <div class="content-panel h-full">
+                            <div class="panel-header">
+                                <h2 class="panel-title">CEO Intelligence</h2>
+                                <span class="status-badge" id="ceo-status">THINKING...</span>
+                            </div>
+                            <div class="ceo-thought-box">
+                                <div class="thought-label">CURRENT FOCUS:</div>
+                                <p id="ceo-thoughts">Analyzing portfolio for high-dividend reinvestment opportunities...</p>
+                            </div>
+                            <div class="mini-chat" id="chat-container">
+                                <!-- Chat messages -->
+                            </div>
+                            <div class="chat-input-wrapper">
+                                <input type="text" id="ceo-command" placeholder="Give the CEO a command...">
+                                <button id="send-command-btn"><i class="fas fa-paper-plane"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Approvals View (Hidden by default) -->
+            <section id="approvals-view" class="view hidden">
+                <div class="view-header">
+                    <h1>Human Oversight</h1>
+                    <p class="subtitle">The CEO needs your permission for sensitive actions</p>
+                </div>
+                <div class="approval-list" id="full-approval-container">
+                    <!-- Full approval items -->
+                </div>
+            </section>
+
+            <!-- CEO Chat View (Full Screen) -->
+            <section id="ceo-view" class="view hidden">
+              <!-- Full screen chat logic -->
+            </section>
+        </main>
+
+        <!-- New Business Modal -->
+        <div id="new-business-modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Launch New Passive Income Machine</h2>
+                    <button class="close-modal"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Business Idea / Objective</label>
+                        <textarea id="new-business-idea" placeholder="e.g. A digital agency focusing on local SEO for plumbers..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary close-modal">Cancel</button>
+                    <button class="btn btn-primary" id="confirm-launch-btn">Execute Launch Phase</button>
+                </div>
+            </div>
         </div>
-      </aside>
-    </div>
-  </main>
 
-  <script src="/dashboard.js"></script>
+        <!-- Success Toast -->
+        <div id="toast" class="toast hidden"></div>
+    </div>
+
+    <script src="/dashboard.js"></script>
 </body>
 </html>

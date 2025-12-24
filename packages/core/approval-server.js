@@ -363,6 +363,44 @@ Or visit the approval dashboard: http://${this.host}:${this.port}/
                 res.writeHead(200, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify(result));
             });
+
+        } else if (pathname === '/api/command' && req.method === 'POST') {
+            let body = '';
+            req.on('data', chunk => body += chunk);
+            req.on('end', async () => {
+                const data = JSON.parse(body);
+                // In Phase 1, we simulate a response if the agent isn't fully integrated
+                const response = {
+                    reply: `CEO Note: I have processed your instruction regarding "${data.command}". Adjusting autonomous vectors to maximize efficiency.`,
+                    thoughts: `Analyzing impact of command: "${data.command}". Recalculating portfolio ROI projections.`
+                };
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify(response));
+
+                // Also log it
+                await this.db.log('ceo', 'command', `User issued command: ${data.command}`, 'human-override');
+            });
+
+        } else if (pathname === '/api/launch' && req.method === 'POST') {
+            let body = '';
+            req.on('data', chunk => body += chunk);
+            req.on('end', async () => {
+                const data = JSON.parse(body);
+                // Create a basic business record
+                const business = {
+                    name: `Project ${data.idea.split(' ').slice(0, 2).join(' ')}`,
+                    industry: 'New Venture',
+                    status: 'initializing',
+                    progress: 10,
+                    current_phase: 'Market Validation',
+                    last_action: `Initializing launch sequence for: ${data.idea}`
+                };
+                await this.db.saveBusiness(business);
+                await this.db.log(business.name, 'milestone', `Empire Launch Initiated: ${data.idea}`, 'launch');
+
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ success: true, business }));
+            });
         } else {
             res.writeHead(404, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ error: 'Not found' }));
