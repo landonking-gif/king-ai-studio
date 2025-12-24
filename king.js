@@ -58,9 +58,12 @@ async function run() {
     if (fs.existsSync(path.join(ROOT_DIR, '.env'))) {
         console.log('\n🔐 [Syncing Secrets] Sending .env to AWS via secure tunnel...');
         try {
+            // Options for non-interactive SSH
+            const sshOpts = '-o StrictHostKeyChecking=no -o ConnectTimeout=10';
+
             // Ensure directory exists before scp
-            execSync(`ssh -i "${keyFile}" ubuntu@${serverIP} "mkdir -p ~/king-ai-studio"`, { stdio: 'ignore' });
-            execSync(`scp -i "${keyFile}" ".env" ubuntu@${serverIP}:~/king-ai-studio/.env`, { stdio: 'inherit' });
+            execSync(`ssh -i "${keyFile}" ${sshOpts} ubuntu@${serverIP} "mkdir -p \\$HOME/king-ai-studio"`, { stdio: 'ignore' });
+            execSync(`scp -i "${keyFile}" ${sshOpts} ".env" ubuntu@${serverIP}:~/king-ai-studio/.env`, { stdio: 'inherit' });
             console.log('✅ Secrets synced successfully.');
         } catch (e) {
             console.warn('⚠️ Could not sync .env securely. You may need to set it manually on the server.');
@@ -70,9 +73,10 @@ async function run() {
     console.log(`\n🔗 [3/4] Preparing remote setup on ${serverIP}...`);
 
     // Remote sequence: Clone/Update -> Install -> Init -> Daemon (in screen)
+    // We check for .git to see if the REPO is cloned, not just if the folder exists
     const remoteCmd = [
-        'if [ ! -d "~/king-ai-studio" ]; then git clone https://github.com/landonking-gif/king-ai-studio.git ~/king-ai-studio; fi',
-        'cd ~/king-ai-studio',
+        'if [ ! -d "$HOME/king-ai-studio/.git" ]; then git clone https://github.com/landonking-gif/king-ai-studio.git $HOME/king-ai-studio; fi',
+        'cd $HOME/king-ai-studio',
         'git fetch origin main',
         'git reset --hard origin/main',
         'npm install',
@@ -86,7 +90,8 @@ async function run() {
     try {
         console.log('\n⏳ Initiating remote update & environment synchronization...');
         console.log('   (This may take a minute while the server pulls data)');
-        execSync(`ssh -i "${keyFile}" ubuntu@${serverIP} "${remoteCmd}"`, { stdio: 'inherit' });
+        const sshOpts = '-o StrictHostKeyChecking=no';
+        execSync(`ssh -i "${keyFile}" ${sshOpts} ubuntu@${serverIP} "${remoteCmd}"`, { stdio: 'inherit' });
     } catch (e) {
         console.error('\n❌ Connection Failed. Check your network, server IP, and .pem key.');
         process.exit(1);
