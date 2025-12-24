@@ -97,10 +97,15 @@ async function run() {
     console.log('═══════════════════════════════════════');
 
     // Auto-open dashboard locally with enhanced retry
+    const dashboardUrl = `http://${serverIP}:3847`;
+    console.log('\n🌎 DASHBOARD COMMAND CENTER');
+    console.log('═══════════════════════════════════════');
+    console.log(`🔗 LINK: ${dashboardUrl}`);
+    console.log('═══════════════════════════════════════');
+
     try {
-        const dashboardUrl = `http://${serverIP}:3847`;
-        console.log(`\n🔍 Monitoring status: ${dashboardUrl}`);
-        process.stdout.write('   Waiting for engine to warm up');
+        console.log(`\n🔍 Connecting to engine...`);
+        process.stdout.write('   Waiting for warm-up');
 
         // Wait up to 60 seconds (Empire mode can take a bit to start everything)
         let attempts = 0;
@@ -117,8 +122,8 @@ async function run() {
                         signal: AbortSignal.timeout(1500)
                     });
 
-                    if (res.status === 200) {
-                        console.log('\n\n✅ 👑 THE KING IS LIVE! Opening Command Center...');
+                    if (res.ok) {
+                        console.log('\n\n✅ THE KING IS LIVE! Opening Dashboard...');
                         await open(dashboardUrl);
                         return true;
                     }
@@ -133,14 +138,14 @@ async function run() {
 
         const ready = await checkServer();
         if (!ready) {
-            console.log(`\n\n⚠️  The dashboard is taking longer than expected to respond.`);
-            console.log(`👉 You can try opening it manually: ${dashboardUrl}`);
+            console.log(`\n\n⚠️  The dashboard is taking longer than expected.`);
+            console.log(`👉 PLEASE NOTE: Ensure your AWS Security Group has Port 3847 OPEN to 0.0.0.0/0.`);
         }
     } catch (e) {
-        console.warn('\n❌ Local browser could not be launched. Please open manually.');
+        // Silently fail if browser can't open
     }
 
-    console.log('\n✨ Automation complete. Long live the King!');
+    console.log('\n👑 Long live the King!');
     rl.close();
 }
 
