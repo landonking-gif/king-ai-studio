@@ -62,9 +62,7 @@ async function run() {
         'git reset --hard origin/main',
         'npm install',
         'npm run init',
-        '# Kill existing empire screen if running',
         'screen -S empire -X quit || true',
-        '# Start in a fresh screen session',
         'screen -dmS empire npm run empire:daemon',
         'echo "🚀 EMPIRE IS NOW RUNNING IN THE BACKGROUND!"',
         'echo "🌐 View Dashboard: http://' + serverIP + ':3847"'
