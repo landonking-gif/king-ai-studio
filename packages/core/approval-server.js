@@ -326,9 +326,8 @@ Or visit the approval dashboard: http://${this.host}:${this.port}/
         if (pathname === '/api/all-data') {
             const businesses = await this.db.getAllBusinesses();
             const approvals = await this.db.getPendingApprovals();
-            // Fetch recent logs
-            const logResult = await this.db.pool.query('SELECT * FROM logs ORDER BY timestamp DESC LIMIT 100');
-            const logs = logResult.rows;
+            // Fetch recent logs using SQLite-compatible method
+            const logs = await this.db.getLogs(100);
 
             // Calculate total profit (heuristic for demo)
             const totalProfit = businesses.length * 1500; // Mock calculation

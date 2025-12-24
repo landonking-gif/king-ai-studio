@@ -228,6 +228,13 @@ export class Database {
         );
     }
 
+    async getLogs(limit = 100) {
+        return await this.db.all(
+            'SELECT * FROM logs ORDER BY timestamp DESC LIMIT ?',
+            [limit]
+        );
+    }
+
     // --- Empire State Methods ---
 
     async setEmpireState(key, value) {
