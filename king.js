@@ -102,18 +102,17 @@ async function run() {
     }
 
     try {
-        console.log('\n⏳ Running deployment script on server...');
-        console.log('   (Output is streaming directly from the server)');
+        console.log('\n⏳ Initiating remote deployment (this will stream live output)...');
         console.log('═══════════════════════════════════════════════════════════');
 
         const sshOpts = '-o StrictHostKeyChecking=no';
-        // Run the script and stream output
+        // Run the script and stream output directly to local terminal
         execSync(`ssh -i "${keyFile}" ${sshOpts} ubuntu@${serverIP} "./deploy.sh"`, { stdio: 'inherit' });
 
         console.log('═══════════════════════════════════════════════════════════');
     } catch (e) {
         console.error('\n❌ Deployment failed on the remote server.');
-        console.error('   Please check the logs above for details.');
+        console.error('   Please check the logs above for the specific error.');
         process.exit(1);
     }
 
