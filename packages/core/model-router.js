@@ -635,35 +635,44 @@ export class ModelRouter {
         const apiKey = this.getApiKey('gemini');
         if (!apiKey) throw new Error('No Gemini API key');
 
-        const response = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
-            {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: prompt }] }]
-                })
+        // ROI #21: Try both v1beta and v1 versions to ensure maximum compatibility
+        const versions = ['v1beta', 'v1'];
+        let lastError = null;
+
+        for (const version of versions) {
+            try {
+                const response = await fetch(
+                    `https://generativelanguage.googleapis.com/${version}/models/${model}:generateContent?key=${apiKey}`,
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: prompt }] }]
+                        })
+                    }
+                );
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const content = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (content) {
+                        return { success: true, content };
+                    }
+                    console.warn(`[ModelRouter] Gemini (${version}/${model}) returned empty candidates:`, JSON.stringify(data, null, 2));
+                } else if (response.status !== 404) {
+                    // If it's not a 404, capture the error but keep trying versions
+                    const errorData = await response.json().catch(() => ({}));
+                    lastError = errorData.error?.message || `Gemini error: ${response.status}`;
+                } else {
+                    // It's a 404, log it clearly and try the next version
+                    console.warn(`[ModelRouter] Gemini model ${model} not found with API version ${version} (404). Trying next version if available.`);
+                }
+            } catch (e) {
+                lastError = e.message;
             }
-        );
-
-        if (!response.ok) {
-            const error = await response.json();
-            console.error(`[ModelRouter] Gemini Error (${response.status}):`, JSON.stringify(error, null, 2));
-            throw new Error(error.error?.message || `Gemini error: ${response.status}`);
         }
 
-        const data = await response.json();
-        const content = data.candidates?.[0]?.content?.parts?.[0]?.text;
-
-        if (!content) {
-            console.warn(`[ModelRouter] Gemini returned empty response:`, JSON.stringify(data, null, 2));
-            return { success: false, error: 'Empty response from Gemini' };
-        }
-
-        return {
-            success: true,
-            content
-        };
+        throw new Error(lastError || `Gemini model ${model} not found or inaccessible`);
     }
 
     /**
