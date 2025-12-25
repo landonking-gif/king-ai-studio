@@ -55,7 +55,9 @@ async function run() {
         const ollamaUrl = `http://${serverIP}:11434`;
 
         if (envContent.includes('OLLAMA_URL=')) {
-            envContent = envContent.replace(/#?\s*OLLAMA_URL=.*/g, `OLLAMA_URL=${ollamaUrl}`);
+            // Robust regex: matches the line starting with OLLAMA_URL (potentially commented)
+            // but preserves anything else on other lines.
+            envContent = envContent.replace(/^.*OLLAMA_URL=.*$/m, `OLLAMA_URL=${ollamaUrl}`);
         } else {
             envContent += `\nOLLAMA_URL=${ollamaUrl}\n`;
         }
@@ -79,7 +81,8 @@ async function run() {
             execSync(`scp -i "${keyFile}" ${sshOpts} ".env" ubuntu@${serverIP}:~/king-ai-studio/.env`, { stdio: 'inherit' });
             console.log('✅ Secrets synced successfully.');
         } catch (e) {
-            console.warn('⚠️ Could not sync .env securely. You may need to set it manually on the server.');
+            console.warn(`⚠️ Could not sync .env securely: ${e.message}`);
+            console.warn('   Continuing anyway, but you may need to set it manually on the server.');
         }
     }
 
@@ -93,7 +96,7 @@ async function run() {
         execSync(`scp -i "${keyFile}" ${sshOpts} "${deployScript}" ubuntu@${serverIP}:~/deploy.sh`, { stdio: 'ignore' });
         execSync(`ssh -i "${keyFile}" ${sshOpts} ubuntu@${serverIP} "chmod +x ~/deploy.sh"`, { stdio: 'ignore' });
     } catch (e) {
-        console.error('❌ Failed to upload deployment script.');
+        console.error(`❌ Failed to upload deployment script: ${e.message}`);
         process.exit(1);
     }
 
