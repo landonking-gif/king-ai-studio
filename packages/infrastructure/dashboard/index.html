@@ -7,7 +7,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="King AI Studio">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👑</text></svg>">
+    <link rel="apple-touch-icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👑</text></svg>">
     <link rel="manifest" href="/manifest.json">
     <link rel="stylesheet" href="/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -70,6 +71,23 @@
             </nav>
 
             <div class="sidebar-footer">
+                <!-- Live CEO Status Widget -->
+                <div class="nav-group" style="padding: 0 20px; margin-bottom: 20px;">
+                    <span class="nav-group-title" style="color: var(--primary);">LIVE CEO STATUS</span>
+                    <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 5px;">Project:</div>
+                    <div id="sidebar-project"
+                        style="font-size: 0.9rem; font-weight: 700; color: #fff; margin-bottom: 10px;">Idle</div>
+
+                    <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 5px;">Step:</div>
+                    <div id="sidebar-step" style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 10px;">
+                        Waiting...</div>
+
+                    <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 5px;">Activity:</div>
+                    <div id="sidebar-activity"
+                        style="font-size: 0.75rem; color: var(--text-muted); font-style: italic; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        ...</div>
+                </div>
+
                 <div class="system-status">
                     <div class="status-indicator online"></div>
                     <div class="status-details">
@@ -89,8 +107,9 @@
                     <input type="text" placeholder="Search businesses, tasks, logs..." aria-label="Search">
                 </div>
                 <div class="top-bar-actions">
-                    <button class="btn-icon" id="theme-toggle" title="Toggle Theme" aria-label="Toggle between dark and light theme"><i class="fas fa-moon"></i></button>
-                    <button class="btn-icon notification-btn" id="notification-btn" title="Notifications" aria-label="View notifications">
+                    <!-- Theme Toggle Removed -->
+                    <button class="btn-icon notification-btn" id="notification-btn" title="Notifications"
+                        aria-label="View notifications">
                         <i class="fas fa-bell"></i>
                         <span class="notification-badge" id="notification-count" style="display: none;">0</span>
                     </button>
@@ -99,7 +118,8 @@
                         <span>New Venture</span>
                     </button>
                     <div class="user-profile" role="button" tabindex="0" aria-label="User profile menu">
-                        <img src="https://ui-avatars.com/api/?name=King&background=833ab4&color=fff" alt="King AI User Avatar">
+                        <img src="https://ui-avatars.com/api/?name=King&background=833ab4&color=fff"
+                            alt="King AI User Avatar">
                     </div>
                 </div>
             </header>
@@ -288,7 +308,8 @@
                                     <th data-sort="status" class="sortable">Status <i class="fas fa-sort"></i></th>
                                     <th data-sort="progress" class="sortable">Progress <i class="fas fa-sort"></i></th>
                                     <th data-sort="revenue" class="sortable">Revenue <i class="fas fa-sort"></i></th>
-                                    <th data-sort="last_action" class="sortable">Last Action <i class="fas fa-sort"></i></th>
+                                    <th data-sort="last_action" class="sortable">Last Action <i class="fas fa-sort"></i>
+                                    </th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -300,7 +321,8 @@
 
                     <div class="table-pagination">
                         <div class="pagination-info">
-                            Showing <span id="showing-start">1</span> to <span id="showing-end">10</span> of <span id="total-entries">0</span> entries
+                            Showing <span id="showing-start">1</span> to <span id="showing-end">10</span> of <span
+                                id="total-entries">0</span> entries
                         </div>
                         <div class="pagination-controls">
                             <button class="btn btn-sm" id="prev-page" disabled>

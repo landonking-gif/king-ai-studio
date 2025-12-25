@@ -1,5 +1,5 @@
 :root {
-    /* Color Palette */
+    /* Color Palette - Enforced Premium Dark Mode */
     --bg-dark: #07070e;
     --bg-main: #0c0c16;
     --sidebar-bg: #0a0a14;
@@ -31,20 +31,7 @@
     --transition-slow: 0.4s ease;
 }
 
-/* Light Theme */
-.light-theme {
-    --bg-dark: #f8f9fa;
-    --bg-main: #ffffff;
-    --sidebar-bg: #f1f3f4;
-    --card-bg: rgba(0, 0, 0, 0.03);
-    --card-hover: rgba(0, 0, 0, 0.05);
-    --glass-bg: rgba(0, 0, 0, 0.02);
-    --glass-border: rgba(0, 0, 0, 0.08);
-
-    --text-primary: #1a1a1a;
-    --text-secondary: #5f6368;
-    --text-muted: #9aa0a6;
-}
+/* Light Theme Removed - Dark Mode Enforced */
 
 /* Base Styles */
 * {
@@ -919,7 +906,7 @@ h1 {
 
 /* Loading States & Skeletons */
 .loading-skeleton {
-    background: linear-gradient(90deg, var(--card-bg) 25%, rgba(255,255,255,0.05) 50%, var(--card-bg) 75%);
+    background: linear-gradient(90deg, var(--card-bg) 25%, rgba(255, 255, 255, 0.05) 50%, var(--card-bg) 75%);
     background-size: 200% 100%;
     animation: loading 1.5s infinite;
     border-radius: var(--border-radius-md);
@@ -928,8 +915,13 @@ h1 {
 }
 
 @keyframes loading {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
 }
 
 .skeleton-text {
@@ -983,8 +975,15 @@ h1 {
 
 /* Pulse animation for loading indicators */
 @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
 }
 
 .loading-pulse {
@@ -1083,7 +1082,8 @@ hr {
     }
 
     .search-wrapper {
-        display: none; /* Hide search on mobile for space */
+        display: none;
+        /* Hide search on mobile for space */
     }
 
     .top-bar-actions {
@@ -1091,7 +1091,8 @@ hr {
     }
 
     .logo-text {
-        display: none; /* Hide text on mobile */
+        display: none;
+        /* Hide text on mobile */
     }
 
     .sidebar-nav {
@@ -1106,7 +1107,8 @@ hr {
     }
 
     .nav-group-title {
-        display: none; /* Hide group titles on mobile */
+        display: none;
+        /* Hide group titles on mobile */
     }
 
     .nav-item {
@@ -1171,11 +1173,13 @@ hr {
     }
 
     .top-bar-actions .btn span {
-        display: none; /* Hide button text on very small screens */
+        display: none;
+        /* Hide button text on very small screens */
     }
 
     .nav-item span {
-        display: none; /* Hide nav text, show only icons */
+        display: none;
+        /* Hide nav text, show only icons */
     }
 
     .nav-item {
@@ -1216,10 +1220,12 @@ hr {
 
 /* Touch-friendly interactions */
 @media (hover: none) and (pointer: coarse) {
+
     .business-card:hover,
     .btn:hover,
     .nav-item:hover {
-        transform: none; /* Remove hover effects on touch devices */
+        transform: none;
+        /* Remove hover effects on touch devices */
     }
 
     .business-card:active,
@@ -1272,7 +1278,7 @@ hr {
     background: var(--bg-main);
     border: 1px solid var(--glass-border);
     border-radius: var(--border-radius-md);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     z-index: 1000;
     overflow: hidden;
 }
@@ -1477,8 +1483,13 @@ hr {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes slideIn {
@@ -1486,6 +1497,7 @@ hr {
         opacity: 0;
         transform: scale(0.9) translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: scale(1) translateY(0);

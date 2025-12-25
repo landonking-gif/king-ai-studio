@@ -145,6 +145,7 @@ class Empire {
 
         // Connect CEO Command Interface
         this.approvalServer.setCommandHandler((cmd) => this.ceo.handleCommand(cmd));
+        this.approvalServer.setStatusProvider(() => this.ceo.getStatus());
 
         console.log('\n📊 System Status:');
         console.log(`   • AI: ${ollamaStatus.available ? '✅ Local Ready' : '🌐 Cloud Only'}`);
@@ -382,7 +383,7 @@ async function main() {
     if (args.includes('--daemon') || args.includes('-d')) {
         // Continuous mode
         await empire.runEmpireLoop({
-            loopInterval: 60 * 60 * 1000, // 1 hour
+            loopInterval: 10 * 1000, // 10 seconds (Continuous Mode)
             ideasPerCycle: 5
         });
     } else if (args.length > 0 && !args[0].startsWith('-')) {

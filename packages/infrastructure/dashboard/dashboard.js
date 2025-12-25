@@ -23,7 +23,9 @@ document.addEventListener('DOMContentLoaded', () => {
     initCommandCenter();
     initFullCommandCenter();
     initSearch();
-    initThemeToggle();
+    initSearch();
+    // initThemeToggle(); // Removed - Dark mode enforced
+    initNotifications();
     initNotifications();
     initHelpModal();
     initKeyboardShortcuts();
@@ -132,6 +134,10 @@ async function fetchData() {
         STATE.approvals = data.approvals || [];
         STATE.logs = data.logs || [];
         STATE.totalProfit = data.totalProfit || 0;
+
+        // Add ceoStatus to STATE if returned
+        STATE.ceoStatus = data.ceoStatus || {};
+
         STATE.lastSync = new Date();
         STATE.connectionStatus = 'online';
 
@@ -142,6 +148,11 @@ async function fetchData() {
 
         updateUI();
         applySearchFilter();
+
+        // Update Live Status
+        if (data.ceoStatus) {
+            updateLiveStatus(data.ceoStatus);
+        }
 
     } catch (error) {
         console.error('Core sync failed:', error);
@@ -174,6 +185,25 @@ function updateUI() {
     renderBusinesses();
     renderLogs();
     renderMiniApprovals();
+}
+
+function updateLiveStatus(status) {
+    const projectEl = document.getElementById('sidebar-project');
+    const stepEl = document.getElementById('sidebar-step');
+    const activityEl = document.getElementById('sidebar-activity');
+
+    if (projectEl) projectEl.textContent = status.activeBusiness?.idea || status.activeBusiness?.name || "Idle / Scouting";
+    if (stepEl) {
+        // Show current step or default to status text
+        const stepText = status.currentStep || status.status || "Waiting...";
+        stepEl.textContent = stepText.substring(0, 30) + (stepText.length > 30 ? '...' : '');
+    }
+    if (activityEl) {
+        // Show latest thought or log
+        const activity = status.recentThoughts || (status.recentProgress && status.recentProgress[0]?.message) || "...";
+        activityEl.textContent = activity;
+        activityEl.title = activity; // Tooltip
+    }
 }
 
 // --- Renderers ---
@@ -350,7 +380,7 @@ function renderAnalytics() {
                     titleColor: '#fff',
                     bodyColor: '#fff',
                     callbacks: {
-                        label: function(context) {
+                        label: function (context) {
                             return `Revenue: $${context.parsed.y.toLocaleString()}`;
                         }
                     }
@@ -361,7 +391,7 @@ function renderAnalytics() {
                     grid: { color: 'rgba(255,255,255,0.05)' },
                     border: { display: false },
                     ticks: {
-                        callback: function(value) {
+                        callback: function (value) {
                             return '$' + value.toLocaleString();
                         }
                     }
@@ -465,7 +495,7 @@ function renderBusinessPerformanceChart() {
                 label: 'Progress (%)',
                 data: businessData.map(b => b.progress),
                 backgroundColor: businessData.map(b => {
-                    switch(b.status) {
+                    switch (b.status) {
                         case 'running': return '#00ff88';
                         case 'paused': return '#ffcc00';
                         case 'stopped': return '#ff4d4d';
@@ -486,10 +516,10 @@ function renderBusinessPerformanceChart() {
                     titleColor: '#fff',
                     bodyColor: '#fff',
                     callbacks: {
-                        title: function(context) {
+                        title: function (context) {
                             return businessData[context[0].dataIndex].name;
                         },
-                        label: function(context) {
+                        label: function (context) {
                             const business = businessData[context.dataIndex];
                             return [
                                 `Progress: ${business.progress}%`,
@@ -595,9 +625,11 @@ function initCommandCenter() {
             const data = await res.json();
 
             setTimeout(() => {
-                addChatMessage('ceo', data.reply || "Command received. Adjusting autonomous vectors.");
+                const replyText = data.reply || "Command received. Adjusting autonomous vectors.";
+                addChatMessage('ceo', replyText, false, data.thoughts);
                 document.getElementById('ceo-status').textContent = 'IDLE';
-                if (data.thoughts) document.getElementById('ceo-thoughts').textContent = data.thoughts;
+                // Thoughts are now inside chat, so we can clear the static box if we prefer, or keep it as "Latest Focus"
+                if (data.thoughts) document.getElementById('ceo-thoughts').textContent = "Refining execution parameters...";
             }, 1000);
 
         } catch (e) {
@@ -645,17 +677,35 @@ function initFullCommandCenter() {
     input.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendCommand(); });
 }
 
-function addChatMessage(role, text, isFull = false) {
+// function initThemeToggle() ... Removed
+// function toggleTheme() ... Removed
+
+function addChatMessage(role, text, isFull = false, thoughts = null) {
     const containerId = isFull ? 'full-chat-container' : 'chat-container';
     const container = document.getElementById(containerId);
     if (!container) return;
 
     const msg = document.createElement('div');
     msg.className = `chat-msg ${role}`;
-    msg.innerHTML = `
-        <div class="msg-bubble">${text}</div>
-        <div class="msg-time">${new Date().toLocaleTimeString()}</div>
-    `;
+
+    let contentHtml = `<div class="msg-bubble">${text}</div>`;
+
+    // Add Thinking Toggle if thoughts exist
+    if (thoughts && role === 'ceo') {
+        const thoughtId = `thought-${Date.now()}`;
+        contentHtml += `
+            <button class="btn-text" style="font-size: 0.75rem; color: var(--primary); margin-top: 5px; opacity: 0.8;" onclick="const t=document.getElementById('${thoughtId}'); t.style.display = t.style.display === 'none' ? 'block' : 'none';">
+                💭 See Thinking
+            </button>
+            <div id="${thoughtId}" style="display: none; margin-top: 8px; padding: 10px; background: rgba(0,0,0,0.3); border-left: 2px solid var(--primary); font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: #a0a0b8; border-radius: 4px;">
+                ${thoughts}
+            </div>
+        `;
+    }
+
+    contentHtml += `<div class="msg-time">${new Date().toLocaleTimeString()}</div>`;
+    msg.innerHTML = contentHtml;
+
     container.appendChild(msg);
     container.scrollTop = container.scrollHeight;
 }

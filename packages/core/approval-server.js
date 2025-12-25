@@ -34,6 +34,10 @@ export class ApprovalServer {
         this.commandHandler = handler;
     }
 
+    setStatusProvider(provider) {
+        this.statusProvider = provider;
+    }
+
     async init() {
         await this.db.init();
         return this;
@@ -336,12 +340,19 @@ Or visit the approval dashboard: http://${this.host}:${this.port}/
             // Calculate total profit (heuristic for demo)
             const totalProfit = businesses.length * 1500; // Mock calculation
 
+            // Get live CEO status
+            let ceoStatus = null;
+            if (this.statusProvider) {
+                ceoStatus = this.statusProvider();
+            }
+
             res.writeHead(200, { 'Content-Type': 'application/json' });
             return res.end(JSON.stringify({
                 businesses,
                 approvals,
                 logs,
-                totalProfit
+                totalProfit,
+                ceoStatus
             }));
 
         } else if (pathname === '/api/pending') {
