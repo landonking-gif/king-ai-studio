@@ -283,6 +283,73 @@ export class CEOAgent {
         this.progressLog = [];
     }
 
+    /**
+     * Handle direct command from User/Admin (Chat Interface)
+     */
+    async handleCommand(command) {
+        console.log(`[CEOAgent] 🗣️ Received command: "${command}"`);
+
+        // 1. Basic status check (fast path)
+        if (command.toLowerCase() === 'status') {
+            const status = this.getStatus();
+            return {
+                reply: `Current Status: ${status.status.toUpperCase()}\nActive Venture: ${status.activeBusiness?.idea || 'None'}\nPending Approvals: ${status.pendingApprovals}`,
+                thoughts: "Providing immediate status report as requested."
+            };
+        }
+
+        // 2. AI Processing
+        const context = `
+You are the CEO Agent of King AI Studio.
+Current Status: ${this.activeBusiness ? 'Running Business: ' + this.activeBusiness.idea : 'Idle / Scouting'}
+Pending Approvals: ${this.getStatus().pendingApprovals}
+Recent Activity: ${this.progressLog.slice(-3).map(l => l.message).join(', ')}
+
+The User (Chairman/Admin) has sent this command: "${command}"
+
+Instructions:
+1. Interpret the intent (Question, Instruction, or Chat).
+2. Formulate a professional, executive response.
+3. If the command requires an action (like "stop", "pause", "start"), confirm you will do it (the system will handle the actual trigger separately for now).
+
+Return ONLY JSON:
+{
+  "reply": "Your response to the user",
+  "thoughts": "Your internal reasoning",
+  "intent": "question|instruction|chat",
+  "suggestedAction": "none|stop|pause|start_new"
+}`;
+
+        try {
+            const result = await this.ai.complete(context, 'fast', { format: 'json' });
+            if (result.success) {
+                let parsed = {};
+                try {
+                    parsed = JSON.parse(result.content);
+                } catch (e) {
+                    // Fallback if AI returns plain text
+                    parsed = { reply: result.content, thoughts: "Processed raw response.", intent: "chat" };
+                }
+
+                // Log the interaction
+                this.logProgress(`User Command: ${command} -> Intent: ${parsed.intent}`, 'chat');
+
+                return parsed;
+            } else {
+                return {
+                    reply: "I am having trouble connecting to my neural core. Please try again.",
+                    thoughts: "AI Connection Failed: " + result.error
+                };
+            }
+        } catch (e) {
+            console.error("Command handling error:", e);
+            return {
+                reply: "An internal error occurred while processing your command.",
+                thoughts: e.message
+            };
+        }
+    }
+
     async init() {
         await this.db.init();
     }

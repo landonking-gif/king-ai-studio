@@ -30,6 +30,10 @@ export class ApprovalServer {
         this.ensureDataDir();
     }
 
+    setCommandHandler(handler) {
+        this.commandHandler = handler;
+    }
+
     async init() {
         await this.db.init();
         return this;
@@ -369,11 +373,19 @@ Or visit the approval dashboard: http://${this.host}:${this.port}/
             req.on('data', chunk => body += chunk);
             req.on('end', async () => {
                 const data = JSON.parse(body);
-                // In Phase 1, we simulate a response if the agent isn't fully integrated
-                const response = {
-                    reply: `CEO Note: I have processed your instruction regarding "${data.command}". Adjusting autonomous vectors to maximize efficiency.`,
-                    thoughts: `Analyzing impact of command: "${data.command}". Recalculating portfolio ROI projections.`
-                };
+
+                let response;
+                if (this.commandHandler) {
+                    // Use real CEO Agent
+                    response = await this.commandHandler(data.command);
+                } else {
+                    // Phase 1 Simulation (Fallback)
+                    response = {
+                        reply: `Ceo Note: I have processed your instruction regarding "${data.command}". System is in simulation mode (no live agent connected).`,
+                        thoughts: `Simulated response. Waiting for live connection.`
+                    };
+                }
+
                 res.writeHead(200, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify(response));
 

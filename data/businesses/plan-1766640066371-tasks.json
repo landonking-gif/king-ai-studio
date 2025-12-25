@@ -1,0 +1,24 @@
+[
+  {
+    "id": "task-1766640078090-qalkn4",
+    "planId": "plan-1766640066371",
+    "phase": "Inception",
+    "name": "Infrastructure Deployment",
+    "description": "Deploy core AI engines",
+    "automated": true,
+    "requiresApproval": false,
+    "status": "pending",
+    "createdAt": "2025-12-25T05:21:18.090Z"
+  },
+  {
+    "id": "task-1766640078091-baelma",
+    "planId": "plan-1766640066371",
+    "phase": "Inception",
+    "name": "Initial Outreach",
+    "description": "Automated lead generation",
+    "automated": true,
+    "requiresApproval": false,
+    "status": "pending",
+    "createdAt": "2025-12-25T05:21:18.091Z"
+  }
+]

@@ -38,6 +38,23 @@ async function verifySystem() {
         console.error('Failed to start business:', result.error);
     }
 
+    // 3. Test Empire Loop Components (Idea Gen & Ranking)
+    console.log('\n--- Testing Empire Loop Heuristics ---');
+    console.log('Testing Idea Generation...');
+    const ideas = await ceo.businessAnalyzer.generateIdeas(3);
+    console.log('Ideas Generated:', ideas.success ? `SUCCESS (${ideas.count})` : 'FAILED', ideas.success ? ideas.ideas[0].name : ideas.error);
+
+    if (ideas.success) {
+        console.log('Testing Idea Ranking...');
+        const ranked = await ceo.businessAnalyzer.rankIdeas(ideas.ideas);
+        console.log('Ranking Result:', ranked.success ? 'SUCCESS' : 'FAILED', ranked.success ? ranked.rankedIdeas[0].name : ranked.error);
+        if (ranked.success && ranked.rankedIdeas[0].name) {
+            console.log('✅ Simulation engine correctly provided a "name" for the top idea.');
+        } else if (ranked.success) {
+            console.log('❌ Simulation engine FAILED: missing name in ranked results.');
+        }
+    }
+
     process.exit(0);
 }
 

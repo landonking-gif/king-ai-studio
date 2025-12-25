@@ -1,0 +1,63 @@
+{
+  "id": "plan-1766640066371",
+  "executiveSummary": "Autonomous AI-driven business scaling with minimal human oversight.",
+  "mission": "To automate value creation through recursive AI optimization.",
+  "vision": "A fully decentralized empire of self-sustaining businesses.",
+  "phases": [
+    {
+      "name": "Inception",
+      "duration": "1 week",
+      "objectives": [
+        "System setup",
+        "Market validation"
+      ],
+      "tasks": [
+        {
+          "name": "Infrastructure Deployment",
+          "description": "Deploy core AI engines",
+          "automated": true,
+          "requiresApproval": false
+        },
+        {
+          "name": "Initial Outreach",
+          "description": "Automated lead generation",
+          "automated": true,
+          "requiresApproval": false
+        }
+      ],
+      "milestones": [
+        "System live"
+      ],
+      "budget": "$500"
+    }
+  ],
+  "automationOpportunities": [
+    {
+      "area": "Lead Gen",
+      "benefit": "24/7 operations",
+      "complexity": "low"
+    }
+  ],
+  "legalRequirements": [
+    {
+      "requirement": "LLC Formation",
+      "when": "Post-revenue",
+      "cost": "$300"
+    }
+  ],
+  "financialProjections": {
+    "month1": {
+      "revenue": 1000,
+      "expenses": 200
+    }
+  },
+  "kpis": [
+    "Conversion rate",
+    "CAC",
+    "LTV"
+  ],
+  "successCriteria": "Self-sustaining revenue > $500/mo",
+  "analysisId": "analysis-1766639408025",
+  "status": "draft",
+  "createdAt": "2025-12-25T05:21:06.373Z"
+}

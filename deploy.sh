@@ -23,9 +23,31 @@ if ! command -v node &> /dev/null; then
     sudo apt-get install -y -qq curl
     curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
     sudo apt-get install -y -qq nodejs
+    sudo apt-get install -y -qq build-essential
 else
     log "Node.js: $(node -v)"
 fi
+
+# 2.5 OLLAMA SETUP
+if ! command -v ollama &> /dev/null; then
+    log "Installing Ollama..."
+    curl -fsSL https://ollama.com/install.sh | sh
+else
+    log "Ollama already installed."
+fi
+
+# Ensure Ollama Service is running
+if ! pgrep -x "ollama" > /dev/null; then
+    log "Starting Ollama Service..."
+    nohup ollama serve > /dev/null 2>&1 &
+    sleep 5 # Give it a moment to bind
+else
+    log "Ollama service is running."
+fi
+
+# Pull the model (idempotent - skips if already exists)
+log "Ensuring llama3.1:8b model is available..."
+ollama pull llama3.1:8b || log "⚠️ Warning: Failed to pull model. Check internet/disk."
 
 # 3. APP DIRECTORY
 APP_DIR="$HOME/king-ai-studio"

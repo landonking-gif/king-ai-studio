@@ -450,8 +450,32 @@ export class ModelRouter {
         let content = '';
 
         if (lowerPrompt.includes('return only valid json')) {
-            if (lowerPrompt.includes('business idea') || lowerPrompt.includes('analyze')) {
+            // Detection Logic for specific Task Outputs
+            if (lowerPrompt.includes('business idea') && (lowerPrompt.includes('generate') || lowerPrompt.includes('list'))) {
+                // Return an array of ideas
+                content = JSON.stringify([
+                    { name: "AI Lead Gen Engine", description: "Automated B2B outreach system using specialized agents.", industry: "Marketing", targetMarket: "SMEs", estimatedStartupCost: "$500" },
+                    { name: "CodeHealer SaaS", description: "Recursive bug fixing and documentation for legacy codebases.", industry: "Technology", targetMarket: "DevOps Teams", estimatedStartupCost: "$800" },
+                    { name: "Niche Affiliate Bot", description: "Hyper-localized product recommendations via social APIs.", industry: "E-commerce", targetMarket: "Shoppers", estimatedStartupCost: "$200" }
+                ]);
+            } else if (lowerPrompt.includes('rank') && lowerPrompt.includes('ideas')) {
+                // Return ranked array
+                content = JSON.stringify([
+                    { name: "AI Lead Gen Engine", scores: { viability: 9, profitability: 9, automation: 10, total: 47 }, recommendation: "Highest priority: Quickest ROI path.", rank: 1 },
+                    { name: "CodeHealer SaaS", scores: { viability: 8, profitability: 7, automation: 9, total: 39 }, recommendation: "Strong technical play.", rank: 2 },
+                    { name: "Niche Affiliate Bot", scores: { viability: 7, profitability: 8, automation: 8, total: 35 }, recommendation: "Good passive income stream.", rank: 3 }
+                ]);
+            } else if (lowerPrompt.includes('tasks') && lowerPrompt.includes('extract')) {
+                // Return tasks array
+                content = JSON.stringify([
+                    { id: "task-1", name: "Market Research", description: "Validate niche keywords", phase: "Research", automated: true, requiresApproval: false },
+                    { id: "task-2", name: "Infrastructure Setup", description: "Deploy cloud server", phase: "Tech", automated: true, requiresApproval: false },
+                    { id: "task-3", name: "Legal Incorporation", description: "File LLC papers", phase: "Legal", automated: false, requiresApproval: true }
+                ]);
+            } else if (lowerPrompt.includes('analyze') || lowerPrompt.includes('viability')) {
                 content = JSON.stringify({
+                    id: `analysis-${Date.now()}`,
+                    name: "Simulated Venture",
                     viability: { score: 8.5, reasoning: "Strong market potential identified via heuristic analysis." },
                     marketAnalysis: { targetAudience: "Niche B2B", marketSize: "Scaling", competition: "Moderate", differentiator: "AI Automation" },
                     revenueModel: { primary: "SaaS", secondary: ["Commission"], pricingStrategy: "Value-based" },
@@ -463,6 +487,7 @@ export class ModelRouter {
                 });
             } else if (lowerPrompt.includes('business plan')) {
                 content = JSON.stringify({
+                    id: `plan-${Date.now()}`,
                     executiveSummary: "Autonomous AI-driven business scaling with minimal human oversight.",
                     mission: "To automate value creation through recursive AI optimization.",
                     vision: "A fully decentralized empire of self-sustaining businesses.",

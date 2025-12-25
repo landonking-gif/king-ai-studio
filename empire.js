@@ -143,6 +143,9 @@ class Empire {
         console.log('👔 Initializing CEO Agent...');
         await this.ceo.init();
 
+        // Connect CEO Command Interface
+        this.approvalServer.setCommandHandler((cmd) => this.ceo.handleCommand(cmd));
+
         console.log('\n📊 System Status:');
         console.log(`   • AI: ${ollamaStatus.available ? '✅ Local Ready' : '🌐 Cloud Only'}`);
         console.log(`   • Email: ${this.emailNotifier ? '✅ Configured' : '⚠️ Not configured'}`);
