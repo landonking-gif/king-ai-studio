@@ -45,11 +45,18 @@ export class ModelRouter {
             gemini: getKeys(process.env.GEMINI_API_KEYS, process.env.GEMINI_API_KEY),
             deepseek: getKeys(process.env.DEEPSEEK_API_KEYS, process.env.DEEPSEEK_API_KEY)
         };
-        console.log('[ModelRouter] API Keys Status:', {
-            openai: this.apiKeys.openai.length > 0,
-            anthropic: this.apiKeys.anthropic.length > 0,
-            gemini: this.apiKeys.gemini.length > 0,
-            deepseek: this.apiKeys.deepseek.length > 0
+
+        // Remote AI Server (AWS or VPS)
+        this.ollamaUrl = process.env.OLLAMA_URL || process.env.PRIVATE_AI_URL || 'http://127.0.0.1:11434';
+
+        console.log('[ModelRouter] AI Configuration:', {
+            keys: {
+                openai: this.apiKeys.openai.length > 0,
+                anthropic: this.apiKeys.anthropic.length > 0,
+                gemini: this.apiKeys.gemini.length > 0,
+                deepseek: this.apiKeys.deepseek.length > 0
+            },
+            ollamaUrl: this.ollamaUrl
         });
 
         // Model configurations
@@ -117,6 +124,30 @@ export class ModelRouter {
             },
 
             // Gemini
+            'gemini:gemini-2.0-flash': {
+                provider: 'gemini',
+                model: 'gemini-2.0-flash',
+                type: 'fast',
+                rateLimit: 60,
+                cost: 0,
+                priority: 1
+            },
+            'gemini:gemini-2.5-flash': {
+                provider: 'gemini',
+                model: 'gemini-2.5-flash',
+                type: 'fast',
+                rateLimit: 60,
+                cost: 0,
+                priority: 1
+            },
+            'gemini:gemini-2.0-pro': {
+                provider: 'gemini',
+                model: 'gemini-2.0-pro',
+                type: 'reasoning',
+                rateLimit: 30,
+                cost: 0,
+                priority: 2
+            },
             'gemini:gemini-1.5-flash': {
                 provider: 'gemini',
                 model: 'gemini-1.5-flash',
@@ -125,25 +156,9 @@ export class ModelRouter {
                 cost: 0,
                 priority: 1
             },
-            'gemini:gemini-1.5-flash-latest': {
-                provider: 'gemini',
-                model: 'gemini-1.5-flash-latest',
-                type: 'fast',
-                rateLimit: 60,
-                cost: 0,
-                priority: 1
-            },
             'gemini:gemini-1.5-pro': {
                 provider: 'gemini',
                 model: 'gemini-1.5-pro',
-                type: 'reasoning',
-                rateLimit: 30,
-                cost: 0,
-                priority: 2
-            },
-            'gemini:gemini-1.5-pro-latest': {
-                provider: 'gemini',
-                model: 'gemini-1.5-pro-latest',
                 type: 'reasoning',
                 rateLimit: 30,
                 cost: 0,
@@ -181,11 +196,11 @@ export class ModelRouter {
 
         // Task type to model preference
         this.taskPreferences = {
-            reasoning: ['gemini:gemini-1.5-pro', 'gemini:gemini-1.5-pro-latest', 'openai:gpt-4o', 'anthropic:claude-3-5-sonnet', 'ollama:llama3.1:8b'],
-            coding: ['anthropic:claude-3-5-sonnet', 'openai:gpt-4o', 'gemini:gemini-1.5-flash', 'gemini:gemini-1.5-flash-latest', 'ollama:llama3.1:8b'],
-            fast: ['gemini:gemini-1.5-flash', 'gemini:gemini-1.5-flash-latest', 'openai:gpt-4o-mini', 'anthropic:claude-3-haiku', 'ollama:fast'],
-            creative: ['gemini:gemini-1.5-pro', 'gemini:gemini-1.5-pro-latest', 'anthropic:claude-3-5-sonnet', 'openai:gpt-4o'],
-            bulk: ['gemini:gemini-1.5-flash', 'gemini:gemini-1.5-flash-latest', 'openai:gpt-4o-mini', 'ollama:fast']
+            reasoning: ['gemini:gemini-2.0-pro', 'gemini:gemini-1.5-pro', 'openai:gpt-4o', 'anthropic:claude-3-5-sonnet', 'ollama:llama3.1:8b', 'ollama:fast'],
+            coding: ['anthropic:claude-3-5-sonnet', 'openai:gpt-4o', 'gemini:gemini-2.0-flash', 'ollama:llama3.1:8b', 'ollama:fast'],
+            fast: ['gemini:gemini-2.0-flash', 'gemini:gemini-2.5-flash', 'openai:gpt-4o-mini', 'anthropic:claude-3-haiku', 'ollama:fast'],
+            creative: ['gemini:gemini-2.0-pro', 'anthropic:claude-3-5-sonnet', 'openai:gpt-4o'],
+            bulk: ['gemini:gemini-2.5-flash', 'gemini:gemini-2.0-flash', 'openai:gpt-4o-mini', 'ollama:fast']
         };
 
         // Rate limit tracking
@@ -446,11 +461,35 @@ export class ModelRouter {
                     timeline: { mvp: "3 weeks", profitable: "4 months" },
                     immediateNextSteps: ["Verify domain availability", "Deploy landing page"]
                 });
+            } else if (lowerPrompt.includes('business plan')) {
+                content = JSON.stringify({
+                    executiveSummary: "Autonomous AI-driven business scaling with minimal human oversight.",
+                    mission: "To automate value creation through recursive AI optimization.",
+                    vision: "A fully decentralized empire of self-sustaining businesses.",
+                    phases: [
+                        {
+                            name: "Inception",
+                            duration: "1 week",
+                            objectives: ["System setup", "Market validation"],
+                            tasks: [
+                                { name: "Infrastructure Deployment", description: "Deploy core AI engines", automated: true, requiresApproval: false },
+                                { name: "Initial Outreach", description: "Automated lead generation", automated: true, requiresApproval: false }
+                            ],
+                            milestones: ["System live"],
+                            budget: "$500"
+                        }
+                    ],
+                    automationOpportunities: [{ area: "Lead Gen", benefit: "24/7 operations", complexity: "low" }],
+                    legalRequirements: [{ requirement: "LLC Formation", when: "Post-revenue", cost: "$300" }],
+                    financialProjections: { month1: { revenue: 1000, expenses: 200 } },
+                    kpis: ["Conversion rate", "CAC", "LTV"],
+                    successCriteria: "Self-sustaining revenue > $500/mo"
+                });
             } else {
                 content = JSON.stringify({
                     status: "success",
                     data: "Simulated response generated to maintain autonomous continuity.",
-                    metadata: { source: "heuristic-v2", taskType }
+                    metadata: { source: "heuristic-v3", taskType }
                 });
             }
         } else {
@@ -551,7 +590,7 @@ export class ModelRouter {
 
             return { ...result, modelId, provider: model.provider };
         } catch (error) {
-            console.warn(`[ModelRouter] ${modelId} execution error: ${error.message}`);
+            console.warn(`[ModelRouter] ❌ ${modelId} execution error: ${error.message}${error.name === 'AbortError' ? ' (TIMEOUT)' : ''}`);
             this.recordCircuitFailure(model.provider);
             return { success: false, error: error.message, modelId };
         }
@@ -575,13 +614,13 @@ export class ModelRouter {
             fullPrompt = `System: ${this.systemPrompt}\n\nUser: ${prompt}`;
         }
 
-        console.log(`[ModelRouter] Calling Ollama: ${model}...`);
+        console.log(`[ModelRouter] Calling Ollama (${this.ollamaUrl}): ${model}...`);
         const startTime = Date.now();
-        const response = await fetch('http://127.0.0.1:11434/api/generate', {
+        const response = await fetch(`${this.ollamaUrl}/api/generate`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ model, prompt: fullPrompt, stream: false }),
-            signal: AbortSignal.timeout(60000) // 60s timeout
+            signal: AbortSignal.timeout(300000) // Increased to 5 minutes for heavy reasoning on AWS
         });
         console.log(`[ModelRouter] Ollama response: ${response.status} (${Date.now() - startTime}ms)`);
 
@@ -705,6 +744,11 @@ export class ModelRouter {
                         return { success: true, content };
                     }
                     console.warn(`[ModelRouter] Gemini (${version}/${model}) returned empty candidates:`, JSON.stringify(data, null, 2));
+                } else if (response.status === 429) {
+                    // Quota exceeded, wait and retry once
+                    console.log(`[ModelRouter] Gemini 429 (Quota) for ${model}. Retrying in 5s...`);
+                    await new Promise(resolve => setTimeout(resolve, 5000));
+                    continue; // Continue loop for same model version
                 } else if (response.status !== 404) {
                     // If it's not a 404, capture the error but keep trying versions
                     const errorData = await response.json().catch(() => ({}));

@@ -49,6 +49,21 @@ async function run() {
     const serverIP = await question(`Enter AWS Server IP/DNS [Default: ${defaultIP}]: `) || defaultIP;
     const keyFile = 'king-ai-studio.pem';
 
+    // Update .env with new OLLAMA_URL
+    if (fs.existsSync(path.join(ROOT_DIR, '.env'))) {
+        let envContent = fs.readFileSync(path.join(ROOT_DIR, '.env'), 'utf8');
+        const ollamaUrl = `http://${serverIP}:11434`;
+
+        if (envContent.includes('OLLAMA_URL=')) {
+            envContent = envContent.replace(/#?\s*OLLAMA_URL=.*/g, `OLLAMA_URL=${ollamaUrl}`);
+        } else {
+            envContent += `\nOLLAMA_URL=${ollamaUrl}\n`;
+        }
+
+        fs.writeFileSync(path.join(ROOT_DIR, '.env'), envContent);
+        console.log(`✅ Updated .env with OLLAMA_URL: ${ollamaUrl}`);
+    }
+
     if (!fs.existsSync(path.join(ROOT_DIR, keyFile))) {
         console.error(`❌ Missing ${keyFile} in the root directory!`);
         process.exit(1);

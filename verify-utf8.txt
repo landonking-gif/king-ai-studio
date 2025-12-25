@@ -1,0 +1,63 @@
+﻿[dotenv@17.2.3] injecting env (14) from .env -- tip: ≡ƒùé∩╕Å backup and recover secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ≡ƒæÑ sync secrets across teammates & machines: https://dotenvx.com/ops
+--- King AI Studio Verification ---
+[ModelRouter] API Keys Status: { openai: false, anthropic: false, gemini: true, deepseek: false }
+Testing Model Router connectivity...
+
+Testing Ollama (Fast/llama3.2:1b)...
+[ModelRouter] Executing: gemini:gemini-2.0-flash
+[ModelRouter] Executing: gemini:gemini-2.5-flash
+[ModelRouter] Executing: ollama:fast
+[ModelRouter] Calling Ollama: llama3.2:1b...
+[ModelRouter] Ollama response: 200 (48850ms)
+Ollama Result: SUCCESS Ollama Fast OK
+
+Testing Gemini (Reasoning/2.0-pro)...
+[ModelRouter] Executing: gemini:gemini-2.0-pro
+[ModelRouter] Executing: gemini:gemini-1.5-pro
+[ModelRouter] Executing: ollama:llama3.1:8b
+[ModelRouter] Calling Ollama: llama3.1:8b...
+[ModelRouter] Public models failed/unavailable, entering Dark-Pool...
+[ModelRouter] Executing: private:llama-3-70b-stealth
+[ModelRouter] Routing to Dark-Pool Node [llama3.1:8b]
+[ModelRouter] Calling Ollama: llama3.1:8b...
+[ModelRouter] ≡ƒÜ¿ ALL ENGINES OFFLINE. Entering Autonomous Simulation Mode.
+Gemini Result: SUCCESS CEOs Note: Strategic vectors are solid. Proceeding with Phase 1 deployment using internal heuristic buffers. All systems nominal.
+
+--- Testing CEO Business Cycle ---
+[Database] Initialized at C:\Users\dmilner.AGV-040318-PC\Downloads\landon\king-ai-studio\data\king-ai.db
+Starting business for idea: A dropshipping store for AI-generated wall art
+[CEO START] ≡ƒÜÇ Starting new business analysis: A dropshipping store for AI-generated wall art
+[CEO PROGRESS] ≡ƒôè Analyzing business idea...
+[ModelRouter] Executing: gemini:gemini-2.0-pro
+[ModelRouter] Executing: gemini:gemini-1.5-pro
+[ModelRouter] Executing: ollama:llama3.1:8b
+[ModelRouter] Calling Ollama: llama3.1:8b...
+[ModelRouter] Public models failed/unavailable, entering Dark-Pool...
+[ModelRouter] Executing: private:llama-3-70b-stealth
+[ModelRouter] Routing to Dark-Pool Node [llama3.1:8b]
+[ModelRouter] Calling Ollama: llama3.1:8b...
+[ModelRouter] ≡ƒÜ¿ ALL ENGINES OFFLINE. Entering Autonomous Simulation Mode.
+[CEO MILESTONE] Γ£à Analysis complete!
+   Viability Score: 8.5/10
+   Target Market: Niche B2B
+   Revenue Model: SaaS
+[CEO PROGRESS] ≡ƒôï Creating detailed business plan...
+[ModelRouter] Executing: gemini:gemini-2.0-pro
+[ModelRouter] Executing: gemini:gemini-1.5-pro
+[ModelRouter] Executing: ollama:llama3.1:8b
+[ModelRouter] Calling Ollama: llama3.1:8b...
+[ModelRouter] Public models failed/unavailable, entering Dark-Pool...
+[ModelRouter] Executing: private:llama-3-70b-stealth
+[ModelRouter] Routing to Dark-Pool Node [llama3.1:8b]
+[ModelRouter] Calling Ollama: llama3.1:8b...
+[ModelRouter] ≡ƒÜ¿ ALL ENGINES OFFLINE. Entering Autonomous Simulation Mode.
+[CEO MILESTONE] Γ£à Business plan created!
+   Phases: undefined
+   Mission: undefined
+[CEO PROGRESS] ≡ƒô¥ Extracting actionable tasks...
+[CEO MILESTONE] Γ£à Found 0 tasks to execute
+   Ready to begin execution phase
+Success! Business Analyzed and Planned.
+Business ID: analysis-1766601607992
+Viability Score: 8.5

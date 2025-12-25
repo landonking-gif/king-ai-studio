@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+﻿import fetch from 'node-fetch';
 
 async function testOllama() {
     const url = 'http://localhost:11434/api/generate';

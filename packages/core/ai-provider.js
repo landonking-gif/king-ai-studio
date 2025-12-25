@@ -6,7 +6,7 @@
 export class AIProvider {
     constructor(config = {}) {
         this.provider = config.provider || 'ollama';
-        this.ollamaUrl = config.ollamaUrl || 'http://localhost:11434';
+        this.ollamaUrl = config.ollamaUrl || process.env.OLLAMA_URL || process.env.PRIVATE_AI_URL || 'http://localhost:11434';
         this.openaiKey = config.openaiKey || process.env.OPENAI_API_KEY;
         this.deepseekKey = config.deepseekKey || process.env.DEEPSEEK_API_KEY;
         this.geminiKey = config.geminiKey || process.env.GEMINI_API_KEY;

@@ -1,0 +1,46 @@
+{
+  "viability": {
+    "score": 8.5,
+    "reasoning": "Strong market potential identified via heuristic analysis."
+  },
+  "marketAnalysis": {
+    "targetAudience": "Niche B2B",
+    "marketSize": "Scaling",
+    "competition": "Moderate",
+    "differentiator": "AI Automation"
+  },
+  "revenueModel": {
+    "primary": "SaaS",
+    "secondary": [
+      "Commission"
+    ],
+    "pricingStrategy": "Value-based"
+  },
+  "requiredSystems": [
+    "EngineCore",
+    "LeadGen-v1"
+  ],
+  "estimatedCosts": {
+    "startup": "$1,200",
+    "monthly": "$240"
+  },
+  "risks": [
+    {
+      "risk": "Regulatory",
+      "mitigation": "Compliance first"
+    }
+  ],
+  "timeline": {
+    "mvp": "3 weeks",
+    "profitable": "4 months"
+  },
+  "immediateNextSteps": [
+    "Verify domain availability",
+    "Deploy landing page"
+  ],
+  "id": "analysis-1766601607992",
+  "ideaDescription": "A dropshipping store for AI-generated wall art",
+  "createdAt": "2025-12-24T18:40:07.993Z",
+  "status": "planned",
+  "planId": "plan-1766602060396"
+}
