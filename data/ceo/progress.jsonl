@@ -992,3 +992,28 @@
 {"timestamp":"2025-12-25T20:59:45.017Z","type":"info","message":"⏸️ Max concurrent businesses reached (384/3). Waiting..."}
 {"timestamp":"2025-12-25T20:59:55.125Z","type":"empire_cycle","message":"🔄 Empire Cycle 2 starting..."}
 {"timestamp":"2025-12-25T20:59:55.270Z","type":"progress","message":"💡 Generating business ideas..."}
+{"timestamp":"2025-12-25T21:08:46.831Z","type":"empire_start","message":"🏛️ EMPIRE MODE ACTIVATED\n   Ideas per cycle: 5\n   Max concurrent: 3\n   Loop interval: 0.16666666666666666 minutes"}
+{"timestamp":"2025-12-25T21:08:46.981Z","type":"empire_cycle","message":"🔄 Empire Cycle 1 starting..."}
+{"timestamp":"2025-12-25T21:08:47.108Z","type":"progress","message":"💡 Generating business ideas..."}
+{"timestamp":"2025-12-25T21:08:52.065Z","type":"milestone","message":"✅ Generated 3 ideas"}
+{"timestamp":"2025-12-25T21:08:52.515Z","type":"progress","message":"📊 Ranking ideas..."}
+{"timestamp":"2025-12-25T21:08:57.312Z","type":"milestone","message":"🎯 Top Idea Selected:\n   Name: AI Lead Gen Engine\n   Score: N/A/50\n   Recommendation: No recommendation"}
+{"timestamp":"2025-12-25T21:08:58.114Z","type":"info","message":"⏸️ Max concurrent businesses reached (384/3). Waiting..."}
+{"timestamp":"2025-12-25T21:09:08.205Z","type":"empire_cycle","message":"🔄 Empire Cycle 2 starting..."}
+{"timestamp":"2025-12-25T21:09:08.327Z","type":"progress","message":"💡 Generating business ideas..."}
+{"timestamp":"2025-12-25T21:09:13.191Z","type":"milestone","message":"✅ Generated 3 ideas"}
+{"timestamp":"2025-12-25T21:09:13.329Z","type":"progress","message":"📊 Ranking ideas..."}
+{"timestamp":"2025-12-25T21:09:15.764Z","type":"milestone","message":"🎯 Top Idea Selected:\n   Name: AI Lead Gen Engine\n   Score: N/A/50\n   Recommendation: No recommendation"}
+{"timestamp":"2025-12-25T21:09:16.314Z","type":"info","message":"⏸️ Max concurrent businesses reached (384/3). Waiting..."}
+{"timestamp":"2025-12-25T21:09:26.443Z","type":"empire_cycle","message":"🔄 Empire Cycle 3 starting..."}
+{"timestamp":"2025-12-25T21:09:26.560Z","type":"progress","message":"💡 Generating business ideas..."}
+{"timestamp":"2025-12-25T21:09:28.998Z","type":"milestone","message":"✅ Generated 3 ideas"}
+{"timestamp":"2025-12-25T21:09:29.154Z","type":"progress","message":"📊 Ranking ideas..."}
+{"timestamp":"2025-12-25T21:09:31.446Z","type":"milestone","message":"🎯 Top Idea Selected:\n   Name: AI Lead Gen Engine\n   Score: N/A/50\n   Recommendation: No recommendation"}
+{"timestamp":"2025-12-25T21:09:31.946Z","type":"info","message":"⏸️ Max concurrent businesses reached (384/3). Waiting..."}
+{"timestamp":"2025-12-25T21:09:42.090Z","type":"empire_cycle","message":"🔄 Empire Cycle 4 starting..."}
+{"timestamp":"2025-12-25T21:09:42.253Z","type":"progress","message":"💡 Generating business ideas..."}
+{"timestamp":"2025-12-25T21:09:44.711Z","type":"milestone","message":"✅ Generated 3 ideas"}
+{"timestamp":"2025-12-25T21:09:44.817Z","type":"progress","message":"📊 Ranking ideas..."}
+{"timestamp":"2025-12-25T21:09:47.242Z","type":"milestone","message":"🎯 Top Idea Selected:\n   Name: AI Lead Gen Engine\n   Score: N/A/50\n   Recommendation: No recommendation"}
+{"timestamp":"2025-12-25T21:09:47.762Z","type":"info","message":"⏸️ Max concurrent businesses reached (384/3). Waiting..."}

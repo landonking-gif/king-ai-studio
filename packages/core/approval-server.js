@@ -151,15 +151,18 @@ Or visit the approval dashboard: http://${this.host}:${this.port}/
     /**
      * Get pending approvals
      */
-    getPending() {
+    async getPending() {
+        if (this.db) {
+            return await this.db.getPendingApprovals();
+        }
         return this.loadApprovals().filter(a => a.status === 'pending');
     }
 
     /**
      * Generate web UI HTML
      */
-    generateDashboardHtml() {
-        const pending = this.getPending();
+    async generateDashboardHtml() {
+        const pending = await this.getPending();
         const all = this.loadApprovals();
 
         return `<!DOCTYPE html>
@@ -327,7 +330,7 @@ Or visit the approval dashboard: http://${this.host}:${this.port}/
 
         // Static File Serving
         if (pathname === '/' || pathname === '/index.html') {
-            const html = fs.readFileSync(path.join(this.dashboardDir, 'index.html'), 'utf-8');
+            const html = await this.generateDashboardHtml();
             res.writeHead(200, { 'Content-Type': 'text/html' });
             return res.end(html);
         } else if (pathname === '/style.css') {

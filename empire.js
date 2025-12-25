@@ -166,6 +166,8 @@ class Empire {
             console.log('   • Database: ✅ PostgreSQL (king_ai)');
             console.log('');
 
+            if (this.emailNotifier) await this.emailNotifier.init();
+
             return true;
         } catch (error) {
             console.error('Error during Empire initialization:', error);

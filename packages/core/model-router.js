@@ -132,17 +132,17 @@ export class ModelRouter {
                 cost: 0,
                 priority: 1
             },
-            'gemini:gemini-2.5-flash': {
+            'gemini:gemini-1.5-flash': {
                 provider: 'gemini',
-                model: 'gemini-2.5-flash',
-                type: 'fast',
-                rateLimit: 60,
+                model: 'gemini-1.5-flash',
+                type: 'reasoning',
+                rateLimit: 15,
                 cost: 0,
                 priority: 1
             },
-            'gemini:gemini-2.0-pro': {
+            'gemini:gemini-pro': {
                 provider: 'gemini',
-                model: 'gemini-2.0-pro',
+                model: 'gemini-pro',
                 type: 'reasoning',
                 rateLimit: 30,
                 cost: 0,
@@ -196,10 +196,10 @@ export class ModelRouter {
 
         // Task type to model preference
         this.taskPreferences = {
-            reasoning: ['gemini:gemini-2.0-pro', 'gemini:gemini-1.5-pro', 'openai:gpt-4o', 'anthropic:claude-3-5-sonnet', 'ollama:llama3.1:8b', 'ollama:fast'],
+            reasoning: ['gemini:gemini-pro', 'gemini:gemini-1.5-flash', 'openai:gpt-4o', 'anthropic:claude-3-5-sonnet', 'ollama:llama3.1:8b', 'ollama:fast'],
             coding: ['anthropic:claude-3-5-sonnet', 'openai:gpt-4o', 'gemini:gemini-2.0-flash', 'ollama:llama3.1:8b', 'ollama:fast'],
             fast: ['gemini:gemini-2.0-flash', 'gemini:gemini-2.5-flash', 'openai:gpt-4o-mini', 'anthropic:claude-3-haiku', 'ollama:fast'],
-            creative: ['gemini:gemini-2.0-pro', 'anthropic:claude-3-5-sonnet', 'openai:gpt-4o'],
+            creative: ['gemini:gemini-pro', 'anthropic:claude-3-5-sonnet', 'openai:gpt-4o'],
             bulk: ['gemini:gemini-2.5-flash', 'gemini:gemini-2.0-flash', 'openai:gpt-4o-mini', 'ollama:fast']
         };
 
