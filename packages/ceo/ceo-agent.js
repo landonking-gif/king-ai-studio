@@ -281,6 +281,7 @@ export class CEOAgent {
         this.activeBusiness = null;
         this.executionQueue = [];
         this.progressLog = [];
+        this.latestHighlight = "Idle / Scouting the next big opportunity.";
     }
 
     /**
@@ -372,6 +373,7 @@ Return ONLY JSON:
         };
 
         this.progressLog.push(entry);
+        this.latestHighlight = message; // Update highlight for real-time flow
         console.log(`[CEO ${type.toUpperCase()}] ${message}`);
 
         // Save to file
@@ -475,6 +477,7 @@ Return ONLY JSON:
         await this.logProgress(`🚀 Starting new business analysis: ${idea.description}`, 'start', true);
 
         // Step 1: Analyze the idea
+        this.latestHighlight = "Performing deep market analysis on new idea...";
         await this.logProgress('📊 Analyzing business idea...', 'progress');
         const analysisResult = await this.businessAnalyzer.analyzeIdea(idea);
 
@@ -592,7 +595,8 @@ Return ONLY JSON:
 
             // Execute automated task
             if (task.automated) {
-                await this.logProgress(`🤖 Auto-executing: ${task.name}`, 'progress');
+                this.latestHighlight = `Executing task: ${task.name}...`;
+                await this.logProgress(`🛠️ Executing: ${task.name}`, 'progress');
 
                 // Simulate or actually execute the task
                 const execResult = await this.executeTask(task);
@@ -743,6 +747,7 @@ Return a JSON object with:
             activeBusiness: this.activeBusiness,
             pendingApprovals: pendingApprovals.length,
             recentProgress: this.progressLog.slice(-10),
+            latestHighlight: this.latestHighlight,
             status: this.activeBusiness ? 'running' : 'idle'
         };
     }
@@ -840,6 +845,7 @@ Return a JSON object with:
 
             try {
                 // Step 1: Generate ideas
+                this.latestHighlight = "Scanning market for high-ROI opportunities...";
                 await this.logProgress('💡 Generating business ideas...', 'progress');
                 const ideasResult = await this.businessAnalyzer.generateIdeas(ideasPerCycle, criteria);
 
@@ -852,6 +858,7 @@ Return a JSON object with:
                 await this.logProgress(`✅ Generated ${ideasResult.count} ideas`, 'milestone');
 
                 // Step 2: Rank ideas
+                this.latestHighlight = `Ranking ${ideasResult.ideas.length} potential ventures...`;
                 await this.logProgress('📊 Ranking ideas...', 'progress');
                 const rankResult = await this.businessAnalyzer.rankIdeas(ideasResult.ideas);
 

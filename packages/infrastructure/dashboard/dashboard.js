@@ -199,10 +199,17 @@ function updateLiveStatus(status) {
         stepEl.textContent = stepText.substring(0, 30) + (stepText.length > 30 ? '...' : '');
     }
     if (activityEl) {
-        // Show latest thought or log
-        const activity = status.recentThoughts || (status.recentProgress && status.recentProgress[0]?.message) || "...";
-        activityEl.textContent = activity;
-        activityEl.title = activity; // Tooltip
+        // Show latest highlight with a "streaming" feel
+        const activity = status.latestHighlight || "...";
+        if (activityEl.textContent !== activity) {
+            activityEl.textContent = activity;
+            activityEl.title = activity;
+
+            // Simple trigger for "pulse" animation
+            activityEl.style.animation = 'none';
+            activityEl.offsetHeight; /* trigger reflow */
+            activityEl.style.animation = 'pulse-text 1s ease';
+        }
     }
 }
 
@@ -694,11 +701,13 @@ function addChatMessage(role, text, isFull = false, thoughts = null) {
     if (thoughts && role === 'ceo') {
         const thoughtId = `thought-${Date.now()}`;
         contentHtml += `
-            <button class="btn-text" style="font-size: 0.75rem; color: var(--primary); margin-top: 5px; opacity: 0.8;" onclick="const t=document.getElementById('${thoughtId}'); t.style.display = t.style.display === 'none' ? 'block' : 'none';">
-                💭 See Thinking
-            </button>
-            <div id="${thoughtId}" style="display: none; margin-top: 8px; padding: 10px; background: rgba(0,0,0,0.3); border-left: 2px solid var(--primary); font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: #a0a0b8; border-radius: 4px;">
-                ${thoughts}
+            <div class="thinking-wrapper" style="margin-top: 10px;">
+                <button class="btn-thinking" onclick="const t=document.getElementById('${thoughtId}'); t.classList.toggle('visible'); this.classList.toggle('active');">
+                    <i class="fas fa-brain"></i> See My Thinking
+                </button>
+                <div id="${thoughtId}" class="thought-popup">
+                    <div class="thought-content">${thoughts}</div>
+                </div>
             </div>
         `;
     }
