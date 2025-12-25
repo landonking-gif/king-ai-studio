@@ -29,7 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initNotifications();
     initHelpModal();
     initKeyboardShortcuts();
-    initGuidedTour();
     startSync();
     setupCharts();
     monitorConnection();
@@ -1101,12 +1100,7 @@ function initHelpModal() {
     }
 
     if (tourBtn) {
-        tourBtn.addEventListener('click', () => {
-            helpModal.classList.add('hidden');
-            if (window.startGuidedTour) {
-                window.startGuidedTour();
-            }
-        });
+        tourBtn.style.display = 'none'; // Hide if still in DOM
     }
 
     // Close on outside click
@@ -1203,142 +1197,7 @@ function initKeyboardShortcuts() {
     });
 }
 
-// --- Guided Tour ---
-function initGuidedTour() {
-    const tourSteps = [
-        {
-            title: 'Welcome to King AI Studio',
-            description: 'Your autonomous business empire dashboard. Let\'s take a quick tour.',
-            target: '.nav-item[data-tab="dashboard"]',
-            position: 'bottom'
-        },
-        {
-            title: 'Business Empire Overview',
-            description: 'Monitor all your automated businesses from this central hub.',
-            target: '.business-grid',
-            position: 'top'
-        },
-        {
-            title: 'Real-time Analytics',
-            description: 'Track performance metrics and growth trends across your empire.',
-            target: '.analytics-section',
-            position: 'left'
-        },
-        {
-            title: 'CEO Command Center',
-            description: 'Direct your AI CEO to optimize and expand your businesses.',
-            target: '.nav-item[data-tab="ceo"]',
-            position: 'bottom'
-        },
-        {
-            title: 'Ready to Scale',
-            description: 'Your AI empire is growing. Use the tools above to accelerate expansion.',
-            target: '.command-center',
-            position: 'top'
-        }
-    ];
-
-    let currentStep = 0;
-    let tourActive = false;
-
-    // Check if user has seen tour before
-    const tourSeen = localStorage.getItem('king-ai-tour-seen');
-    if (!tourSeen) {
-        // Auto-start tour for new users after a delay
-        setTimeout(() => startTour(), 2000);
-    }
-
-    function startTour() {
-        if (tourActive) return;
-        tourActive = true;
-        currentStep = 0;
-        showTourStep();
-    }
-
-    function showTourStep() {
-        const step = tourSteps[currentStep];
-        const overlay = document.getElementById('tour-overlay');
-        const tooltip = document.getElementById('tour-tooltip');
-        const title = document.getElementById('tour-title');
-        const description = document.getElementById('tour-description');
-        const stepIndicator = document.getElementById('tour-step');
-        const arrow = document.getElementById('tour-arrow');
-
-        title.textContent = step.title;
-        description.textContent = step.description;
-        stepIndicator.textContent = `${currentStep + 1} / ${tourSteps.length}`;
-
-        // Position tooltip
-        const target = document.querySelector(step.target);
-        if (target) {
-            const rect = target.getBoundingClientRect();
-            const tooltipRect = tooltip.getBoundingClientRect();
-
-            let top, left;
-
-            switch (step.position) {
-                case 'top':
-                    top = rect.top - tooltipRect.height - 10;
-                    left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
-                    arrow.style.transform = 'rotate(180deg)';
-                    break;
-                case 'bottom':
-                    top = rect.bottom + 10;
-                    left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
-                    arrow.style.transform = 'rotate(0deg)';
-                    break;
-                case 'left':
-                    top = rect.top + (rect.height / 2) - (tooltipRect.height / 2);
-                    left = rect.left - tooltipRect.width - 10;
-                    arrow.style.transform = 'rotate(90deg)';
-                    break;
-                case 'right':
-                    top = rect.top + (rect.height / 2) - (tooltipRect.height / 2);
-                    left = rect.right + 10;
-                    arrow.style.transform = 'rotate(-90deg)';
-                    break;
-            }
-
-            tooltip.style.top = `${Math.max(10, Math.min(window.innerHeight - tooltipRect.height - 10, top))}px`;
-            tooltip.style.left = `${Math.max(10, Math.min(window.innerWidth - tooltipRect.width - 10, left))}px`;
-        }
-
-        overlay.classList.remove('hidden');
-    }
-
-    function nextStep() {
-        currentStep++;
-        if (currentStep >= tourSteps.length) {
-            endTour();
-        } else {
-            showTourStep();
-        }
-    }
-
-    function prevStep() {
-        currentStep--;
-        if (currentStep < 0) {
-            currentStep = 0;
-        }
-        showTourStep();
-    }
-
-    function endTour() {
-        tourActive = false;
-        document.getElementById('tour-overlay').classList.add('hidden');
-        localStorage.setItem('king-ai-tour-seen', 'true');
-        showToast('Tour completed! Welcome to your AI empire.', 'success');
-    }
-
-    // Tour navigation
-    document.getElementById('tour-next').addEventListener('click', nextStep);
-    document.getElementById('tour-prev').addEventListener('click', prevStep);
-    document.getElementById('tour-skip').addEventListener('click', endTour);
-
-    // Make tour available via help menu
-    window.startGuidedTour = startTour;
-}
-
+// --- Data Export Helpers ---
 function exportToCSV(filename) {
     // Prepare CSV data
     let csvContent = 'Business Name,Industry,Status,Progress,Last Action\n';
