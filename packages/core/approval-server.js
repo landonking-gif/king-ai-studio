@@ -330,7 +330,7 @@ Or visit the approval dashboard: http://${this.host}:${this.port}/
 
         // Static File Serving
         if (pathname === '/' || pathname === '/index.html') {
-            const html = await this.generateDashboardHtml();
+            const html = fs.readFileSync(path.join(this.dashboardDir, 'index.html'), 'utf-8');
             res.writeHead(200, { 'Content-Type': 'text/html' });
             return res.end(html);
         } else if (pathname === '/style.css') {
