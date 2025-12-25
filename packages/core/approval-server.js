@@ -341,6 +341,25 @@ Or visit the approval dashboard: http://${this.host}:${this.port}/
             const js = fs.readFileSync(path.join(this.dashboardDir, 'dashboard.js'), 'utf-8');
             res.writeHead(200, { 'Content-Type': 'application/javascript' });
             return res.end(js);
+        } else if (pathname.startsWith('/assets/')) {
+            const assetPath = path.join(this.dashboardDir, pathname);
+            if (fs.existsSync(assetPath)) {
+                const ext = path.extname(assetPath);
+                const contentType = ext === '.css' ? 'text/css' : ext === '.js' ? 'application/javascript' : 'text/plain';
+                const content = fs.readFileSync(assetPath);
+                res.writeHead(200, { 'Content-Type': contentType });
+                return res.end(content);
+            } else {
+                res.writeHead(404, { 'Content-Type': 'text/plain' });
+                return res.end('Asset not found');
+            }
+        } else if (pathname === '/favicon.ico' || pathname === '/manifest.json' || pathname === '/robots.txt' || pathname === '/placeholder.svg') {
+            const filePath = path.join(this.dashboardDir, pathname);
+            if (fs.existsSync(filePath)) {
+                const content = fs.readFileSync(filePath);
+                res.writeHead(200, { 'Content-Type': 'text/plain' });
+                return res.end(content);
+            }
         }
 
         // API Endpoints
