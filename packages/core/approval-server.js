@@ -107,35 +107,45 @@ Or visit the approval dashboard: http://${this.host}:${this.port}/
     }
 
     async approve(id, notes = '') {
-        if (this.db) {
-            const result = await this.db.pool.query('SELECT * FROM approvals WHERE id = $1 AND status = $2', [id, 'pending']);
-            if (result.rows.length > 0) {
-                const app = result.rows[0];
-                app.status = 'approved';
-                app.decided_at = new Date().toISOString();
-                app.notes = notes;
-                await this.db.saveApproval(app);
-                this.onApproval(app);
-                return { success: true, item: app };
+        try {
+            if (this.db) {
+                const result = await this.db.pool.query('SELECT * FROM approvals WHERE id = $1 AND status = $2', [id, 'pending']);
+                if (result.rows.length > 0) {
+                    const app = result.rows[0];
+                    app.status = 'approved';
+                    app.decided_at = new Date().toISOString();
+                    app.notes = notes;
+                    await this.db.saveApproval(app);
+                    this.onApproval(app);
+                    return { success: true, item: app };
+                }
             }
+            return { success: false, error: 'Approval not found in DB' };
+        } catch (error) {
+            console.error('Error in approve:', error);
+            return { success: false, error: error.message };
         }
-        return { success: false, error: 'Approval not found in DB' };
     }
 
     async reject(id, reason = '') {
-        if (this.db) {
-            const result = await this.db.pool.query('SELECT * FROM approvals WHERE id = $1 AND status = $2', [id, 'pending']);
-            if (result.rows.length > 0) {
-                const app = result.rows[0];
-                app.status = 'rejected';
-                app.decided_at = new Date().toISOString();
-                app.notes = reason;
-                await this.db.saveApproval(app);
-                this.onRejection(app);
-                return { success: true, item: app };
+        try {
+            if (this.db) {
+                const result = await this.db.pool.query('SELECT * FROM approvals WHERE id = $1 AND status = $2', [id, 'pending']);
+                if (result.rows.length > 0) {
+                    const app = result.rows[0];
+                    app.status = 'rejected';
+                    app.decided_at = new Date().toISOString();
+                    app.notes = reason;
+                    await this.db.saveApproval(app);
+                    this.onRejection(app);
+                    return { success: true, item: app };
+                }
             }
+            return { success: false, error: 'Approval not found in DB' };
+        } catch (error) {
+            console.error('Error in reject:', error);
+            return { success: false, error: error.message };
         }
-        return { success: false, error: 'Approval not found in DB' };
     }
 
     /**
@@ -332,98 +342,173 @@ Or visit the approval dashboard: http://${this.host}:${this.port}/
 
         // API Endpoints
         if (pathname === '/api/all-data') {
-            const businesses = await this.db.getAllBusinesses();
-            const approvals = await this.db.getPendingApprovals();
-            // Fetch recent logs using SQLite-compatible method
-            const logs = await this.db.getLogs(100);
+            try {
+                const businesses = await this.db.getAllBusinesses();
+                const approvals = await this.db.getPendingApprovals();
+                // Fetch recent logs using SQLite-compatible method
+                const logs = await this.db.getLogs(100);
 
-            // Calculate total profit (heuristic for demo)
-            const totalProfit = businesses.length * 1500; // Mock calculation
+                // Calculate total profit (heuristic for demo)
+                const totalProfit = businesses.length * 1500; // Mock calculation
 
-            // Get live CEO status
-            let ceoStatus = null;
-            if (this.statusProvider) {
-                ceoStatus = this.statusProvider();
+                // Get live CEO status
+                let ceoStatus = null;
+                if (this.statusProvider) {
+                    ceoStatus = this.statusProvider();
+                }
+
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                return res.end(JSON.stringify({
+                    businesses,
+                    approvals,
+                    logs,
+                    totalProfit,
+                    ceoStatus
+                }));
+            } catch (error) {
+                console.error('Error in /api/all-data:', error);
+                res.writeHead(500, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: error.message }));
             }
 
-            res.writeHead(200, { 'Content-Type': 'application/json' });
-            return res.end(JSON.stringify({
-                businesses,
-                approvals,
-                logs,
-                totalProfit,
-                ceoStatus
-            }));
-
         } else if (pathname === '/api/pending') {
-            res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify(await this.db.getPendingApprovals()));
+            try {
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify(await this.db.getPendingApprovals()));
+            } catch (error) {
+                console.error('Error in /api/pending:', error);
+                res.writeHead(500, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: error.message }));
+            }
 
         } else if (pathname === '/api/approve' && req.method === 'POST') {
             let body = '';
             req.on('data', chunk => body += chunk);
             req.on('end', async () => {
-                const data = JSON.parse(body);
-                const result = await this.approve(data.id, data.notes);
-                res.writeHead(200, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify(result));
+                try {
+                    const data = JSON.parse(body);
+                    const result = await this.approve(data.id, data.notes);
+                    res.writeHead(200, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify(result));
+                } catch (error) {
+                    console.error('Error in /api/approve:', error);
+                    res.writeHead(500, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ success: false, error: error.message }));
+                }
             });
 
         } else if (pathname === '/api/reject' && req.method === 'POST') {
             let body = '';
             req.on('data', chunk => body += chunk);
             req.on('end', async () => {
-                const data = JSON.parse(body);
-                const result = await this.reject(data.id, data.reason);
-                res.writeHead(200, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify(result));
+                try {
+                    const data = JSON.parse(body);
+                    const result = await this.reject(data.id, data.reason);
+                    res.writeHead(200, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify(result));
+                } catch (error) {
+                    console.error('Error in /api/reject:', error);
+                    res.writeHead(500, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ success: false, error: error.message }));
+                }
             });
 
         } else if (pathname === '/api/command' && req.method === 'POST') {
             let body = '';
             req.on('data', chunk => body += chunk);
             req.on('end', async () => {
-                const data = JSON.parse(body);
+                try {
+                    const data = JSON.parse(body);
 
-                let response;
-                if (this.commandHandler) {
-                    // Use real CEO Agent
-                    response = await this.commandHandler(data.command);
-                } else {
-                    // Phase 1 Simulation (Fallback)
-                    response = {
-                        reply: `Ceo Note: I have processed your instruction regarding "${data.command}". System is in simulation mode (no live agent connected).`,
-                        thoughts: `Simulated response. Waiting for live connection.`
-                    };
+                    let response;
+                    if (this.commandHandler) {
+                        // Use real CEO Agent
+                        response = await this.commandHandler(data.command);
+                    } else {
+                        // Phase 1 Simulation (Fallback)
+                        response = {
+                            reply: `Ceo Note: I have processed your instruction regarding "${data.command}". System is in simulation mode (no live agent connected).`,
+                            thoughts: `Simulated response. Waiting for live connection.`
+                        };
+                    }
+
+                    res.writeHead(200, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify(response));
+
+                    // Also log it
+                    await this.db.log('ceo', 'command', `User issued command: ${data.command}`, 'human-override');
+                } catch (error) {
+                    console.error('Error in /api/command:', error);
+                    res.writeHead(500, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ success: false, error: error.message }));
                 }
-
-                res.writeHead(200, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify(response));
-
-                // Also log it
-                await this.db.log('ceo', 'command', `User issued command: ${data.command}`, 'human-override');
             });
 
         } else if (pathname === '/api/launch' && req.method === 'POST') {
             let body = '';
             req.on('data', chunk => body += chunk);
             req.on('end', async () => {
-                const data = JSON.parse(body);
-                // Create a basic business record
-                const business = {
-                    name: `Project ${data.idea.split(' ').slice(0, 2).join(' ')}`,
-                    industry: 'New Venture',
-                    status: 'initializing',
-                    progress: 10,
-                    current_phase: 'Market Validation',
-                    last_action: `Initializing launch sequence for: ${data.idea}`
-                };
-                await this.db.saveBusiness(business);
-                await this.db.log(business.name, 'milestone', `Empire Launch Initiated: ${data.idea}`, 'launch');
+                try {
+                    const data = JSON.parse(body);
+                    // Create a basic business record
+                    const business = {
+                        name: `Project ${data.idea.split(' ').slice(0, 2).join(' ')}`,
+                        industry: 'New Venture',
+                        status: 'initializing',
+                        progress: 10,
+                        current_phase: 'Market Validation',
+                        last_action: `Initializing launch sequence for: ${data.idea}`
+                    };
+                    await this.db.saveBusiness(business);
+                    await this.db.log(business.name, 'milestone', `Empire Launch Initiated: ${data.idea}`, 'launch');
 
-                res.writeHead(200, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ success: true, business }));
+                    res.writeHead(200, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ success: true, business }));
+                } catch (error) {
+                    console.error('Error in /api/launch:', error);
+                    res.writeHead(500, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ success: false, error: error.message }));
+                }
             });
+
+        } else if (pathname === '/health') {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ status: 'ok', timestamp: new Date().toISOString() }));
+
+        } else if (pathname.startsWith('/approve/')) {
+            const id = pathname.split('/approve/')[1];
+            try {
+                const result = await this.approve(id);
+                if (result.success) {
+                    res.writeHead(302, { 'Location': '/' });
+                    res.end();
+                } else {
+                    res.writeHead(400, { 'Content-Type': 'text/plain' });
+                    res.end('Approval failed: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Error in /approve:', error);
+                res.writeHead(500, { 'Content-Type': 'text/plain' });
+                res.end('Internal server error');
+            }
+
+        } else if (pathname.startsWith('/reject/')) {
+            const id = pathname.split('/reject/')[1];
+            try {
+                const result = await this.reject(id);
+                if (result.success) {
+                    res.writeHead(302, { 'Location': '/' });
+                    res.end();
+                } else {
+                    res.writeHead(400, { 'Content-Type': 'text/plain' });
+                    res.end('Rejection failed: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Error in /reject:', error);
+                res.writeHead(500, { 'Content-Type': 'text/plain' });
+                res.end('Internal server error');
+            }
+
         } else {
             res.writeHead(404, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ error: 'Not found' }));

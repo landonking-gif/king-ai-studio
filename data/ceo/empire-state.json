@@ -1,29 +1,10 @@
 {
-  "isRunning": false,
-  "startedAt": "2025-12-25T05:23:52.556Z",
+  "isRunning": true,
+  "startedAt": "2025-12-25T20:59:34.808Z",
   "cycleCount": 0,
   "businessesStarted": [],
   "config": {
-    "loopInterval": 3600000,
-    "ideasPerCycle": 5,
-    "maxConcurrentBusinesses": 3,
-    "criteria": {
-      "budget": "$500 - $5,000",
-      "timeToProfit": "1-3 months",
-      "automationLevel": "High - businesses that can run with minimal human input",
-      "industries": [
-        "Digital Services",
-        "SaaS",
-        "Automation",
-        "AI Tools",
-        "Content"
-      ],
-      "skills": [
-        "AI/ML",
-        "Web Development",
-        "Marketing Automation",
-        "Content Creation"
-      ]
-    }
+    "loopInterval": 10000,
+    "ideasPerCycle": 5
   }
 }

@@ -31,6 +31,17 @@ import { TaskDispatcher } from './packages/orchestrator/task-dispatcher.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Global error handlers
+process.on('uncaughtException', (error) => {
+    console.error('Uncaught Exception:', error);
+    process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+    process.exit(1);
+});
+
 class Empire {
     constructor(config = {}) {
         this.config = config;
@@ -108,134 +119,149 @@ class Empire {
      * Initialize the empire
      */
     async initialize() {
-        console.log('╔══════════════════════════════════════════════════════════╗');
-        console.log('║           👑 KING AI STUDIO - AUTONOMOUS EMPIRE          ║');
-        console.log('╠══════════════════════════════════════════════════════════╣');
-        console.log('║  The AI that builds businesses while you sleep           ║');
-        console.log('╚══════════════════════════════════════════════════════════╝\n');
+        try {
+            console.log('╔══════════════════════════════════════════════════════════╗');
+            console.log('║           👑 KING AI STUDIO - AUTONOMOUS EMPIRE          ║');
+            console.log('╠══════════════════════════════════════════════════════════╣');
+            console.log('║  The AI that builds businesses while you sleep           ║');
+            console.log('╚══════════════════════════════════════════════════════════╝\n');
 
-        // Initialize Database
-        console.log('🗄️ Initializing Database...');
-        await this.db.init();
+            // Initialize Database
+            console.log('🗄️ Initializing Database...');
+            await this.db.init();
 
-        // Check AI availability
-        console.log('🔍 Checking AI availability...');
-        const ollamaStatus = await this.ai.checkOllama();
-        if (!ollamaStatus.available) {
-            console.log('⚠️ Ollama is not running. Falling back to Cloud/Simulation Mode.');
-            this.simulationMode = true;
-        } else {
-            console.log(`✅ Ollama connected (${ollamaStatus.models.length} models available)`);
-            this.simulationMode = false;
+            // Check AI availability
+            console.log('🔍 Checking AI availability...');
+            const ollamaStatus = await this.ai.checkOllama();
+            if (!ollamaStatus.available) {
+                console.log('⚠️ Ollama is not running. Falling back to Cloud/Simulation Mode.');
+                this.simulationMode = true;
+            } else {
+                console.log(`✅ Ollama connected (${ollamaStatus.models.length} models available)`);
+                this.simulationMode = false;
+            }
+
+            // Start approval server
+            console.log('🌐 Starting dashboard server...');
+            await this.approvalServer.init();
+            await this.approvalServer.start();
+
+            // Start Orchestrator
+            console.log('🧠 Starting Meta-Orchestrator...');
+            await this.orchestrator.init();
+            await this.orchestrator.start();
+
+            // Initialize CEO
+            console.log('👔 Initializing CEO Agent...');
+            await this.ceo.init();
+
+            // Connect CEO Command Interface
+            this.approvalServer.setCommandHandler((cmd) => this.ceo.handleCommand(cmd));
+            this.approvalServer.setStatusProvider(() => this.ceo.getStatus());
+
+            console.log('\n📊 System Status:');
+            console.log(`   • AI: ${ollamaStatus.available ? '✅ Local Ready' : '🌐 Cloud Only'}`);
+            console.log(`   • Email: ${this.emailNotifier ? '✅ Configured' : '⚠️ Not configured'}`);
+            console.log(`   • Dashboard: http://localhost:${this.approvalServer.port}`);
+            console.log('   • Database: ✅ PostgreSQL (king_ai)');
+            console.log('');
+
+            return true;
+        } catch (error) {
+            console.error('Error during Empire initialization:', error);
+            throw error;
         }
-
-        // Start approval server
-        console.log('🌐 Starting dashboard server...');
-        await this.approvalServer.init();
-        await this.approvalServer.start();
-
-        // Start Orchestrator
-        console.log('🧠 Starting Meta-Orchestrator...');
-        await this.orchestrator.init();
-        await this.orchestrator.start();
-
-        // Initialize CEO
-        console.log('👔 Initializing CEO Agent...');
-        await this.ceo.init();
-
-        // Connect CEO Command Interface
-        this.approvalServer.setCommandHandler((cmd) => this.ceo.handleCommand(cmd));
-        this.approvalServer.setStatusProvider(() => this.ceo.getStatus());
-
-        console.log('\n📊 System Status:');
-        console.log(`   • AI: ${ollamaStatus.available ? '✅ Local Ready' : '🌐 Cloud Only'}`);
-        console.log(`   • Email: ${this.emailNotifier ? '✅ Configured' : '⚠️ Not configured'}`);
-        console.log(`   • Dashboard: http://localhost:${this.approvalServer.port}`);
-        console.log('   • Database: ✅ PostgreSQL (king_ai)');
-        console.log('');
-
-        return true;
     }
 
     /**
      * Run a single business from an idea via Orchestrator
      */
     async runBusiness(idea) {
-        console.log(`\n🚀 Submitting business idea to Orchestrator: "${idea}"\n`);
+        try {
+            console.log(`\n🚀 Submitting business idea to Orchestrator: "${idea}"\n`);
 
-        return this.orchestrator.submitTask({
-            module: 'ceo',
-            action: 'start',
-            description: `Build business: ${idea}`,
-            data: { description: idea },
-            impact: 9,
-            urgency: 8
-        });
+            return this.orchestrator.submitTask({
+                module: 'ceo',
+                action: 'start',
+                description: `Build business: ${idea}`,
+                data: { description: idea },
+                impact: 9,
+                urgency: 8
+            });
+        } catch (error) {
+            console.error('Error in runBusiness:', error);
+            throw error;
+        }
     }
 
     /**
      * Execute plan using the task dispatcher
      */
     async executePlanWithDispatcher() {
-        const status = this.ceo.getStatus();
-        if (!status.activeBusiness) {
-            return { success: false, error: 'No active business' };
-        }
+        try {
+            const status = this.ceo.getStatus();
+            if (!status.activeBusiness) {
+                return { success: false, error: 'No active business' };
+            }
 
-        const tasks = status.activeBusiness.tasks || [];
-        const results = [];
+            const tasks = status.activeBusiness.tasks || [];
+            const results = [];
 
-        for (const task of tasks) {
-            if (task.status === 'completed') continue;
+            for (const task of tasks) {
+                if (task.status === 'completed') continue;
 
-            console.log(`\n📌 Task: ${task.name || task.title}`);
+                console.log(`\n📌 Task: ${task.name || task.title}`);
 
-            // Check if task requires approval
-            const policyCheck = this.policyEngine.evaluate(task);
+                // Check if task requires approval
+                const policyCheck = this.policyEngine.evaluate(task);
 
-            if (policyCheck.requiresApproval) {
-                console.log(`⏸️ Approval required: ${policyCheck.reason}`);
+                if (policyCheck.requiresApproval) {
+                    console.log(`⏸️ Approval required: ${policyCheck.reason}`);
 
-                // Add to approval queue
-                this.approvalServer.addApproval({
-                    taskType: task.type || 'business_task',
-                    description: (task.name || task.title) + '\n' + (task.description || ''),
-                    data: task,
-                    riskLevel: policyCheck.reason
+                    // Add to approval queue
+                    this.approvalServer.addApproval({
+                        taskType: task.type || 'business_task',
+                        description: (task.name || task.title) + '\n' + (task.description || ''),
+                        data: task,
+                        riskLevel: policyCheck.reason
+                    });
+
+                    // Wait for approval
+                    const approved = await this.waitForApproval(task);
+                    if (!approved) {
+                        console.log('❌ Task rejected or timed out');
+                        results.push({ task: task.name || task.title, status: 'rejected' });
+                        continue;
+                    }
+                }
+
+                // Dispatch the task
+                const dispatchResult = await this.dispatcher.dispatch({
+                    type: this.inferTaskType(task),
+                    description: task.name || task.title,
+                    data: task
                 });
 
-                // Wait for approval
-                const approved = await this.waitForApproval(task);
-                if (!approved) {
-                    console.log('❌ Task rejected or timed out');
-                    results.push({ task: task.name || task.title, status: 'rejected' });
-                    continue;
+                if (dispatchResult.success) {
+                    console.log(`✅ Task completed`);
+                    task.status = 'completed';
+                } else {
+                    console.log(`⚠️ Task needs manual handling: ${dispatchResult.error || 'No matching automation'}`);
+                    task.status = 'manual_required';
                 }
+
+                results.push({
+                    task: task.name || task.title,
+                    status: task.status,
+                    result: dispatchResult
+                });
             }
 
-            // Dispatch the task
-            const dispatchResult = await this.dispatcher.dispatch({
-                type: this.inferTaskType(task),
-                description: task.name || task.title,
-                data: task
-            });
-
-            if (dispatchResult.success) {
-                console.log(`✅ Task completed`);
-                task.status = 'completed';
-            } else {
-                console.log(`⚠️ Task needs manual handling: ${dispatchResult.error || 'No matching automation'}`);
-                task.status = 'manual_required';
-            }
-
-            results.push({
-                task: task.name || task.title,
-                status: task.status,
-                result: dispatchResult
-            });
+            return { success: true, results };
+        } catch (error) {
+            console.error('Error in executePlanWithDispatcher:', error);
+            return { success: false, error: error.message };
         }
-
-        return { success: true, results };
     }
 
     /**
