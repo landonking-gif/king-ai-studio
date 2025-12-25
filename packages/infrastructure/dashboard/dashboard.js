@@ -23,10 +23,9 @@ document.addEventListener('DOMContentLoaded', () => {
     initCommandCenter();
     initFullCommandCenter();
     initSearch();
-    initSearch();
     // initThemeToggle(); // Removed - Dark mode enforced
     initNotifications();
-    initNotifications();
+    initSettings();
     initKeyboardShortcuts();
     startSync();
     setupCharts();
@@ -317,12 +316,18 @@ function renderEmpire() {
         return;
     }
 
+    // Check if we should render table instead
+    if (STATE.isTableView) {
+        renderEmpireTable();
+        return;
+    }
+
     container.innerHTML = STATE.businesses.map(b => `
         <div class="business-card">
             <div class="card-top">
                 <div>
-                    <div class="biz-name">${b.name}</div>
-                    <div class="biz-type">${b.industry}</div>
+                    <div class="biz-name">${b.name || 'Incognito Venture'}</div>
+                    <div class="biz-type">${b.industry || 'R&D'}</div>
                 </div>
                 <div class="status-badge status-${b.status}">${b.status}</div>
             </div>
@@ -334,266 +339,341 @@ function renderEmpire() {
             <div class="mt-20">
                 <p style="font-size: 0.85rem; color: var(--text-secondary)"><strong>Last Action:</strong> ${b.last_action || 'Awaiting autonomous pulse...'}</p>
                 <div class="btn-group mt-10">
-                    <button class="btn-text" onclick="showVentureDetails('${b.id}')">Details</button>
-                    <button class="btn-text" onclick="rebalanceVenture('${b.id}')">Optimize</button>
+                    <button class="btn-text" onclick="showVentureDetails('${b.id || ''}')">Details</button>
+                    <!-- rebalanceVenture removed as it was placeholder -->
                 </div>
             </div>
         </div>
     `).join('');
 }
 
-function renderAnalytics() {
-    const revenueCtx = document.getElementById('revenue-growth-chart');
-    if (!revenueCtx) return;
+// --- Empire View Features ---
+function toggleTableView() {
+    STATE.isTableView = !STATE.isTableView;
+    const cardContainer = document.getElementById('empire-business-container');
+    const tableContainer = document.getElementById('business-table-container');
+    const toggleBtn = document.querySelector('#empire-view .view-actions button:first-child');
 
-    // Destroy existing chart if it exists to prevent memory leaks
-    if (window.revenueChart) window.revenueChart.destroy();
+    if (STATE.isTableView) {
+        cardContainer.classList.add('hidden');
+        tableContainer.classList.remove('hidden');
+        if (toggleBtn) toggleBtn.innerHTML = '<i class="fas fa-grid-2"></i> Card View';
+        renderEmpireTable();
+    } else {
+        cardContainer.classList.remove('hidden');
+        tableContainer.classList.add('hidden');
+        if (toggleBtn) toggleBtn.innerHTML = '<i class="fas fa-table"></i> Table View';
+        renderEmpire();
+    }
+}
 
-    // Generate more realistic data based on actual business data
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const revenueData = months.map((month, index) => {
-        const baseRevenue = STATE.businesses.length * 1000;
-        const growth = Math.sin(index / 3) * 2000 + Math.random() * 1000;
-        return Math.max(0, baseRevenue + growth);
-    });
+function renderEmpireTable() {
+    const tbody = document.getElementById('business-table-body');
+    if (!tbody) return;
 
-    window.revenueChart = new Chart(revenueCtx.getContext('2d'), {
-        type: 'line',
-        data: {
-            labels: months,
-            datasets: [{
-                label: 'Monthly Revenue ($)',
-                data: revenueData,
-                borderColor: '#833ab4',
-                backgroundColor: 'rgba(131, 58, 180, 0.1)',
-                fill: true,
-                tension: 0.4,
-                pointBackgroundColor: '#833ab4',
-                pointBorderColor: '#fff',
-                pointBorderWidth: 2,
-                pointRadius: 4,
-                pointHoverRadius: 6
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    backgroundColor: 'rgba(0,0,0,0.8)',
-                    titleColor: '#fff',
-                    bodyColor: '#fff',
-                    callbacks: {
-                        label: function (context) {
-                            return `Revenue: $${context.parsed.y.toLocaleString()}`;
-                        }
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    grid: { color: 'rgba(255,255,255,0.05)' },
-                    border: { display: false },
-                    ticks: {
-                        callback: function (value) {
-                            return '$' + value.toLocaleString();
-                        }
-                    }
-                },
-                x: {
-                    grid: { display: false },
-                    border: { display: false }
-                }
-            },
-            interaction: {
-                intersect: false,
-                mode: 'index'
-            }
-        }
-    });
+    if (STATE.businesses.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 20px;">No active businesses</td></tr>';
+        return;
+    }
 
-    const automationCtx = document.getElementById('automation-chart');
-    if (automationCtx) {
-        if (window.automationChart) window.automationChart.destroy();
-        // Calculate automation levels based on actual data
-        const totalLogs = STATE.logs.length;
-        const errorLogs = STATE.logs.filter(l => l.type === 'error').length;
-        const successLogs = STATE.logs.filter(l => l.type === 'success' || l.type === 'milestone').length;
-        const pendingApprovals = STATE.approvals.length;
+    tbody.innerHTML = STATE.businesses.map(b => `
+        <tr>
+            <td>${b.name || 'Unknown'}</td>
+            <td>${b.industry || 'Unknown'}</td>
+            <td><span class="status-badge status-${b.status}">${b.status}</span></td>
+            <td>
+                <div class="progress-container" style="width: 100px;">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${b.progress}%"></div>
+                    </div>
+                </div>
+            </td>
+             <td>$${(b.progress * 1000).toLocaleString()}</td>
+            <td>${b.last_action || '-'}</td>
+            <td>
+                <button class="btn-text" onclick="showVentureDetails('${b.id}')">View</button>
+            </td>
+        </tr>
+    `).join('');
 
-        const fullyAutomated = Math.max(0, totalLogs - errorLogs - pendingApprovals);
-        const semiAutomated = pendingApprovals;
-        const manualRequired = errorLogs;
+    // Update pagination info (mock)
+    document.getElementById('total-entries').textContent = STATE.businesses.length;
+}
 
-        window.automationChart = new Chart(automationCtx.getContext('2d'), {
-            type: 'doughnut',
+function exportBusinessData() {
+    exportToCSV('empire-export');
+}
+
+// --- Settings ---
+function initSettings() {
+    const saveBtn = document.getElementById('save-settings-btn');
+    if (saveBtn) {
+        saveBtn.addEventListener('click', () => {
+            const provider = document.getElementById('setting-ai-provider').value;
+            const limit = document.getElementById('setting-spending-limit').value;
+
+            // In a real app, we would POST this to the server
+            // For now, we simulate a save
+            localStorage.setItem('king-ai-provider', provider);
+            localStorage.setItem('king-ai-limit', limit);
+
+            showToast('✅ System configuration updated', 'success');
+        });
+    }
+
+
+    function renderAnalytics() {
+        const revenueCtx = document.getElementById('revenue-growth-chart');
+        if (!revenueCtx) return;
+
+        // Destroy existing chart if it exists to prevent memory leaks
+        if (window.revenueChart) window.revenueChart.destroy();
+
+        // Generate more realistic data based on actual business data
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const revenueData = months.map((month, index) => {
+            const baseRevenue = STATE.businesses.length * 1000;
+            const growth = Math.sin(index / 3) * 2000 + Math.random() * 1000;
+            return Math.max(0, baseRevenue + growth);
+        });
+
+        window.revenueChart = new Chart(revenueCtx.getContext('2d'), {
+            type: 'line',
             data: {
-                labels: ['Fully Automated', 'Semi-Autonomous', 'Manual Required'],
+                labels: months,
                 datasets: [{
-                    data: [fullyAutomated, semiAutomated, manualRequired],
-                    backgroundColor: ['#00ff88', '#5851db', '#ff4d4d'],
-                    borderWidth: 0,
-                    hoverOffset: 10
+                    label: 'Monthly Revenue ($)',
+                    data: revenueData,
+                    borderColor: '#833ab4',
+                    backgroundColor: 'rgba(131, 58, 180, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#833ab4',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            color: '#a0a0b8',
-                            padding: 20,
-                            usePointStyle: true
-                        }
-                    },
+                    legend: { display: false },
                     tooltip: {
                         backgroundColor: 'rgba(0,0,0,0.8)',
                         titleColor: '#fff',
-                        bodyColor: '#fff'
+                        bodyColor: '#fff',
+                        callbacks: {
+                            label: function (context) {
+                                return `Revenue: $${context.parsed.y.toLocaleString()}`;
+                            }
+                        }
                     }
                 },
-                cutout: '70%'
+                scales: {
+                    y: {
+                        grid: { color: 'rgba(255,255,255,0.05)' },
+                        border: { display: false },
+                        ticks: {
+                            callback: function (value) {
+                                return '$' + value.toLocaleString();
+                            }
+                        }
+                    },
+                    x: {
+                        grid: { display: false },
+                        border: { display: false }
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
+                }
             }
         });
+
+        const automationCtx = document.getElementById('automation-chart');
+        if (automationCtx) {
+            if (window.automationChart) window.automationChart.destroy();
+            // Calculate automation levels based on actual data
+            const totalLogs = STATE.logs.length;
+            const errorLogs = STATE.logs.filter(l => l.type === 'error').length;
+            const successLogs = STATE.logs.filter(l => l.type === 'success' || l.type === 'milestone').length;
+            const pendingApprovals = STATE.approvals.length;
+
+            const fullyAutomated = Math.max(0, totalLogs - errorLogs - pendingApprovals);
+            const semiAutomated = pendingApprovals;
+            const manualRequired = errorLogs;
+
+            window.automationChart = new Chart(automationCtx.getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Fully Automated', 'Semi-Autonomous', 'Manual Required'],
+                    datasets: [{
+                        data: [fullyAutomated, semiAutomated, manualRequired],
+                        backgroundColor: ['#00ff88', '#5851db', '#ff4d4d'],
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#a0a0b8',
+                                padding: 20,
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0,0,0,0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff'
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+        }
     }
-}
 
-function renderBusinessPerformanceChart() {
-    const perfContainer = document.querySelector('.grid-layout');
-    if (!perfContainer) return;
+    function renderBusinessPerformanceChart() {
+        const perfContainer = document.querySelector('.grid-layout');
+        if (!perfContainer) return;
 
-    // Create new chart container if it doesn't exist
-    let perfChartContainer = document.getElementById('performance-chart-container');
-    if (!perfChartContainer) {
-        perfChartContainer = document.createElement('div');
-        perfChartContainer.id = 'performance-chart-container';
-        perfChartContainer.className = 'grid-span-6';
-        perfChartContainer.innerHTML = `
+        // Create new chart container if it doesn't exist
+        let perfChartContainer = document.getElementById('performance-chart-container');
+        if (!perfChartContainer) {
+            perfChartContainer = document.createElement('div');
+            perfChartContainer.id = 'performance-chart-container';
+            perfChartContainer.className = 'grid-span-6';
+            perfChartContainer.innerHTML = `
             <div class="content-panel">
                 <h3>Business Performance</h3>
                 <canvas id="business-performance-chart" height="300"></canvas>
             </div>
         `;
-        perfContainer.appendChild(perfChartContainer);
-    }
+            perfContainer.appendChild(perfChartContainer);
+        }
 
-    const perfCtx = document.getElementById('business-performance-chart');
-    if (!perfCtx) return;
+        const perfCtx = document.getElementById('business-performance-chart');
+        if (!perfCtx) return;
 
-    if (window.performanceChart) window.performanceChart.destroy();
+        if (window.performanceChart) window.performanceChart.destroy();
 
-    // Prepare data for business performance
-    const businessData = STATE.businesses.map(b => ({
-        name: b.name || 'Unknown',
-        progress: b.progress || 0,
-        status: b.status || 'unknown'
-    }));
+        // Prepare data for business performance
+        const businessData = STATE.businesses.map(b => ({
+            name: b.name || 'Unknown',
+            progress: b.progress || 0,
+            status: b.status || 'unknown'
+        }));
 
-    window.performanceChart = new Chart(perfCtx.getContext('2d'), {
-        type: 'bar',
-        data: {
-            labels: businessData.map(b => b.name.substring(0, 15) + (b.name.length > 15 ? '...' : '')),
-            datasets: [{
-                label: 'Progress (%)',
-                data: businessData.map(b => b.progress),
-                backgroundColor: businessData.map(b => {
-                    switch (b.status) {
-                        case 'running': return '#00ff88';
-                        case 'paused': return '#ffcc00';
-                        case 'stopped': return '#ff4d4d';
-                        default: return '#5851db';
+        window.performanceChart = new Chart(perfCtx.getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: businessData.map(b => b.name.substring(0, 15) + (b.name.length > 15 ? '...' : '')),
+                datasets: [{
+                    label: 'Progress (%)',
+                    data: businessData.map(b => b.progress),
+                    backgroundColor: businessData.map(b => {
+                        switch (b.status) {
+                            case 'running': return '#00ff88';
+                            case 'paused': return '#ffcc00';
+                            case 'stopped': return '#ff4d4d';
+                            default: return '#5851db';
+                        }
+                    }),
+                    borderRadius: 4,
+                    borderSkipped: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(0,0,0,0.8)',
+                        titleColor: '#fff',
+                        bodyColor: '#fff',
+                        callbacks: {
+                            title: function (context) {
+                                return businessData[context[0].dataIndex].name;
+                            },
+                            label: function (context) {
+                                const business = businessData[context.dataIndex];
+                                return [
+                                    `Progress: ${business.progress}%`,
+                                    `Status: ${business.status}`
+                                ];
+                            }
+                        }
                     }
-                }),
-                borderRadius: 4,
-                borderSkipped: false
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    backgroundColor: 'rgba(0,0,0,0.8)',
-                    titleColor: '#fff',
-                    bodyColor: '#fff',
-                    callbacks: {
-                        title: function (context) {
-                            return businessData[context[0].dataIndex].name;
-                        },
-                        label: function (context) {
-                            const business = businessData[context.dataIndex];
-                            return [
-                                `Progress: ${business.progress}%`,
-                                `Status: ${business.status}`
-                            ];
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        grid: { color: 'rgba(255,255,255,0.05)' },
+                        border: { display: false },
+                        ticks: { color: '#a0a0b8' }
+                    },
+                    x: {
+                        grid: { display: false },
+                        border: { display: false },
+                        ticks: {
+                            color: '#a0a0b8',
+                            maxRotation: 45,
+                            minRotation: 45
                         }
                     }
                 }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: 100,
-                    grid: { color: 'rgba(255,255,255,0.05)' },
-                    border: { display: false },
-                    ticks: { color: '#a0a0b8' }
-                },
-                x: {
-                    grid: { display: false },
-                    border: { display: false },
-                    ticks: {
-                        color: '#a0a0b8',
-                        maxRotation: 45,
-                        minRotation: 45
-                    }
-                }
             }
-        }
-    });
-}
-
-function renderSettings() {
-    // Placeholder to satisfy the refresh logic
-    console.log("Settings view activated");
-}
-
-async function handleApproval(id, decision) {
-    const notes = prompt(decision ? "Additional authorization notes?" : "Reason for rejection?");
-    if (notes === null) return; // Cancelled
-
-    showToast(decision ? "Authorizing action..." : "Rejecting action...", 'info');
-
-    try {
-        const endpoint = decision ? '/api/approve' : '/api/reject';
-        const res = await fetch(endpoint, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id, notes, reason: notes })
         });
+    }
 
-        if (res.ok) {
-            showToast(decision ? "✅ Action Authorized" : "❌ Action Rejected", 'success');
-            fetchData();
+    function renderSettings() {
+        // Placeholder to satisfy the refresh logic
+        console.log("Settings view activated");
+    }
+
+    async function handleApproval(id, decision) {
+        const notes = prompt(decision ? "Additional authorization notes?" : "Reason for rejection?");
+        if (notes === null) return; // Cancelled
+
+        showToast(decision ? "Authorizing action..." : "Rejecting action...", 'info');
+
+        try {
+            const endpoint = decision ? '/api/approve' : '/api/reject';
+            const res = await fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id, notes, reason: notes })
+            });
+
+            if (res.ok) {
+                showToast(decision ? "✅ Action Authorized" : "❌ Action Rejected", 'success');
+                fetchData();
+            }
+        } catch (e) {
+            showToast("Communication link failed", 'error');
         }
-    } catch (e) {
-        showToast("Communication link failed", 'error');
-    }
-}
-
-function renderFullApprovals() {
-    const container = document.getElementById('full-approval-container');
-    if (!container) return;
-
-    if (STATE.approvals.length === 0) {
-        container.innerHTML = '<div class="empty-state">All systems GO. No approvals pending.</div>';
-        return;
     }
 
-    container.innerHTML = STATE.approvals.map(a => `
+    function renderFullApprovals() {
+        const container = document.getElementById('full-approval-container');
+        if (!container) return;
+
+        if (STATE.approvals.length === 0) {
+            container.innerHTML = '<div class="empty-state">All systems GO. No approvals pending.</div>';
+            return;
+        }
+
+        container.innerHTML = STATE.approvals.map(a => `
         <div class="approval-card panel">
             <div class="approval-info">
                 <h3>${a.title}</h3>
@@ -606,99 +686,99 @@ function renderFullApprovals() {
             </div>
         </div>
     `).join('');
-}
+    }
 
-// --- CEO Command Center ---
-function initCommandCenter() {
-    const input = document.getElementById('ceo-command');
-    const btn = document.getElementById('send-command-btn');
+    // --- CEO Command Center ---
+    function initCommandCenter() {
+        const input = document.getElementById('ceo-command');
+        const btn = document.getElementById('send-command-btn');
 
-    const sendCommand = async () => {
-        const cmd = input.value.trim();
-        if (!cmd) return;
+        const sendCommand = async () => {
+            const cmd = input.value.trim();
+            if (!cmd) return;
 
-        addChatMessage('user', cmd);
-        input.value = '';
+            addChatMessage('user', cmd);
+            input.value = '';
 
-        try {
-            document.getElementById('ceo-status').textContent = 'THINKING...';
-            const res = await fetch('/api/command', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ command: cmd })
-            });
-            const data = await res.json();
+            try {
+                document.getElementById('ceo-status').textContent = 'THINKING...';
+                const res = await fetch('/api/command', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ command: cmd })
+                });
+                const data = await res.json();
 
-            setTimeout(() => {
-                const replyText = data.reply || "Command received. Adjusting autonomous vectors.";
-                addChatMessage('ceo', replyText, false, data.thoughts);
-                document.getElementById('ceo-status').textContent = 'IDLE';
-                // Thoughts are now inside chat, so we can clear the static box if we prefer, or keep it as "Latest Focus"
-                if (data.thoughts) document.getElementById('ceo-thoughts').textContent = "Refining execution parameters...";
-            }, 1000);
+                setTimeout(() => {
+                    const replyText = data.reply || "Command received. Adjusting autonomous vectors.";
+                    addChatMessage('ceo', replyText, false, data.thoughts);
+                    document.getElementById('ceo-status').textContent = 'IDLE';
+                    // Thoughts are now inside chat, so we can clear the static box if we prefer, or keep it as "Latest Focus"
+                    if (data.thoughts) document.getElementById('ceo-thoughts').textContent = "Refining execution parameters...";
+                }, 1000);
 
-        } catch (e) {
-            addChatMessage('ceo', "Error connecting to neural uplink. Re-attempting connection.");
-        }
-    };
+            } catch (e) {
+                addChatMessage('ceo', "Error connecting to neural uplink. Re-attempting connection.");
+            }
+        };
 
-    btn.addEventListener('click', sendCommand);
-    input.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendCommand(); });
-}
+        btn.addEventListener('click', sendCommand);
+        input.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendCommand(); });
+    }
 
-function initFullCommandCenter() {
-    const input = document.getElementById('ceo-full-command');
-    const btn = document.getElementById('send-full-command-btn');
-    if (!input || !btn) return;
+    function initFullCommandCenter() {
+        const input = document.getElementById('ceo-full-command');
+        const btn = document.getElementById('send-full-command-btn');
+        if (!input || !btn) return;
 
-    const sendCommand = async () => {
-        const cmd = input.value.trim();
-        if (!cmd) return;
+        const sendCommand = async () => {
+            const cmd = input.value.trim();
+            if (!cmd) return;
 
-        addChatMessage('user', cmd, true);
-        input.value = '';
+            addChatMessage('user', cmd, true);
+            input.value = '';
 
-        try {
-            document.getElementById('ceo-full-status').textContent = 'THINKING...';
-            const res = await fetch('/api/command', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ command: cmd })
-            });
-            const data = await res.json();
+            try {
+                document.getElementById('ceo-full-status').textContent = 'THINKING...';
+                const res = await fetch('/api/command', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ command: cmd })
+                });
+                const data = await res.json();
 
-            setTimeout(() => {
-                addChatMessage('ceo', data.reply || "Strategy recalibrated.", true);
-                document.getElementById('ceo-full-status').textContent = 'CONNECTED';
-                if (data.activeObjective) document.getElementById('ceo-active-objective').textContent = data.activeObjective;
-            }, 800);
+                setTimeout(() => {
+                    addChatMessage('ceo', data.reply || "Strategy recalibrated.", true);
+                    document.getElementById('ceo-full-status').textContent = 'CONNECTED';
+                    if (data.activeObjective) document.getElementById('ceo-active-objective').textContent = data.activeObjective;
+                }, 800);
 
-        } catch (e) {
-            addChatMessage('ceo', "Uplink unstable. Check firewall settings.", true);
-        }
-    };
+            } catch (e) {
+                addChatMessage('ceo', "Uplink unstable. Check firewall settings.", true);
+            }
+        };
 
-    btn.addEventListener('click', sendCommand);
-    input.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendCommand(); });
-}
+        btn.addEventListener('click', sendCommand);
+        input.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendCommand(); });
+    }
 
-// function initThemeToggle() ... Removed
-// function toggleTheme() ... Removed
+    // function initThemeToggle() ... Removed
+    // function toggleTheme() ... Removed
 
-function addChatMessage(role, text, isFull = false, thoughts = null) {
-    const containerId = isFull ? 'full-chat-container' : 'chat-container';
-    const container = document.getElementById(containerId);
-    if (!container) return;
+    function addChatMessage(role, text, isFull = false, thoughts = null) {
+        const containerId = isFull ? 'full-chat-container' : 'chat-container';
+        const container = document.getElementById(containerId);
+        if (!container) return;
 
-    const msg = document.createElement('div');
-    msg.className = `chat-msg ${role}`;
+        const msg = document.createElement('div');
+        msg.className = `chat-msg ${role}`;
 
-    let contentHtml = `<div class="msg-bubble">${text}</div>`;
+        let contentHtml = `<div class="msg-bubble">${text}</div>`;
 
-    // Add Thinking Toggle if thoughts exist
-    if (thoughts && role === 'ceo') {
-        const thoughtId = `thought-${Date.now()}`;
-        contentHtml += `
+        // Add Thinking Toggle if thoughts exist
+        if (thoughts && role === 'ceo') {
+            const thoughtId = `thought-${Date.now()}`;
+            contentHtml += `
             <div class="thinking-wrapper" style="margin-top: 10px;">
                 <button class="btn-thinking" onclick="const t=document.getElementById('${thoughtId}'); t.classList.toggle('visible'); this.classList.toggle('active');">
                     <i class="fas fa-brain"></i> See My Thinking
@@ -708,86 +788,94 @@ function addChatMessage(role, text, isFull = false, thoughts = null) {
                 </div>
             </div>
         `;
+        }
+
+        contentHtml += `<div class="msg-time">${new Date().toLocaleTimeString()}</div>`;
+        msg.innerHTML = contentHtml;
+
+        container.appendChild(msg);
+        container.scrollTop = container.scrollHeight;
     }
 
-    contentHtml += `<div class="msg-time">${new Date().toLocaleTimeString()}</div>`;
-    msg.innerHTML = contentHtml;
+    // --- Modals ---
+    function initModals() {
+        const modal = document.getElementById('new-business-modal');
+        const businessDetailModal = document.getElementById('business-detail-modal');
+        const openBtn = document.getElementById('new-business-btn');
+        const closeBtns = document.querySelectorAll('.close-modal');
+        const confirmBtn = document.getElementById('confirm-launch-btn');
+        const optimizeBtn = document.getElementById('optimize-business-btn');
 
-    container.appendChild(msg);
-    container.scrollTop = container.scrollHeight;
-}
-
-// --- Modals ---
-function initModals() {
-    const modal = document.getElementById('new-business-modal');
-    const businessDetailModal = document.getElementById('business-detail-modal');
-    const openBtn = document.getElementById('new-business-btn');
-    const closeBtns = document.querySelectorAll('.close-modal');
-    const confirmBtn = document.getElementById('confirm-launch-btn');
-    const optimizeBtn = document.getElementById('optimize-business-btn');
-
-    openBtn.onclick = () => modal.classList.remove('hidden');
-    closeBtns.forEach(b => b.onclick = () => {
-        modal.classList.add('hidden');
-        businessDetailModal.classList.add('hidden');
-    });
-
-    confirmBtn.onclick = async () => {
-        const idea = document.getElementById('new-business-idea').value;
-        if (!idea) return;
-
-        showToast('🚀 Launching new venture...', 'info');
-        modal.classList.add('hidden');
-
-        try {
-            const res = await fetch('/api/launch', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ idea })
-            });
-            if (res.ok) {
-                showToast('✅ Venture initialized successfully!', 'success');
-                fetchData();
+        openBtn.onclick = () => modal.classList.remove('hidden');
+        closeBtns.forEach(b => b.onclick = (e) => {
+            const parentModal = b.closest('.modal');
+            if (parentModal) {
+                parentModal.classList.add('hidden');
+            } else {
+                // Fallback for buttons not inside a modal structure
+                modal.classList.add('hidden');
+                businessDetailModal.classList.add('hidden');
+                const shortcutsModal = document.getElementById('keyboard-shortcuts-modal');
+                if (shortcutsModal) shortcutsModal.classList.add('hidden');
             }
-        } catch (e) {
-            showToast('❌ Launch sequence failed.', 'error');
-        }
-    };
+        });
 
-    optimizeBtn.onclick = () => {
-        showToast('🎯 Optimization commands sent to CEO', 'info');
-        businessDetailModal.classList.add('hidden');
-    };
-}
+        confirmBtn.onclick = async () => {
+            const idea = document.getElementById('new-business-idea').value;
+            if (!idea) return;
 
-// --- Business Details ---
-function showBusinessDetails(index) {
-    const businesses = STATE.searchQuery ? STATE.filteredBusinesses : STATE.businesses;
-    const business = businesses[index];
-    if (!business) return;
+            showToast('🚀 Launching new venture...', 'info');
+            modal.classList.add('hidden');
 
-    const modal = document.getElementById('business-detail-modal');
+            try {
+                const res = await fetch('/api/launch', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ idea })
+                });
+                if (res.ok) {
+                    showToast('✅ Venture initialized successfully!', 'success');
+                    fetchData();
+                }
+            } catch (e) {
+                showToast('❌ Launch sequence failed.', 'error');
+            }
+        };
 
-    // Populate basic info
-    document.getElementById('business-detail-title').textContent = business.name || 'Business Details';
-    document.getElementById('detail-name').textContent = business.name || 'Unknown';
-    document.getElementById('detail-industry').textContent = business.industry || 'Unknown';
-    document.getElementById('detail-status').textContent = business.status || 'Unknown';
-    document.getElementById('detail-status').className = `status-badge status-${business.status}`;
-    document.getElementById('detail-progress').textContent = `${business.progress || 0}%`;
-    document.getElementById('detail-phase').textContent = business.current_phase || 'Phase 1';
-    document.getElementById('detail-progress-bar').style.width = `${business.progress || 0}%`;
-    document.getElementById('detail-description').textContent = business.last_action || 'No recent activity';
+        optimizeBtn.onclick = () => {
+            showToast('🎯 Optimization commands sent to CEO', 'info');
+            businessDetailModal.classList.add('hidden');
+        };
+    }
 
-    // Mock financial data (in a real app, this would come from the business object)
-    document.getElementById('detail-revenue').textContent = `$${(business.progress * 1000) || 0}`;
-    document.getElementById('detail-profit').textContent = `$${(business.progress * 500) || 0}`;
-    document.getElementById('detail-customers').textContent = Math.floor((business.progress / 10) || 0);
+    // --- Business Details ---
+    function showBusinessDetails(index) {
+        const businesses = STATE.searchQuery ? STATE.filteredBusinesses : STATE.businesses;
+        const business = businesses[index];
+        if (!business) return;
 
-    // Generate activity timeline
-    const activityContainer = document.getElementById('detail-activity');
-    const activities = generateBusinessActivity(business);
-    activityContainer.innerHTML = activities.map(activity => `
+        const modal = document.getElementById('business-detail-modal');
+
+        // Populate basic info
+        document.getElementById('business-detail-title').textContent = business.name || 'Business Details';
+        document.getElementById('detail-name').textContent = business.name || 'Unknown';
+        document.getElementById('detail-industry').textContent = business.industry || 'Unknown';
+        document.getElementById('detail-status').textContent = business.status || 'Unknown';
+        document.getElementById('detail-status').className = `status-badge status-${business.status}`;
+        document.getElementById('detail-progress').textContent = `${business.progress || 0}%`;
+        document.getElementById('detail-phase').textContent = business.current_phase || 'Phase 1';
+        document.getElementById('detail-progress-bar').style.width = `${business.progress || 0}%`;
+        document.getElementById('detail-description').textContent = business.last_action || 'No recent activity';
+
+        // Mock financial data (in a real app, this would come from the business object)
+        document.getElementById('detail-revenue').textContent = `$${(business.progress * 1000) || 0}`;
+        document.getElementById('detail-profit').textContent = `$${(business.progress * 500) || 0}`;
+        document.getElementById('detail-customers').textContent = Math.floor((business.progress / 10) || 0);
+
+        // Generate activity timeline
+        const activityContainer = document.getElementById('detail-activity');
+        const activities = generateBusinessActivity(business);
+        activityContainer.innerHTML = activities.map(activity => `
         <div class="activity-item">
             <div class="activity-icon">
                 <i class="fas ${activity.icon}"></i>
@@ -800,242 +888,242 @@ function showBusinessDetails(index) {
         </div>
     `).join('');
 
-    modal.classList.remove('hidden');
-}
-
-function generateBusinessActivity(business) {
-    // Mock activity data based on business progress
-    const activities = [
-        {
-            icon: 'fa-rocket',
-            title: 'Business Launched',
-            time: '2 weeks ago',
-            description: 'Initial setup and market research completed'
-        },
-        {
-            icon: 'fa-users',
-            title: 'First Customers Acquired',
-            time: '1 week ago',
-            description: 'Customer acquisition campaigns showing positive results'
-        },
-        {
-            icon: 'fa-chart-line',
-            title: 'Revenue Milestone',
-            time: '3 days ago',
-            description: 'First revenue generated from operations'
-        },
-        {
-            icon: 'fa-cogs',
-            title: 'System Optimization',
-            time: '1 day ago',
-            description: 'Automated processes refined for better efficiency'
-        }
-    ];
-
-    // Return activities based on progress
-    const progress = business.progress || 0;
-    return activities.slice(0, Math.ceil(progress / 25));
-}
-
-// --- Search Functionality ---
-function initSearch() {
-    const searchInput = document.querySelector('.search-wrapper input');
-    if (!searchInput) return;
-
-    searchInput.addEventListener('input', (e) => {
-        STATE.searchQuery = e.target.value.toLowerCase();
-        applySearchFilter();
-    });
-}
-
-function applySearchFilter() {
-    if (!STATE.searchQuery) {
-        STATE.filteredBusinesses = STATE.businesses;
-        STATE.filteredLogs = STATE.logs;
-    } else {
-        STATE.filteredBusinesses = STATE.businesses.filter(b =>
-            b.name?.toLowerCase().includes(STATE.searchQuery) ||
-            b.industry?.toLowerCase().includes(STATE.searchQuery) ||
-            b.status?.toLowerCase().includes(STATE.searchQuery)
-        );
-
-        STATE.filteredLogs = STATE.logs.filter(l =>
-            l.message?.toLowerCase().includes(STATE.searchQuery) ||
-            l.type?.toLowerCase().includes(STATE.searchQuery)
-        );
+        modal.classList.remove('hidden');
     }
 
-    // Re-render current view with filtered data
-    renderBusinesses();
-    renderLogs();
-}
-
-// --- Connection Monitoring ---
-function monitorConnection() {
-    // Monitor online/offline events
-    window.addEventListener('online', () => {
-        STATE.connectionStatus = 'connecting';
-        updateConnectionStatus();
-        fetchData(); // Immediate retry
-    });
-
-    window.addEventListener('offline', () => {
-        STATE.connectionStatus = 'offline';
-        updateConnectionStatus();
-        showToast('📴 You are offline', 'error');
-    });
-
-    // Periodic connectivity check
-    setInterval(async () => {
-        if (navigator.onLine && STATE.connectionStatus === 'offline') {
-            // Try to reconnect
-            await fetchData();
-        }
-    }, 30000); // Check every 30 seconds
-}
-
-function updateConnectionStatus() {
-    const statusElement = document.getElementById('connection-status');
-    if (!statusElement) return;
-
-    statusElement.className = `connection-status ${STATE.connectionStatus}`;
-    const statusText = statusElement.querySelector('span');
-
-    switch (STATE.connectionStatus) {
-        case 'online':
-            statusText.textContent = 'Connected';
-            break;
-        case 'connecting':
-            statusText.textContent = 'Connecting...';
-            break;
-        case 'offline':
-            statusText.textContent = 'Offline';
-            break;
-    }
-}
-
-// --- Theme Toggle ---
-function initThemeToggle() {
-    const themeToggle = document.getElementById('theme-toggle');
-    if (!themeToggle) return;
-
-    // Load saved theme preference
-    const savedTheme = localStorage.getItem('king-ai-theme') || 'dark';
-    document.body.className = `${savedTheme}-theme`;
-    updateThemeIcon(savedTheme);
-
-    themeToggle.addEventListener('click', () => {
-        const currentTheme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-
-        document.body.className = `${newTheme}-theme`;
-        localStorage.setItem('king-ai-theme', newTheme);
-        updateThemeIcon(newTheme);
-
-        showToast(`Switched to ${newTheme} theme`, 'info');
-    });
-}
-
-function updateThemeIcon(theme) {
-    const icon = document.querySelector('#theme-toggle i');
-    if (icon) {
-        icon.className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
-    }
-}
-
-// --- Notifications ---
-function initNotifications() {
-    const notificationBtn = document.getElementById('notification-btn');
-    const dropdown = document.getElementById('notification-dropdown');
-
-    notificationBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        dropdown.classList.toggle('hidden');
-
-        // Close dropdown when clicking outside
-        const closeDropdown = (event) => {
-            if (!dropdown.contains(event.target) && !notificationBtn.contains(event.target)) {
-                dropdown.classList.add('hidden');
-                document.removeEventListener('click', closeDropdown);
+    function generateBusinessActivity(business) {
+        // Mock activity data based on business progress
+        const activities = [
+            {
+                icon: 'fa-rocket',
+                title: 'Business Launched',
+                time: '2 weeks ago',
+                description: 'Initial setup and market research completed'
+            },
+            {
+                icon: 'fa-users',
+                title: 'First Customers Acquired',
+                time: '1 week ago',
+                description: 'Customer acquisition campaigns showing positive results'
+            },
+            {
+                icon: 'fa-chart-line',
+                title: 'Revenue Milestone',
+                time: '3 days ago',
+                description: 'First revenue generated from operations'
+            },
+            {
+                icon: 'fa-cogs',
+                title: 'System Optimization',
+                time: '1 day ago',
+                description: 'Automated processes refined for better efficiency'
             }
+        ];
+
+        // Return activities based on progress
+        const progress = business.progress || 0;
+        return activities.slice(0, Math.ceil(progress / 25));
+    }
+
+    // --- Search Functionality ---
+    function initSearch() {
+        const searchInput = document.querySelector('.search-wrapper input');
+        if (!searchInput) return;
+
+        searchInput.addEventListener('input', (e) => {
+            STATE.searchQuery = e.target.value.toLowerCase();
+            applySearchFilter();
+        });
+    }
+
+    function applySearchFilter() {
+        if (!STATE.searchQuery) {
+            STATE.filteredBusinesses = STATE.businesses;
+            STATE.filteredLogs = STATE.logs;
+        } else {
+            STATE.filteredBusinesses = STATE.businesses.filter(b =>
+                b.name?.toLowerCase().includes(STATE.searchQuery) ||
+                b.industry?.toLowerCase().includes(STATE.searchQuery) ||
+                b.status?.toLowerCase().includes(STATE.searchQuery)
+            );
+
+            STATE.filteredLogs = STATE.logs.filter(l =>
+                l.message?.toLowerCase().includes(STATE.searchQuery) ||
+                l.type?.toLowerCase().includes(STATE.searchQuery)
+            );
+        }
+
+        // Re-render current view with filtered data
+        renderBusinesses();
+        renderLogs();
+    }
+
+    // --- Connection Monitoring ---
+    function monitorConnection() {
+        // Monitor online/offline events
+        window.addEventListener('online', () => {
+            STATE.connectionStatus = 'connecting';
+            updateConnectionStatus();
+            fetchData(); // Immediate retry
+        });
+
+        window.addEventListener('offline', () => {
+            STATE.connectionStatus = 'offline';
+            updateConnectionStatus();
+            showToast('📴 You are offline', 'error');
+        });
+
+        // Periodic connectivity check
+        setInterval(async () => {
+            if (navigator.onLine && STATE.connectionStatus === 'offline') {
+                // Try to reconnect
+                await fetchData();
+            }
+        }, 30000); // Check every 30 seconds
+    }
+
+    function updateConnectionStatus() {
+        const statusElement = document.getElementById('connection-status');
+        if (!statusElement) return;
+
+        statusElement.className = `connection-status ${STATE.connectionStatus}`;
+        const statusText = statusElement.querySelector('span');
+
+        switch (STATE.connectionStatus) {
+            case 'online':
+                statusText.textContent = 'Connected';
+                break;
+            case 'connecting':
+                statusText.textContent = 'Connecting...';
+                break;
+            case 'offline':
+                statusText.textContent = 'Offline';
+                break;
+        }
+    }
+
+    // --- Theme Toggle ---
+    function initThemeToggle() {
+        const themeToggle = document.getElementById('theme-toggle');
+        if (!themeToggle) return;
+
+        // Load saved theme preference
+        const savedTheme = localStorage.getItem('king-ai-theme') || 'dark';
+        document.body.className = `${savedTheme}-theme`;
+        updateThemeIcon(savedTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+            document.body.className = `${newTheme}-theme`;
+            localStorage.setItem('king-ai-theme', newTheme);
+            updateThemeIcon(newTheme);
+
+            showToast(`Switched to ${newTheme} theme`, 'info');
+        });
+    }
+
+    function updateThemeIcon(theme) {
+        const icon = document.querySelector('#theme-toggle i');
+        if (icon) {
+            icon.className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+        }
+    }
+
+    // --- Notifications ---
+    function initNotifications() {
+        const notificationBtn = document.getElementById('notification-btn');
+        const dropdown = document.getElementById('notification-dropdown');
+
+        notificationBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdown.classList.toggle('hidden');
+
+            // Close dropdown when clicking outside
+            const closeDropdown = (event) => {
+                if (!dropdown.contains(event.target) && !notificationBtn.contains(event.target)) {
+                    dropdown.classList.add('hidden');
+                    document.removeEventListener('click', closeDropdown);
+                }
+            };
+
+            if (!dropdown.classList.contains('hidden')) {
+                document.addEventListener('click', closeDropdown);
+            }
+        });
+
+        // Generate some initial notifications
+        generateInitialNotifications();
+        updateNotificationBadge();
+    }
+
+    function generateInitialNotifications() {
+        const notifications = [
+            {
+                id: 'welcome',
+                type: 'info',
+                title: 'Welcome to King AI Studio',
+                message: 'Your autonomous business empire is now active and growing.',
+                time: new Date(Date.now() - 1000 * 60 * 5), // 5 minutes ago
+                read: false,
+                icon: 'fa-crown'
+            },
+            {
+                id: 'first-business',
+                type: 'success',
+                title: 'First Business Milestone',
+                message: 'Your first automated business has reached 25% completion.',
+                time: new Date(Date.now() - 1000 * 60 * 15), // 15 minutes ago
+                read: false,
+                icon: 'fa-rocket'
+            }
+        ];
+
+        STATE.notifications = notifications;
+    }
+
+    function addNotification(type, title, message, icon = 'fa-info-circle') {
+        const notification = {
+            id: Date.now().toString(),
+            type,
+            title,
+            message,
+            time: new Date(),
+            read: false,
+            icon
         };
 
-        if (!dropdown.classList.contains('hidden')) {
-            document.addEventListener('click', closeDropdown);
-        }
-    });
+        STATE.notifications.unshift(notification);
+        updateNotificationBadge();
+        renderNotifications();
 
-    // Generate some initial notifications
-    generateInitialNotifications();
-    updateNotificationBadge();
-}
-
-function generateInitialNotifications() {
-    const notifications = [
-        {
-            id: 'welcome',
-            type: 'info',
-            title: 'Welcome to King AI Studio',
-            message: 'Your autonomous business empire is now active and growing.',
-            time: new Date(Date.now() - 1000 * 60 * 5), // 5 minutes ago
-            read: false,
-            icon: 'fa-crown'
-        },
-        {
-            id: 'first-business',
-            type: 'success',
-            title: 'First Business Milestone',
-            message: 'Your first automated business has reached 25% completion.',
-            time: new Date(Date.now() - 1000 * 60 * 15), // 15 minutes ago
-            read: false,
-            icon: 'fa-rocket'
-        }
-    ];
-
-    STATE.notifications = notifications;
-}
-
-function addNotification(type, title, message, icon = 'fa-info-circle') {
-    const notification = {
-        id: Date.now().toString(),
-        type,
-        title,
-        message,
-        time: new Date(),
-        read: false,
-        icon
-    };
-
-    STATE.notifications.unshift(notification);
-    updateNotificationBadge();
-    renderNotifications();
-
-    // Auto-hide dropdown after 5 seconds if it's visible
-    setTimeout(() => {
-        const dropdown = document.getElementById('notification-dropdown');
-        if (!dropdown.classList.contains('hidden')) {
-            setTimeout(() => dropdown.classList.add('hidden'), 2000);
-        }
-    }, 3000);
-}
-
-function updateNotificationBadge() {
-    const unreadCount = STATE.notifications.filter(n => !n.read).length;
-    const badge = document.getElementById('notification-count');
-
-    if (unreadCount > 0) {
-        badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
-        badge.style.display = 'flex';
-    } else {
-        badge.style.display = 'none';
+        // Auto-hide dropdown after 5 seconds if it's visible
+        setTimeout(() => {
+            const dropdown = document.getElementById('notification-dropdown');
+            if (!dropdown.classList.contains('hidden')) {
+                setTimeout(() => dropdown.classList.add('hidden'), 2000);
+            }
+        }, 3000);
     }
-}
 
-function renderNotifications() {
-    const container = document.getElementById('notification-list');
-    if (!container) return;
+    function updateNotificationBadge() {
+        const unreadCount = STATE.notifications.filter(n => !n.read).length;
+        const badge = document.getElementById('notification-count');
 
-    container.innerHTML = STATE.notifications.slice(0, 10).map(notification => `
+        if (unreadCount > 0) {
+            badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+            badge.style.display = 'flex';
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+
+    function renderNotifications() {
+        const container = document.getElementById('notification-list');
+        if (!container) return;
+
+        container.innerHTML = STATE.notifications.slice(0, 10).map(notification => `
         <div class="notification-item ${!notification.read ? 'unread' : ''}" onclick="markNotificationRead('${notification.id}')">
             <div class="notification-content">
                 <div class="notification-icon">
@@ -1049,217 +1137,217 @@ function renderNotifications() {
             </div>
         </div>
     `).join('');
-}
+    }
 
-function markNotificationRead(id) {
-    const notification = STATE.notifications.find(n => n.id === id);
-    if (notification) {
-        notification.read = true;
+    function markNotificationRead(id) {
+        const notification = STATE.notifications.find(n => n.id === id);
+        if (notification) {
+            notification.read = true;
+            updateNotificationBadge();
+            renderNotifications();
+        }
+    }
+
+    function markAllNotificationsRead() {
+        STATE.notifications.forEach(n => n.read = true);
         updateNotificationBadge();
         renderNotifications();
     }
-}
 
-function markAllNotificationsRead() {
-    STATE.notifications.forEach(n => n.read = true);
-    updateNotificationBadge();
-    renderNotifications();
-}
+    function formatTimeAgo(date) {
+        const now = new Date();
+        const diffMs = now - date;
+        const diffMins = Math.floor(diffMs / (1000 * 60));
+        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
-function formatTimeAgo(date) {
-    const now = new Date();
-    const diffMs = now - date;
-    const diffMins = Math.floor(diffMs / (1000 * 60));
-    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-    if (diffMins < 1) return 'Just now';
-    if (diffMins < 60) return `${diffMins}m ago`;
-    if (diffHours < 24) return `${diffHours}h ago`;
-    return `${diffDays}d ago`;
-}
-
-// Help Modal init removed
-
-
-// --- Keyboard Shortcuts ---
-function initKeyboardShortcuts() {
-    document.addEventListener('keydown', (e) => {
-        // Don't trigger shortcuts when typing in inputs
-        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
-            return;
-        }
-
-        const key = e.key.toLowerCase();
-        const ctrl = e.ctrlKey || e.metaKey;
-
-        // Tab switching shortcuts (1-5)
-        if (!ctrl && !e.altKey && !e.shiftKey && key >= '1' && key <= '5') {
-            e.preventDefault();
-            const tabs = ['dashboard', 'empire', 'approvals', 'ceo', 'analytics'];
-            const tabIndex = parseInt(key) - 1;
-            if (tabs[tabIndex]) {
-                switchTab(tabs[tabIndex]);
-                showToast(`Switched to ${tabs[tabIndex]} tab`, 'info');
-            }
-        }
-
-        // Ctrl+K: Focus search
-        if (ctrl && key === 'k') {
-            e.preventDefault();
-            const searchInput = document.querySelector('.search-wrapper input');
-            if (searchInput) {
-                searchInput.focus();
-                searchInput.select();
-                showToast('Search focused', 'info');
-            }
-        }
-
-        // Ctrl+/: Show help
-        if (ctrl && key === '/') {
-            e.preventDefault();
-            const helpModal = document.getElementById('keyboard-shortcuts-modal');
-            if (helpModal) {
-                helpModal.classList.remove('hidden');
-            }
-        }
-
-        // Ctrl+N: New business
-        if (ctrl && key === 'n') {
-            e.preventDefault();
-            const newBusinessModal = document.getElementById('new-business-modal');
-            if (newBusinessModal) {
-                newBusinessModal.classList.remove('hidden');
-                const input = document.getElementById('new-business-idea');
-                if (input) {
-                    input.focus();
-                }
-                showToast('New business modal opened', 'info');
-            }
-        }
-
-        // Ctrl+E: Export data
-        if (ctrl && key === 'e') {
-            e.preventDefault();
-            exportToCSV(`king-ai-export-${new Date().toISOString().split('T')[0]}`);
-        }
-
-        // Escape: Close modals
-        if (key === 'escape') {
-            const modals = document.querySelectorAll('.modal:not(.hidden)');
-            modals.forEach(modal => modal.classList.add('hidden'));
-        }
-
-        // Ctrl+T: Toggle theme
-        if (ctrl && key === 't') {
-            e.preventDefault();
-            const themeToggle = document.getElementById('theme-toggle');
-            if (themeToggle) {
-                themeToggle.click();
-            }
-        }
-
-        // Ctrl+R: Refresh data
-        if (ctrl && key === 'r') {
-            e.preventDefault();
-            fetchData();
-            showToast('Refreshing data...', 'info');
-        }
-    });
-}
-
-// --- Data Export Helpers ---
-function exportToCSV(filename) {
-    // Prepare CSV data
-    let csvContent = 'Business Name,Industry,Status,Progress,Last Action\n';
-
-    STATE.businesses.forEach(business => {
-        const row = [
-            `"${business.name || 'Unknown'}"`,
-            `"${business.industry || 'Unknown'}"`,
-            `"${business.status || 'Unknown'}"`,
-            `"${business.progress || 0}%"`,
-            `"${business.last_action || 'No activity'}"`
-        ].join(',');
-        csvContent += row + '\n';
-    });
-
-    // Add logs section
-    csvContent += '\n\nLog Entries\n';
-    csvContent += 'Timestamp,Type,Message\n';
-
-    STATE.logs.slice(0, 100).forEach(log => {
-        const row = [
-            `"${log.timestamp || new Date().toISOString()}"`,
-            `"${log.type || 'info'}"`,
-            `"${log.message || ''}"`
-        ].join(',');
-        csvContent += row + '\n';
-    });
-
-    // Download CSV
-    downloadFile(csvContent, `${filename}.csv`, 'text/csv');
-}
-
-function exportToJSON(filename) {
-    const exportData = {
-        exportDate: new Date().toISOString(),
-        summary: {
-            totalBusinesses: STATE.businesses.length,
-            activeBusinesses: STATE.businesses.filter(b => b.status === 'running').length,
-            totalProfit: STATE.totalProfit,
-            pendingApprovals: STATE.approvals.length,
-            totalLogs: STATE.logs.length
-        },
-        businesses: STATE.businesses,
-        approvals: STATE.approvals,
-        logs: STATE.logs.slice(0, 500) // Limit logs for file size
-    };
-
-    const jsonContent = JSON.stringify(exportData, null, 2);
-    downloadFile(jsonContent, `${filename}.json`, 'application/json');
-}
-
-function downloadFile(content, filename, mimeType) {
-    const blob = new Blob([content], { type: mimeType });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-
-    URL.revokeObjectURL(url);
-
-    showToast(`📁 Exported data to ${filename}`, 'success');
-}
-
-// --- Helpers ---
-function showToast(msg, type = 'info') {
-    const toast = document.getElementById('toast');
-    toast.textContent = msg;
-    toast.className = `toast visible ${type}`;
-    setTimeout(() => toast.className = 'toast hidden', 3000);
-
-    // Add notification for important events
-    if (type === 'error' || type === 'warning' || (type === 'success' && msg.includes('successfully'))) {
-        let icon = 'fa-info-circle';
-        let title = 'System Notification';
-        if (type === 'success') {
-            icon = 'fa-check-circle';
-            title = 'Success';
-        }
-        if (type === 'error') {
-            icon = 'fa-exclamation-triangle';
-            title = 'Error';
-        }
-        if (type === 'warning') {
-            icon = 'fa-exclamation-circle';
-            title = 'Warning';
-        }
-
-        addNotification(type, title, msg, icon);
+        if (diffMins < 1) return 'Just now';
+        if (diffMins < 60) return `${diffMins}m ago`;
+        if (diffHours < 24) return `${diffHours}h ago`;
+        return `${diffDays}d ago`;
     }
-}
+
+    // Help Modal init removed
+
+
+    // --- Keyboard Shortcuts ---
+    function initKeyboardShortcuts() {
+        document.addEventListener('keydown', (e) => {
+            // Don't trigger shortcuts when typing in inputs
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                return;
+            }
+
+            const key = e.key.toLowerCase();
+            const ctrl = e.ctrlKey || e.metaKey;
+
+            // Tab switching shortcuts (1-5)
+            if (!ctrl && !e.altKey && !e.shiftKey && key >= '1' && key <= '5') {
+                e.preventDefault();
+                const tabs = ['dashboard', 'empire', 'approvals', 'ceo', 'analytics'];
+                const tabIndex = parseInt(key) - 1;
+                if (tabs[tabIndex]) {
+                    switchTab(tabs[tabIndex]);
+                    showToast(`Switched to ${tabs[tabIndex]} tab`, 'info');
+                }
+            }
+
+            // Ctrl+K: Focus search
+            if (ctrl && key === 'k') {
+                e.preventDefault();
+                const searchInput = document.querySelector('.search-wrapper input');
+                if (searchInput) {
+                    searchInput.focus();
+                    searchInput.select();
+                    showToast('Search focused', 'info');
+                }
+            }
+
+            // Ctrl+/: Show help
+            if (ctrl && key === '/') {
+                e.preventDefault();
+                const helpModal = document.getElementById('keyboard-shortcuts-modal');
+                if (helpModal) {
+                    helpModal.classList.remove('hidden');
+                }
+            }
+
+            // Ctrl+N: New business
+            if (ctrl && key === 'n') {
+                e.preventDefault();
+                const newBusinessModal = document.getElementById('new-business-modal');
+                if (newBusinessModal) {
+                    newBusinessModal.classList.remove('hidden');
+                    const input = document.getElementById('new-business-idea');
+                    if (input) {
+                        input.focus();
+                    }
+                    showToast('New business modal opened', 'info');
+                }
+            }
+
+            // Ctrl+E: Export data
+            if (ctrl && key === 'e') {
+                e.preventDefault();
+                exportToCSV(`king-ai-export-${new Date().toISOString().split('T')[0]}`);
+            }
+
+            // Escape: Close modals
+            if (key === 'escape') {
+                const modals = document.querySelectorAll('.modal:not(.hidden)');
+                modals.forEach(modal => modal.classList.add('hidden'));
+            }
+
+            // Ctrl+T: Toggle theme
+            if (ctrl && key === 't') {
+                e.preventDefault();
+                const themeToggle = document.getElementById('theme-toggle');
+                if (themeToggle) {
+                    themeToggle.click();
+                }
+            }
+
+            // Ctrl+R: Refresh data
+            if (ctrl && key === 'r') {
+                e.preventDefault();
+                fetchData();
+                showToast('Refreshing data...', 'info');
+            }
+        });
+    }
+
+    // --- Data Export Helpers ---
+    function exportToCSV(filename) {
+        // Prepare CSV data
+        let csvContent = 'Business Name,Industry,Status,Progress,Last Action\n';
+
+        STATE.businesses.forEach(business => {
+            const row = [
+                `"${business.name || 'Unknown'}"`,
+                `"${business.industry || 'Unknown'}"`,
+                `"${business.status || 'Unknown'}"`,
+                `"${business.progress || 0}%"`,
+                `"${business.last_action || 'No activity'}"`
+            ].join(',');
+            csvContent += row + '\n';
+        });
+
+        // Add logs section
+        csvContent += '\n\nLog Entries\n';
+        csvContent += 'Timestamp,Type,Message\n';
+
+        STATE.logs.slice(0, 100).forEach(log => {
+            const row = [
+                `"${log.timestamp || new Date().toISOString()}"`,
+                `"${log.type || 'info'}"`,
+                `"${log.message || ''}"`
+            ].join(',');
+            csvContent += row + '\n';
+        });
+
+        // Download CSV
+        downloadFile(csvContent, `${filename}.csv`, 'text/csv');
+    }
+
+    function exportToJSON(filename) {
+        const exportData = {
+            exportDate: new Date().toISOString(),
+            summary: {
+                totalBusinesses: STATE.businesses.length,
+                activeBusinesses: STATE.businesses.filter(b => b.status === 'running').length,
+                totalProfit: STATE.totalProfit,
+                pendingApprovals: STATE.approvals.length,
+                totalLogs: STATE.logs.length
+            },
+            businesses: STATE.businesses,
+            approvals: STATE.approvals,
+            logs: STATE.logs.slice(0, 500) // Limit logs for file size
+        };
+
+        const jsonContent = JSON.stringify(exportData, null, 2);
+        downloadFile(jsonContent, `${filename}.json`, 'application/json');
+    }
+
+    function downloadFile(content, filename, mimeType) {
+        const blob = new Blob([content], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        URL.revokeObjectURL(url);
+
+        showToast(`📁 Exported data to ${filename}`, 'success');
+    }
+
+    // --- Helpers ---
+    function showToast(msg, type = 'info') {
+        const toast = document.getElementById('toast');
+        toast.textContent = msg;
+        toast.className = `toast visible ${type}`;
+        setTimeout(() => toast.className = 'toast hidden', 3000);
+
+        // Add notification for important events
+        if (type === 'error' || type === 'warning' || (type === 'success' && msg.includes('successfully'))) {
+            let icon = 'fa-info-circle';
+            let title = 'System Notification';
+            if (type === 'success') {
+                icon = 'fa-check-circle';
+                title = 'Success';
+            }
+            if (type === 'error') {
+                icon = 'fa-exclamation-triangle';
+                title = 'Error';
+            }
+            if (type === 'warning') {
+                icon = 'fa-exclamation-circle';
+                title = 'Warning';
+            }
+
+            addNotification(type, title, msg, icon);
+        }
+    }

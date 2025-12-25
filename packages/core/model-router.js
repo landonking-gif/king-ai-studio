@@ -518,396 +518,408 @@ export class ModelRouter {
                 });
             }
         } else {
-            content = "CEOs Note: Strategic vectors are solid. Proceeding with Phase 1 deployment using internal heuristic buffers. All systems nominal.";
+        } else {
+            // Dynamic Fallback for General Chat
+            const topics = ['hiring', 'expansion', 'strategy', 'finance', 'marketing'];
+            const randomTopic = topics[Math.floor(Math.random() * topics.length)];
+
+            if (lowerPrompt.includes('status') || lowerPrompt.includes('doing')) {
+                content = "Systems online. Operating in autonomous heuristic mode due to neural link interruption. Maintaining empire stability.";
+            } else if (lowerPrompt.includes('hello') || lowerPrompt.includes('hi ')) {
+                content = "Greetings. Neural uplink is currently limited, but I am monitoring all business vectors.";
+            } else {
+                content = `I've received your input: "${prompt.substring(0, 50)}${prompt.length > 50 ? '...' : ''}". \n\nStandard neural processing is currently offline. Operating on backup protocol ${Math.floor(Math.random() * 900) + 100}. \n\nPending your command to re-establish full AI connectivity.`;
+            }
         }
+    }
 
         return {
-            success: true,
-            content,
-            modelId: 'simulation:high-roi',
-            provider: 'simulated',
-            simulated: true,
-            reasoning: "Synthetic intelligence engine generated this response to prevent system halt during API outage."
-        };
+    success: true,
+    content,
+    modelId: 'simulation:high-roi',
+    provider: 'simulated',
+    simulated: true,
+    reasoning: "Synthetic intelligence engine generated this response to prevent system halt during API outage."
+};
     }
 
     /**
      * Internal helper to execute a request for a specific model
      */
     async executeModelRequest(modelId, prompt, options = {}) {
-        if (process.env.MOCK_AI === 'true') {
-            let content = "Mocked AI Response";
-            if (prompt.includes('Return ONLY valid JSON')) {
-                // Return a structure that satisfies both BusinessAnalyzer and others
-                content = JSON.stringify({
-                    viability: { score: 9, reasoning: "Mocked success" },
-                    marketAnalysis: { targetAudience: "Global", marketSize: "Scaling", competition: "Low", differentiator: "AI Automation" },
-                    revenueModel: { primary: "SaaS", secondary: [], pricingStrategy: "Subscription" },
-                    requiredSystems: [], estimatedCosts: { startup: "$100", monthly: "$10" },
-                    risks: [], timeline: { mvp: "2 weeks", profitable: "2 months" },
-                    immediateNextSteps: ["Initialize project"],
-                    executiveSummary: "Mocked summary", mission: "Automate everything", vision: "Infinite scaling",
-                    phases: [
-                        {
-                            name: "Launch", duration: "1 month", objectives: ["Reach users"], tasks: [
-                                { name: "Setup server", description: "Deploy code", automated: true, requiresApproval: false }
-                            ], milestones: ["Release"], budget: "$100"
-                        }
-                    ],
-                    automationOpportunities: [], legalRequirements: [], financialProjections: {}, kpis: [], successCriteria: "Growth"
-                });
-            }
-            return { success: true, content, modelId, provider: 'mock' };
+    if (process.env.MOCK_AI === 'true') {
+        let content = "Mocked AI Response";
+        if (prompt.includes('Return ONLY valid JSON')) {
+            // Return a structure that satisfies both BusinessAnalyzer and others
+            content = JSON.stringify({
+                viability: { score: 9, reasoning: "Mocked success" },
+                marketAnalysis: { targetAudience: "Global", marketSize: "Scaling", competition: "Low", differentiator: "AI Automation" },
+                revenueModel: { primary: "SaaS", secondary: [], pricingStrategy: "Subscription" },
+                requiredSystems: [], estimatedCosts: { startup: "$100", monthly: "$10" },
+                risks: [], timeline: { mvp: "2 weeks", profitable: "2 months" },
+                immediateNextSteps: ["Initialize project"],
+                executiveSummary: "Mocked summary", mission: "Automate everything", vision: "Infinite scaling",
+                phases: [
+                    {
+                        name: "Launch", duration: "1 month", objectives: ["Reach users"], tasks: [
+                            { name: "Setup server", description: "Deploy code", automated: true, requiresApproval: false }
+                        ], milestones: ["Release"], budget: "$100"
+                    }
+                ],
+                automationOpportunities: [], legalRequirements: [], financialProjections: {}, kpis: [], successCriteria: "Growth"
+            });
         }
-        const model = this.models[modelId];
-        if (!model) return { success: false, error: `Unknown model: ${modelId}` };
-
-        // Check circuit breaker
-        if (!this.checkCircuit(model.provider)) {
-            return { success: false, error: `Circuit breaker open for ${model.provider}` };
-        }
-
-        // Check cache
-        const cacheKey = this.hashPrompt(prompt);
-        const cached = this.cache.get(`${modelId}:${cacheKey}`);
-        if (cached) {
-            return { ...cached, cached: true };
-        }
-
-        this.recordRequest(modelId);
-        console.log(`[ModelRouter] Executing: ${modelId}`);
-
-        try {
-            let result;
-            switch (model.provider) {
-                case 'ollama':
-                    result = await this.completeOllama(model.model, prompt);
-                    break;
-                case 'openai':
-                    result = await this.completeOpenAI(model.model, prompt);
-                    break;
-                case 'anthropic':
-                    result = await this.completeAnthropic(model.model, prompt);
-                    break;
-                case 'gemini':
-                    result = await this.completeGemini(model.model, prompt);
-                    break;
-                case 'deepseek':
-                    result = await this.completeDeepSeek(model.model, prompt);
-                    break;
-                case 'private':
-                    result = await this.completePrivate(model.model, prompt);
-                    break;
-                default:
-                    return { success: false, error: `Unknown provider: ${model.provider}` };
-            }
-
-            if (result.success && model.cost > 0) {
-                this.usageTracker[modelId].totalCost += model.cost;
-                this.saveUsageTracker();
-            }
-
-            // Cache successful results
-            if (result.success) {
-                this.cache.set(`${modelId}:${cacheKey}`, result);
-                this.recordCircuitSuccess(model.provider);
-            }
-
-            return { ...result, modelId, provider: model.provider };
-        } catch (error) {
-            console.warn(`[ModelRouter] ❌ ${modelId} execution error: ${error.message}${error.name === 'AbortError' ? ' (TIMEOUT)' : ''}`);
-            this.recordCircuitFailure(model.provider);
-            return { success: false, error: error.message, modelId };
-        }
+        return { success: true, content, modelId, provider: 'mock' };
     }
+    const model = this.models[modelId];
+    if (!model) return { success: false, error: `Unknown model: ${modelId}` };
+
+    // Check circuit breaker
+    if (!this.checkCircuit(model.provider)) {
+        return { success: false, error: `Circuit breaker open for ${model.provider}` };
+    }
+
+    // Check cache
+    const cacheKey = this.hashPrompt(prompt);
+    const cached = this.cache.get(`${modelId}:${cacheKey}`);
+    if (cached) {
+        return { ...cached, cached: true };
+    }
+
+    this.recordRequest(modelId);
+    console.log(`[ModelRouter] Executing: ${modelId}`);
+
+    try {
+        let result;
+        switch (model.provider) {
+            case 'ollama':
+                result = await this.completeOllama(model.model, prompt);
+                break;
+            case 'openai':
+                result = await this.completeOpenAI(model.model, prompt);
+                break;
+            case 'anthropic':
+                result = await this.completeAnthropic(model.model, prompt);
+                break;
+            case 'gemini':
+                result = await this.completeGemini(model.model, prompt);
+                break;
+            case 'deepseek':
+                result = await this.completeDeepSeek(model.model, prompt);
+                break;
+            case 'private':
+                result = await this.completePrivate(model.model, prompt);
+                break;
+            default:
+                return { success: false, error: `Unknown provider: ${model.provider}` };
+        }
+
+        if (result.success && model.cost > 0) {
+            this.usageTracker[modelId].totalCost += model.cost;
+            this.saveUsageTracker();
+        }
+
+        // Cache successful results
+        if (result.success) {
+            this.cache.set(`${modelId}:${cacheKey}`, result);
+            this.recordCircuitSuccess(model.provider);
+        }
+
+        return { ...result, modelId, provider: model.provider };
+    } catch (error) {
+        console.warn(`[ModelRouter] ❌ ${modelId} execution error: ${error.message}${error.name === 'AbortError' ? ' (TIMEOUT)' : ''}`);
+        this.recordCircuitFailure(model.provider);
+        return { success: false, error: error.message, modelId };
+    }
+}
 
     /**
      * Complete with Private/Dark-Pool (simulated)
      */
     async completePrivate(model, prompt) {
-        // In reality, this might be a local GPU server or a secure VPC endpoint
-        console.log(`[ModelRouter] Routing to Dark-Pool Node [${model}]`);
-        return this.completeOllama(model, prompt); // For now, use Ollama as the "Private" engine
-    }
+    // In reality, this might be a local GPU server or a secure VPC endpoint
+    console.log(`[ModelRouter] Routing to Dark-Pool Node [${model}]`);
+    return this.completeOllama(model, prompt); // For now, use Ollama as the "Private" engine
+}
 
     /**
      * Complete with Ollama (local)
      */
     async completeOllama(model, prompt) {
-        let fullPrompt = prompt;
-        if (this.systemPrompt) {
-            fullPrompt = `System: ${this.systemPrompt}\n\nUser: ${prompt}`;
-        }
-
-        console.log(`[ModelRouter] Calling Ollama (${this.ollamaUrl}): ${model}...`);
-        const startTime = Date.now();
-        const response = await fetch(`${this.ollamaUrl}/api/generate`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ model, prompt: fullPrompt, stream: false }),
-            signal: AbortSignal.timeout(300000) // Increased to 5 minutes for heavy reasoning on AWS
-        });
-        console.log(`[ModelRouter] Ollama response: ${response.status} (${Date.now() - startTime}ms)`);
-
-        if (!response.ok) {
-            throw new Error(`Ollama error: ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        // Extract reasoning from <think> tags
-        const thinkMatch = data.response?.match(/<think>([\s\S]*?)<\/think>/);
-        const content = thinkMatch
-            ? data.response.replace(/<think>[\s\S]*?<\/think>/, '').trim()
-            : data.response;
-
-        return {
-            success: true,
-            content,
-            reasoning: thinkMatch ? thinkMatch[1].trim() : null,
-            rawContent: data.response
-        };
+    let fullPrompt = prompt;
+    if (this.systemPrompt) {
+        fullPrompt = `System: ${this.systemPrompt}\n\nUser: ${prompt}`;
     }
+
+    console.log(`[ModelRouter] Calling Ollama (${this.ollamaUrl}): ${model}...`);
+    const startTime = Date.now();
+    const response = await fetch(`${this.ollamaUrl}/api/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model, prompt: fullPrompt, stream: false }),
+        signal: AbortSignal.timeout(300000) // Increased to 5 minutes for heavy reasoning on AWS
+    });
+    console.log(`[ModelRouter] Ollama response: ${response.status} (${Date.now() - startTime}ms)`);
+
+    if (!response.ok) {
+        throw new Error(`Ollama error: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    // Extract reasoning from <think> tags
+    const thinkMatch = data.response?.match(/<think>([\s\S]*?)<\/think>/);
+    const content = thinkMatch
+        ? data.response.replace(/<think>[\s\S]*?<\/think>/, '').trim()
+        : data.response;
+
+    return {
+        success: true,
+        content,
+        reasoning: thinkMatch ? thinkMatch[1].trim() : null,
+        rawContent: data.response
+    };
+}
 
     /**
      * Complete with OpenAI
      */
     async completeOpenAI(model, prompt) {
-        const apiKey = this.getApiKey('openai');
-        if (!apiKey) throw new Error('No OpenAI API key');
+    const apiKey = this.getApiKey('openai');
+    if (!apiKey) throw new Error('No OpenAI API key');
 
-        const response = await fetch('https://api.openai.com/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`
-            },
-            body: JSON.stringify({
-                model,
-                messages: [
-                    ...(this.systemPrompt ? [{ role: 'system', content: this.systemPrompt }] : []),
-                    { role: 'user', content: prompt }
-                ],
-                max_tokens: 4096
-            })
-        });
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+            model,
+            messages: [
+                ...(this.systemPrompt ? [{ role: 'system', content: this.systemPrompt }] : []),
+                { role: 'user', content: prompt }
+            ],
+            max_tokens: 4096
+        })
+    });
 
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.error?.message || `OpenAI error: ${response.status}`);
-        }
-
-        const data = await response.json();
-        return {
-            success: true,
-            content: data.choices[0]?.message?.content || ''
-        };
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error?.message || `OpenAI error: ${response.status}`);
     }
+
+    const data = await response.json();
+    return {
+        success: true,
+        content: data.choices[0]?.message?.content || ''
+    };
+}
 
     /**
      * Complete with Anthropic
      */
     async completeAnthropic(model, prompt) {
-        const apiKey = this.getApiKey('anthropic');
-        if (!apiKey) throw new Error('No Anthropic API key');
+    const apiKey = this.getApiKey('anthropic');
+    if (!apiKey) throw new Error('No Anthropic API key');
 
-        const response = await fetch('https://api.anthropic.com/v1/messages', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'x-api-key': apiKey,
-                'anthropic-version': '2023-06-01'
-            },
-            body: JSON.stringify({
-                model,
-                max_tokens: 4096,
-                system: this.systemPrompt || undefined,
-                messages: [{ role: 'user', content: prompt }]
-            })
-        });
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': apiKey,
+            'anthropic-version': '2023-06-01'
+        },
+        body: JSON.stringify({
+            model,
+            max_tokens: 4096,
+            system: this.systemPrompt || undefined,
+            messages: [{ role: 'user', content: prompt }]
+        })
+    });
 
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.error?.message || `Anthropic error: ${response.status}`);
-        }
-
-        const data = await response.json();
-        return {
-            success: true,
-            content: data.content[0]?.text || ''
-        };
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error?.message || `Anthropic error: ${response.status}`);
     }
+
+    const data = await response.json();
+    return {
+        success: true,
+        content: data.content[0]?.text || ''
+    };
+}
 
     /**
      * Complete with Gemini
      */
     async completeGemini(model, prompt) {
-        const apiKey = this.getApiKey('gemini');
-        if (!apiKey) throw new Error('No Gemini API key');
+    const apiKey = this.getApiKey('gemini');
+    if (!apiKey) throw new Error('No Gemini API key');
 
-        // ROI #21: Try both v1beta and v1 versions to ensure maximum compatibility
-        const versions = ['v1beta', 'v1'];
-        let lastError = null;
+    // ROI #21: Try both v1beta and v1 versions to ensure maximum compatibility
+    const versions = ['v1beta', 'v1'];
+    let lastError = null;
 
-        for (const version of versions) {
-            try {
-                const response = await fetch(
-                    `https://generativelanguage.googleapis.com/${version}/models/${model}:generateContent?key=${apiKey}`,
-                    {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            contents: [{ parts: [{ text: prompt }] }]
-                        })
-                    }
-                );
-
-                if (response.ok) {
-                    const data = await response.json();
-                    const content = data.candidates?.[0]?.content?.parts?.[0]?.text;
-                    if (content) {
-                        return { success: true, content };
-                    }
-                    console.warn(`[ModelRouter] Gemini (${version}/${model}) returned empty candidates:`, JSON.stringify(data, null, 2));
-                } else if (response.status === 429) {
-                    // Quota exceeded, wait and retry once
-                    console.log(`[ModelRouter] Gemini 429 (Quota) for ${model}. Retrying in 5s...`);
-                    await new Promise(resolve => setTimeout(resolve, 5000));
-                    continue; // Continue loop for same model version
-                } else if (response.status !== 404) {
-                    // If it's not a 404, capture the error but keep trying versions
-                    const errorData = await response.json().catch(() => ({}));
-                    lastError = errorData.error?.message || `Gemini error: ${response.status}`;
-                } else {
-                    // It's a 404, log it clearly and try the next version
-                    console.warn(`[ModelRouter] Gemini model ${model} not found with API version ${version} (404). Trying next version if available.`);
+    for (const version of versions) {
+        try {
+            const response = await fetch(
+                `https://generativelanguage.googleapis.com/${version}/models/${model}:generateContent?key=${apiKey}`,
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }]
+                    })
                 }
-            } catch (e) {
-                lastError = e.message;
-            }
-        }
+            );
 
-        throw new Error(lastError || `Gemini model ${model} not found or inaccessible`);
+            if (response.ok) {
+                const data = await response.json();
+                const content = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (content) {
+                    return { success: true, content };
+                }
+                console.warn(`[ModelRouter] Gemini (${version}/${model}) returned empty candidates:`, JSON.stringify(data, null, 2));
+            } else if (response.status === 429) {
+                // Quota exceeded, wait and retry once
+                console.log(`[ModelRouter] Gemini 429 (Quota) for ${model}. Retrying in 5s...`);
+                await new Promise(resolve => setTimeout(resolve, 5000));
+                continue; // Continue loop for same model version
+            } else if (response.status !== 404) {
+                // If it's not a 404, capture the error but keep trying versions
+                const errorData = await response.json().catch(() => ({}));
+                lastError = errorData.error?.message || `Gemini error: ${response.status}`;
+            } else {
+                // It's a 404, log it clearly and try the next version
+                console.warn(`[ModelRouter] Gemini model ${model} not found with API version ${version} (404). Trying next version if available.`);
+            }
+        } catch (e) {
+            lastError = e.message;
+        }
     }
+
+    throw new Error(lastError || `Gemini model ${model} not found or inaccessible`);
+}
 
     /**
      * Complete with DeepSeek API
      */
     async completeDeepSeek(model, prompt) {
-        const apiKey = this.getApiKey('deepseek');
-        if (!apiKey) throw new Error('No DeepSeek API key');
+    const apiKey = this.getApiKey('deepseek');
+    if (!apiKey) throw new Error('No DeepSeek API key');
 
-        const response = await fetch('https://api.deepseek.com/chat/completions', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`
-            },
-            body: JSON.stringify({
-                model,
-                messages: [
-                    ...(this.systemPrompt ? [{ role: 'system', content: this.systemPrompt }] : []),
-                    { role: 'user', content: prompt }
-                ]
-            })
-        });
+    const response = await fetch('https://api.deepseek.com/chat/completions', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+            model,
+            messages: [
+                ...(this.systemPrompt ? [{ role: 'system', content: this.systemPrompt }] : []),
+                { role: 'user', content: prompt }
+            ]
+        })
+    });
 
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.error?.message || `DeepSeek error: ${response.status}`);
-        }
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error?.message || `DeepSeek error: ${response.status}`);
+    }
 
-        const data = await response.json();
-        return {
-            success: true,
-            content: data.choices[0]?.message?.content || ''
+    const data = await response.json();
+    return {
+        success: true,
+        content: data.choices[0]?.message?.content || ''
+    };
+}
+
+/**
+ * Get usage statistics
+ */
+getUsageStats() {
+    const stats = {};
+    for (const [modelId, usage] of Object.entries(this.usageTracker)) {
+        stats[modelId] = {
+            requestsLast5Min: usage.requests?.length || 0,
+            totalCost: usage.totalCost || 0,
+            isRateLimited: this.isRateLimited(modelId)
         };
     }
-
-    /**
-     * Get usage statistics
-     */
-    getUsageStats() {
-        const stats = {};
-        for (const [modelId, usage] of Object.entries(this.usageTracker)) {
-            stats[modelId] = {
-                requestsLast5Min: usage.requests?.length || 0,
-                totalCost: usage.totalCost || 0,
-                isRateLimited: this.isRateLimited(modelId)
-            };
-        }
-        return stats;
-    }
+    return stats;
+}
 
     /**
      * Execute from orchestrator
      */
     async execute(task) {
-        switch (task.action) {
-            case 'complete':
-                return this.complete(task.data.prompt, task.data.taskType, task.data.options);
-            case 'select':
-                return { model: this.selectModel(task.data.taskType, task.data.options) };
-            case 'stats':
-                return this.getUsageStats();
-            default:
-                throw new Error(`Unknown action: ${task.action}`);
-        }
+    switch (task.action) {
+        case 'complete':
+            return this.complete(task.data.prompt, task.data.taskType, task.data.options);
+        case 'select':
+            return { model: this.selectModel(task.data.taskType, task.data.options) };
+        case 'stats':
+            return this.getUsageStats();
+        default:
+            throw new Error(`Unknown action: ${task.action}`);
     }
+}
 
-    /**
-     * Check circuit breaker for provider
-     */
-    checkCircuit(provider) {
-        const cb = this.circuitBreakers[provider];
-        if (!cb) return true; // Allow if no breaker
+/**
+ * Check circuit breaker for provider
+ */
+checkCircuit(provider) {
+    const cb = this.circuitBreakers[provider];
+    if (!cb) return true; // Allow if no breaker
 
-        if (cb.state === 'open') {
-            if (Date.now() - cb.lastFail > this.circuitTimeout) {
-                cb.state = 'half-open';
-                cb.failures = 0;
-                return true;
-            }
-            return false; // Circuit open
-        }
-        return true;
-    }
-
-    /**
-     * Record circuit breaker failure
-     */
-    recordCircuitFailure(provider) {
-        const cb = this.circuitBreakers[provider];
-        if (!cb) return;
-
-        cb.failures++;
-        cb.lastFail = Date.now();
-        if (cb.failures >= this.circuitThreshold) {
-            cb.state = 'open';
-            console.warn(`[ModelRouter] Circuit breaker opened for ${provider}`);
-        }
-    }
-
-    /**
-     * Record circuit breaker success
-     */
-    recordCircuitSuccess(provider) {
-        const cb = this.circuitBreakers[provider];
-        if (!cb) return;
-
-        if (cb.state === 'half-open') {
-            cb.state = 'closed';
+    if (cb.state === 'open') {
+        if (Date.now() - cb.lastFail > this.circuitTimeout) {
+            cb.state = 'half-open';
             cb.failures = 0;
-            console.log(`[ModelRouter] Circuit breaker closed for ${provider}`);
+            return true;
         }
+        return false; // Circuit open
     }
+    return true;
+}
 
-    /**
-     * Hash prompt for caching
-     */
-    hashPrompt(prompt) {
-        return crypto.createHash('md5').update(prompt).digest('hex');
+/**
+ * Record circuit breaker failure
+ */
+recordCircuitFailure(provider) {
+    const cb = this.circuitBreakers[provider];
+    if (!cb) return;
+
+    cb.failures++;
+    cb.lastFail = Date.now();
+    if (cb.failures >= this.circuitThreshold) {
+        cb.state = 'open';
+        console.warn(`[ModelRouter] Circuit breaker opened for ${provider}`);
     }
+}
+
+/**
+ * Record circuit breaker success
+ */
+recordCircuitSuccess(provider) {
+    const cb = this.circuitBreakers[provider];
+    if (!cb) return;
+
+    if (cb.state === 'half-open') {
+        cb.state = 'closed';
+        cb.failures = 0;
+        console.log(`[ModelRouter] Circuit breaker closed for ${provider}`);
+    }
+}
+
+/**
+ * Hash prompt for caching
+ */
+hashPrompt(prompt) {
+    return crypto.createHash('md5').update(prompt).digest('hex');
+}
 }
 
 export default ModelRouter;
