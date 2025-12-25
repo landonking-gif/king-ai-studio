@@ -27,7 +27,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // initThemeToggle(); // Removed - Dark mode enforced
     initNotifications();
     initNotifications();
-    initHelpModal();
     initKeyboardShortcuts();
     startSync();
     setupCharts();
@@ -1080,36 +1079,8 @@ function formatTimeAgo(date) {
     return `${diffDays}d ago`;
 }
 
-// --- Help Modal ---
-function initHelpModal() {
-    const helpBtn = document.getElementById('help-btn');
-    const helpModal = document.getElementById('help-modal');
-    const closeBtn = helpModal?.querySelector('.close-modal');
-    const tourBtn = document.getElementById('start-tour-btn');
+// Help Modal init removed
 
-    if (!helpBtn || !helpModal) return;
-
-    helpBtn.addEventListener('click', () => {
-        helpModal.classList.remove('hidden');
-    });
-
-    if (closeBtn) {
-        closeBtn.addEventListener('click', () => {
-            helpModal.classList.add('hidden');
-        });
-    }
-
-    if (tourBtn) {
-        tourBtn.style.display = 'none'; // Hide if still in DOM
-    }
-
-    // Close on outside click
-    helpModal.addEventListener('click', (e) => {
-        if (e.target === helpModal) {
-            helpModal.classList.add('hidden');
-        }
-    });
-}
 
 // --- Keyboard Shortcuts ---
 function initKeyboardShortcuts() {
@@ -1147,7 +1118,7 @@ function initKeyboardShortcuts() {
         // Ctrl+/: Show help
         if (ctrl && key === '/') {
             e.preventDefault();
-            const helpModal = document.getElementById('help-modal');
+            const helpModal = document.getElementById('keyboard-shortcuts-modal');
             if (helpModal) {
                 helpModal.classList.remove('hidden');
             }
