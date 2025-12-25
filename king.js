@@ -45,9 +45,9 @@ async function run() {
 
     // Step 2: AWS Info
     console.log('🌐 [2/4] AWS Server Details');
-    const defaultIP = 'ec2-18-216-0-221.us-east-2.compute.amazonaws.com';
+    const defaultIP = 'ec2-3-91-94-2.compute-1.amazonaws.com';
     const serverIP = await question(`Enter AWS Server IP/DNS [Default: ${defaultIP}]: `) || defaultIP;
-    const keyFile = 'king-ai-studio.pem';
+    const keyFile = 'king-ai-studio (1).pem';
 
     // Update .env with new OLLAMA_URL
     if (fs.existsSync(path.join(ROOT_DIR, '.env'))) {
