@@ -21,6 +21,17 @@ const rl = readline.createInterface({
 
 const question = (query) => new Promise((resolve) => rl.question(query, resolve));
 
+// Dry-run mode: set via env `DRY_RUN=1` or by passing `--dry-run` argument.
+const dryRun = process.env.DRY_RUN === '1' || process.argv.includes('--dry-run');
+
+function runCmd(cmd, opts = { stdio: 'inherit' }) {
+    if (dryRun) {
+        console.log('[DRY RUN]', cmd);
+        return null;
+    }
+    return execSync(cmd, opts);
+}
+
 async function run() {
     console.clear();
     console.log('╔══════════════════════════════════════════════════════════╗');
@@ -35,16 +46,16 @@ async function run() {
     // Step 1: Push local fixes
     console.log('📤 [1/4] Syncing local fixes to repository...');
     try {
-        execSync('git add .', { stdio: 'ignore' });
-        execSync('git commit -m "Auto-sync from Master Controller" --allow-empty', { stdio: 'ignore' });
+        runCmd('git add .', { stdio: 'ignore' });
+        runCmd('git commit -m "Auto-sync from Master Controller" --allow-empty', { stdio: 'ignore' });
         try {
-            execSync('git push origin main', { stdio: 'inherit' });
+            runCmd('git push origin main', { stdio: 'inherit' });
             console.log('✅ Local code synced to GitHub.\n');
         } catch (pushErr) {
             console.warn('⚠️ Push failed — attempting to integrate remote changes via pull --rebase...');
             try {
-                execSync('git pull --rebase --autostash origin main', { stdio: 'inherit' });
-                execSync('git push origin main', { stdio: 'inherit' });
+                runCmd('git pull --rebase --autostash origin main', { stdio: 'inherit' });
+                runCmd('git push origin main', { stdio: 'inherit' });
                 console.log('✅ Synced after rebasing remote changes.\n');
             } catch (pullErr) {
                 console.warn('⚠️ Could not auto-sync with remote. Continuing without pushing.');
