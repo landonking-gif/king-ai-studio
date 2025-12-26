@@ -146,7 +146,7 @@ const Index = () => {
         </div>
 
         {/* Recent Tasks */}
-        <TaskStatusCard title="Recent Task History" tasks={recentTasks} />
+        <TaskStatusCard title="Recent Task History" tasks={recentTasksState} />
       </div>
     </DashboardLayout>
   );
