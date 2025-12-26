@@ -45,7 +45,7 @@ const PortfolioPage = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <MetricCard
             title="Total Ventures"
-            value={businesses.length}
+            value={businessesState.length}
             icon={<Building2 className="w-5 h-5" />}
           />
           <MetricCard
