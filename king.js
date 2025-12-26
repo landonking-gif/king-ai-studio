@@ -37,17 +37,50 @@ async function run() {
     try {
         execSync('git add .', { stdio: 'ignore' });
         execSync('git commit -m "Auto-sync from Master Controller" --allow-empty', { stdio: 'ignore' });
-        execSync('git push origin main', { stdio: 'inherit' });
-        console.log('✅ Local code synced to GitHub.\n');
+        try {
+            execSync('git push origin main', { stdio: 'inherit' });
+            console.log('✅ Local code synced to GitHub.\n');
+        } catch (pushErr) {
+            console.warn('⚠️ Push failed — attempting to integrate remote changes via pull --rebase...');
+            try {
+                execSync('git pull --rebase --autostash origin main', { stdio: 'inherit' });
+                execSync('git push origin main', { stdio: 'inherit' });
+                console.log('✅ Synced after rebasing remote changes.\n');
+            } catch (pullErr) {
+                console.warn('⚠️ Could not auto-sync with remote. Continuing without pushing.');
+            }
+        }
     } catch (e) {
-        console.warn('⚠️ Push failed (likely already up to date). Continuing...');
+        console.warn('⚠️ Git operations failed locally. Continuing...');
     }
 
     // Step 2: AWS Info
     console.log('🌐 [2/4] AWS Server Details');
     const defaultIP = 'ec2-3-91-94-2.compute-1.amazonaws.com';
     const serverIP = await question(`Enter AWS Server IP/DNS [Default: ${defaultIP}]: `) || defaultIP;
-    const keyFile = 'king-ai-studio (1).pem';
+    let keyFile = 'king-ai-studio (1).pem';
+
+    // If the hardcoded key isn't present, try to discover a sensible .pem file
+    const pemFiles = fs.readdirSync(ROOT_DIR).filter(f => f.toLowerCase().endsWith('.pem'));
+    if (!fs.existsSync(path.join(ROOT_DIR, keyFile))) {
+        if (pemFiles.length === 1) {
+            keyFile = pemFiles[0];
+            console.log(`Using discovered key file: ${keyFile}`);
+        } else if (pemFiles.length > 1) {
+            console.log('Multiple .pem files found in the project root:');
+            pemFiles.forEach((p, i) => console.log(`  ${i + 1}. ${p}`));
+            const ans = await question(`Enter number of key to use [1]: `) || '1';
+            const idx = Math.max(0, Math.min(pemFiles.length - 1, parseInt(ans, 10) - 1));
+            keyFile = pemFiles[idx];
+        } else {
+            const manual = await question('No .pem found. Enter path to SSH key file (or press Enter to abort): ');
+            if (!manual) {
+                console.error('❌ No SSH key provided; cannot continue.');
+                process.exit(1);
+            }
+            keyFile = manual.trim();
+        }
+    }
 
     // Update .env with new OLLAMA_URL
     if (fs.existsSync(path.join(ROOT_DIR, '.env'))) {
@@ -66,8 +99,10 @@ async function run() {
         console.log(`✅ Updated .env with OLLAMA_URL: ${ollamaUrl}`);
     }
 
-    if (!fs.existsSync(path.join(ROOT_DIR, keyFile))) {
-        console.error(`❌ Missing ${keyFile} in the root directory!`);
+    // Allow absolute or relative key paths; if relative, resolve from ROOT_DIR
+    const resolvedKeyPath = path.isAbsolute(keyFile) ? keyFile : path.join(ROOT_DIR, keyFile);
+    if (!fs.existsSync(resolvedKeyPath)) {
+        console.error(`❌ Missing SSH key at ${resolvedKeyPath}!`);
         process.exit(1);
     }
 
@@ -77,8 +112,8 @@ async function run() {
         try {
             const sshOpts = '-o StrictHostKeyChecking=no -o ConnectTimeout=10';
             // Ensure directory exists with correct permissions
-            execSync(`ssh -i "${keyFile}" ${sshOpts} ubuntu@${serverIP} "mkdir -p \\$HOME/king-ai-studio && chmod 700 \\$HOME/king-ai-studio"`, { stdio: 'ignore' });
-            execSync(`scp -i "${keyFile}" ${sshOpts} ".env" ubuntu@${serverIP}:~/king-ai-studio/.env`, { stdio: 'inherit' });
+            execSync(`ssh -i "${resolvedKeyPath}" ${sshOpts} ubuntu@${serverIP} "mkdir -p \$HOME/king-ai-studio && chmod 700 \$HOME/king-ai-studio"`, { stdio: 'ignore' });
+            execSync(`scp -i "${resolvedKeyPath}" ${sshOpts} ".env" ubuntu@${serverIP}:~/king-ai-studio/.env`, { stdio: 'inherit' });
             console.log('✅ Secrets synced successfully.');
         } catch (e) {
             console.warn(`⚠️ Could not sync .env securely: ${e.message}`);
@@ -91,33 +126,33 @@ async function run() {
     // Upload deploy script
     const deployScript = 'deploy.sh';
     console.log(`\n📦 [3.5/4] Uploading deployment script...`);
-    try {
-        const sshOpts = '-o StrictHostKeyChecking=no -o ConnectTimeout=10';
-        execSync(`scp -i "${keyFile}" ${sshOpts} "${deployScript}" ubuntu@${serverIP}:~/deploy.sh`, { stdio: 'ignore' });
-        execSync(`ssh -i "${keyFile}" ${sshOpts} ubuntu@${serverIP} "chmod +x ~/deploy.sh"`, { stdio: 'ignore' });
-    } catch (e) {
-        console.error(`❌ Failed to upload deployment script: ${e.message}`);
-        process.exit(1);
-    }
+        try {
+            const sshOpts = '-o StrictHostKeyChecking=no -o ConnectTimeout=10';
+            execSync(`scp -i "${resolvedKeyPath}" ${sshOpts} "${deployScript}" ubuntu@${serverIP}:~/deploy.sh`, { stdio: 'ignore' });
+            execSync(`ssh -i "${resolvedKeyPath}" ${sshOpts} ubuntu@${serverIP} "chmod +x ~/deploy.sh"`, { stdio: 'ignore' });
+        } catch (e) {
+            console.error(`❌ Failed to upload deployment script: ${e.message}`);
+            process.exit(1);
+        }
 
     // Sync entire project to server (since repo is private)
     console.log(`\n📂 [3.6/4] Syncing project files to server...`);
-    try {
-        const sshOpts = '-o StrictHostKeyChecking=no -o ConnectTimeout=10';
-        console.log('   Creating secure stream and uploading...');
+        try {
+            const sshOpts = '-o StrictHostKeyChecking=no -o ConnectTimeout=10';
+            console.log('   Creating secure stream and uploading...');
 
-        // Ensure destination exists
-        execSync(`ssh -i "${keyFile}" ${sshOpts} ubuntu@${serverIP} "mkdir -p ~/king-ai-studio"`, { stdio: 'ignore' });
+            // Ensure destination exists
+            execSync(`ssh -i "${resolvedKeyPath}" ${sshOpts} ubuntu@${serverIP} "mkdir -p ~/king-ai-studio"`, { stdio: 'ignore' });
 
-        // Use tar to bundle everything except node_modules/git/data and stream to server
-        // This is extremely fast and avoids GitHub private repo issues
-        execSync(`tar --exclude=node_modules --exclude=.git --exclude=data -cf - . | ssh -i "${keyFile}" ${sshOpts} ubuntu@${serverIP} "cd ~/king-ai-studio && tar -xf -"`, { stdio: 'inherit' });
-        console.log('✅ Project files synced.');
-    } catch (e) {
-        console.error('❌ Failed to sync project files.');
-        console.error('   Error:', e.message);
-        process.exit(1);
-    }
+            // Use tar to bundle everything except node_modules/git/data and stream to server
+            // This is extremely fast and avoids GitHub private repo issues
+            execSync(`tar --exclude=node_modules --exclude=.git --exclude=data -cf - . | ssh -i "${resolvedKeyPath}" ${sshOpts} ubuntu@${serverIP} "cd ~/king-ai-studio && tar -xf -"`, { stdio: 'inherit' });
+            console.log('✅ Project files synced.');
+        } catch (e) {
+            console.error('❌ Failed to sync project files.');
+            console.error('   Error:', e.message);
+            process.exit(1);
+        }
 
     try {
         console.log('\n⏳ Initiating remote deployment (this will stream live output)...');
