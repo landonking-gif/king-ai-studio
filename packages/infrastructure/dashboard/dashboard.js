@@ -146,6 +146,15 @@ async function fetchData() {
         updateUI();
         applySearchFilter();
 
+        // Rebuild notifications from fresh server data
+        try {
+            generateInitialNotifications();
+            updateNotificationBadge();
+            renderNotifications();
+        } catch (e) {
+            console.warn('Could not update notifications:', e);
+        }
+
         // Update Live Status
         if (data.ceoStatus) {
             updateLiveStatus(data.ceoStatus);
@@ -892,37 +901,31 @@ function initSettings() {
     }
 
     function generateBusinessActivity(business) {
-        // Mock activity data based on business progress
-        const activities = [
-            {
-                icon: 'fa-rocket',
-                title: 'Business Launched',
-                time: '2 weeks ago',
-                description: 'Initial setup and market research completed'
-            },
-            {
-                icon: 'fa-users',
-                title: 'First Customers Acquired',
-                time: '1 week ago',
-                description: 'Customer acquisition campaigns showing positive results'
-            },
-            {
-                icon: 'fa-chart-line',
-                title: 'Revenue Milestone',
-                time: '3 days ago',
-                description: 'First revenue generated from operations'
-            },
-            {
-                icon: 'fa-cogs',
-                title: 'System Optimization',
-                time: '1 day ago',
-                description: 'Automated processes refined for better efficiency'
-            }
-        ];
+        // Build an activity timeline from recent logs related to this business.
+        // Prefer logs with `business_id` or messages that contain the business name.
+        const bizId = business.id || business.name;
+        const relevant = (STATE.logs || []).filter(l => {
+            if (!l) return false;
+            if (l.business_id && bizId && String(l.business_id) === String(bizId)) return true;
+            if (l.message && business.name && l.message.includes(business.name)) return true;
+            return false;
+        }).slice(0, 8);
 
-        // Return activities based on progress
-        const progress = business.progress || 0;
-        return activities.slice(0, Math.ceil(progress / 25));
+        if (relevant.length === 0) {
+            // Fallback: generate lightweight items from the business object
+            const fallback = [
+                { icon: 'fa-rocket', title: 'Launched', time: 'N/A', description: business.last_action || 'Initialized' },
+                { icon: 'fa-chart-line', title: 'Progress Update', time: 'N/A', description: `Progress: ${business.progress || 0}%` }
+            ];
+            return fallback;
+        }
+
+        return relevant.map(l => ({
+            icon: l.type === 'error' ? 'fa-exclamation-triangle' : (l.type === 'milestone' ? 'fa-rocket' : 'fa-info-circle'),
+            title: l.type ? l.type.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) : 'Activity',
+            time: new Date(l.timestamp || Date.now()).toLocaleString(),
+            description: l.message || ''
+        }));
     }
 
     // --- Search Functionality ---
@@ -1053,34 +1056,52 @@ function initSettings() {
             }
         });
 
-        // Generate some initial notifications
+        // Generate notifications from backend state (if available)
         generateInitialNotifications();
         updateNotificationBadge();
     }
 
     function generateInitialNotifications() {
-        const notifications = [
-            {
-                id: 'welcome',
-                type: 'info',
-                title: 'Welcome to King AI Studio',
-                message: 'Your autonomous business empire is now active and growing.',
-                time: new Date(Date.now() - 1000 * 60 * 5), // 5 minutes ago
-                read: false,
-                icon: 'fa-crown'
-            },
-            {
-                id: 'first-business',
-                type: 'success',
-                title: 'First Business Milestone',
-                message: 'Your first automated business has reached 25% completion.',
-                time: new Date(Date.now() - 1000 * 60 * 15), // 15 minutes ago
-                read: false,
-                icon: 'fa-rocket'
-            }
-        ];
+        // Prefer server-provided logs/approvals for notifications. If we already
+        // have logs (fetched via `/api/all-data`), convert recent logs into
+        // notification entries. Otherwise, keep a lightweight welcome note.
+        const fromLogs = (STATE.logs || []).slice(0, 8).map((l, i) => ({
+            id: `log-${i}-${Date.parse(l.timestamp || new Date())}`,
+            type: l.type === 'error' ? 'error' : l.type === 'milestone' || l.type === 'success' ? 'success' : 'info',
+            title: l.type ? l.type.toUpperCase() : 'Log',
+            message: l.message || '',
+            time: l.timestamp ? new Date(l.timestamp) : new Date(),
+            read: false,
+            icon: l.type === 'error' ? 'fa-exclamation-triangle' : (l.type === 'milestone' ? 'fa-rocket' : 'fa-info-circle')
+        }));
 
-        STATE.notifications = notifications;
+        // Convert pending approvals into higher-priority notifications
+        const fromApprovals = (STATE.approvals || []).slice(0, 6).map((a) => ({
+            id: `approval-${a.id}`,
+            type: 'warning',
+            title: a.title || 'Approval Required',
+            message: a.description || 'Action required for pending approval',
+            time: a.createdAt ? new Date(a.createdAt) : new Date(),
+            read: false,
+            icon: 'fa-exclamation-circle'
+        }));
+
+        if (fromApprovals.length > 0 || fromLogs.length > 0) {
+            // Approvals first, then recent logs
+            STATE.notifications = fromApprovals.concat(fromLogs);
+        } else {
+            STATE.notifications = [
+                {
+                    id: 'welcome',
+                    type: 'info',
+                    title: 'Welcome to King AI Studio',
+                    message: 'System initialized. Waiting for backend data...',
+                    time: new Date(),
+                    read: false,
+                    icon: 'fa-crown'
+                }
+            ];
+        }
     }
 
     function addNotification(type, title, message, icon = 'fa-info-circle') {
