@@ -1,3 +1,232 @@
+// Minimal dashboard frontend (self-contained)
+(function () {
+  const API_BASE = window.API_BASE || '';
+
+  // Simple element builder
+  const el = (tag, attrs = {}, html = '') => {
+    const d = document.createElement(tag);
+    Object.entries(attrs).forEach(([k, v]) => {
+      if (k === 'class') d.className = v;
+      else if (k.startsWith('on') && typeof v === 'function') d.addEventListener(k.substring(2), v);
+      else d.setAttribute(k, String(v));
+    });
+    if (html) d.innerHTML = html;
+    return d;
+  };
+
+  const escapeHtml = (s) => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  function buildUI() {
+    const root = document.getElementById('root') || document.body.appendChild(el('div', { id: 'root' }));
+    root.innerHTML = '';
+    root.appendChild(el('style', {}, `
+      .k-container{font-family:Inter,system-ui,Arial;margin:18px;color:#e6e6e6;background:transparent}
+      .k-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+      .k-h1{font-size:20px;font-weight:700}
+      .k-grid{display:grid;grid-template-columns:1fr 420px;gap:12px}
+      .k-panel{background:#1f1f23;padding:12px;border-radius:8px}
+      .k-list{max-height:420px;overflow:auto}
+      .biz{padding:8px;border-bottom:1px solid rgba(255,255,255,0.03)}
+      .small{color:#9aa0b4;font-size:12px}
+      button{background:#3a3a3f;border:0;color:#fff;padding:6px 10px;border-radius:6px;cursor:pointer}
+      input, textarea{width:100%;padding:8px;border-radius:6px;border:1px solid #2b2b2f;background:#0f0f11;color:#fff}
+      .k-footer{margin-top:12px;color:#8f90a0;font-size:12px}
+      .badge{background:#2b2b2f;padding:4px 8px;border-radius:999px;font-size:12px}
+    `));
+
+    const header = el('div', { class: 'k-header' });
+    header.appendChild(el('div', { class: 'k-h1' }, 'King AI Dashboard'));
+    const rightGroup = el('div', {});
+    rightGroup.appendChild(el('button', { id: 'refresh-btn' }, 'Refresh'));
+    header.appendChild(rightGroup);
+
+    root.appendChild(el('div', { class: 'k-container' }, ''));
+    root.querySelector('.k-container').appendChild(header);
+
+    const grid = el('div', { class: 'k-grid' });
+    const leftCol = el('div', {});
+    const businessesPanel = el('div', { class: 'k-panel' });
+    businessesPanel.appendChild(el('h3', {}, 'Businesses'));
+    businessesPanel.appendChild(el('div', { id: 'business-list', class: 'k-list' }, '<div class="small">Loading…</div>'));
+    leftCol.appendChild(businessesPanel);
+
+    const logsPanel = el('div', { class: 'k-panel', style: 'margin-top:12px' });
+    logsPanel.appendChild(el('h3', {}, 'Recent Logs'));
+    logsPanel.appendChild(el('div', { id: 'log-list', class: 'k-list' }, '<div class="small">Loading…</div>'));
+    leftCol.appendChild(logsPanel);
+
+    const rightCol = el('div', {});
+    const approvalsPanel = el('div', { class: 'k-panel' });
+    approvalsPanel.appendChild(el('h3', {}, 'Approvals'));
+    approvalsPanel.appendChild(el('div', { id: 'approval-list', class: 'k-list' }, '<div class="small">Loading…</div>'));
+    rightCol.appendChild(approvalsPanel);
+
+    const actionsPanel = el('div', { class: 'k-panel', style: 'margin-top:12px' });
+    actionsPanel.appendChild(el('h3', {}, 'Actions'));
+    actionsPanel.appendChild(el('div', {}, `
+      <div style="margin-bottom:8px">
+        <input id="launch-idea" placeholder="New venture idea" />
+        <div style="height:8px"></div>
+        <button id="launch-btn">Launch Venture</button>
+      </div>
+      <div style="margin-top:8px">
+        <input id="command-input" placeholder="CEO command" />
+        <div style="height:8px"></div>
+        <button id="command-btn">Send Command</button>
+      </div>
+    `));
+    rightCol.appendChild(actionsPanel);
+
+    grid.appendChild(leftCol);
+    grid.appendChild(rightCol);
+    root.querySelector('.k-container').appendChild(grid);
+
+    const footer = el('div', { class: 'k-footer' }, `Data from backend at ${API_BASE || 'same origin'}`);
+    root.querySelector('.k-container').appendChild(footer);
+
+    const toast = el('div', { id: 'k-toast', style: 'position:fixed;right:18px;bottom:18px;padding:10px 14px;border-radius:8px;background:#111;color:#fff;display:none' });
+    document.body.appendChild(toast);
+
+    document.getElementById('refresh-btn').addEventListener('click', fetchAndRender);
+    document.getElementById('launch-btn').addEventListener('click', launchVenture);
+    document.getElementById('command-btn').addEventListener('click', sendCommand);
+  }
+
+  function showToast(msg, timeout = 3000) {
+    const t = document.getElementById('k-toast');
+    if (!t) return;
+    t.textContent = msg;
+    t.style.display = 'block';
+    clearTimeout(t._hide);
+    t._hide = setTimeout(() => (t.style.display = 'none'), timeout);
+  }
+
+  async function fetchAndRender() {
+    const bizList = document.getElementById('business-list');
+    const logList = document.getElementById('log-list');
+    const apprList = document.getElementById('approval-list');
+    if (bizList) bizList.innerHTML = '<div class="small">Loading…</div>';
+    if (logList) logList.innerHTML = '<div class="small">Loading…</div>';
+    if (apprList) apprList.innerHTML = '<div class="small">Loading…</div>';
+
+    try {
+      const res = await fetch(`${API_BASE}/api/all-data`);
+      if (!res.ok) throw new Error(`Status ${res.status}`);
+      const data = await res.json();
+
+      const businesses = (data.businesses || []).slice(0, 200);
+      const logs = (data.logs || []).slice(0, 200);
+      const approvals = (data.approvals || []).slice(0, 200);
+
+      if (bizList)
+        bizList.innerHTML =
+          businesses.length === 0
+            ? '<div class="small">No businesses</div>'
+            : businesses
+                .map(
+                  (b) =>
+                    `<div class="biz"><div style="display:flex;justify-content:space-between"><strong>${escapeHtml(
+                      b.name || 'Unnamed'
+                    )}</strong><span class="badge">${escapeHtml(b.status || 'n/a')}</span></div><div class="small">${escapeHtml(
+                      b.industry || ''
+                    )} • ${b.progress || 0}%</div></div>`
+                )
+                .join('');
+      if (logList)
+        logList.innerHTML =
+          logs.length === 0
+            ? '<div class="small">No logs</div>'
+            : logs
+                .map(
+                  (l) =>
+                    `<div class="biz"><div class="small">${new Date(l.timestamp || Date.now()).toLocaleString()}</div><div>${escapeHtml(
+                      l.message || ''
+                    )}</div></div>`
+                )
+                .join('');
+      if (apprList)
+        apprList.innerHTML =
+          approvals.length === 0
+            ? '<div class="small">No pending approvals</div>'
+            : approvals
+                .map(
+                  (a) =>
+                    `<div class="biz" style="display:flex;justify-content:space-between;align-items:center"><div style="flex:1;margin-right:8px"><strong>${escapeHtml(
+                      a.title || a.type || 'Approval'
+                    )}</strong><div class="small">${escapeHtml(a.description || '')}</div></div><div style="display:flex;flex-direction:column;gap:6px"><button data-id="${escapeHtml(
+                      a.id || ''
+                    )}" data-action="approve">Approve</button><button data-id="${escapeHtml(a.id || '')}" data-action="reject" style="background:#b33">Reject</button></div></div>`
+                )
+                .join('');
+
+      if (apprList) {
+        apprList.querySelectorAll('button[data-action]').forEach((btn) => {
+          btn.onclick = async () => {
+            const id = btn.getAttribute('data-id');
+            const action = btn.getAttribute('data-action');
+            await postAction(action === 'approve' ? '/api/approve' : '/api/reject', { id });
+            await fetchAndRender();
+          };
+        });
+      }
+      showToast('Data refreshed', 900);
+    } catch (e) {
+      if (bizList) bizList.innerHTML = `<div class="small">Error loading data: ${escapeHtml(e.message)}</div>`;
+      if (logList) logList.innerHTML = '';
+      if (apprList) apprList.innerHTML = '';
+      showToast('Failed to load data', 2500);
+      console.error('fetchAndRender error', e);
+    }
+  }
+
+  async function postAction(path, body) {
+    try {
+      const res = await fetch(`${API_BASE}${path}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      if (!res.ok) {
+        const txt = await res.text().catch(() => null);
+        throw new Error(txt || `HTTP ${res.status}`);
+      }
+      return await res.json().catch(() => ({ success: true }));
+    } catch (e) {
+      showToast(`Action failed: ${e.message}`, 3000);
+      throw e;
+    }
+  }
+
+  async function launchVenture() {
+    const ideaEl = document.getElementById('launch-idea');
+    const idea = (ideaEl && ideaEl.value && ideaEl.value.trim()) || '';
+    if (!idea) return showToast('Enter idea');
+    try {
+      await postAction('/api/launch', { idea });
+      showToast('Venture launch requested', 2000);
+      if (ideaEl) ideaEl.value = '';
+      await fetchAndRender();
+    } catch (e) {}
+  }
+
+  async function sendCommand() {
+    const cmdEl = document.getElementById('command-input');
+    const cmd = (cmdEl && cmdEl.value && cmdEl.value.trim()) || '';
+    if (!cmd) return showToast('Enter command');
+    try {
+      await postAction('/api/command', { command: cmd });
+      showToast('Command sent', 1500);
+      if (cmdEl) cmdEl.value = '';
+      await fetchAndRender();
+    } catch (e) {}
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    buildUI();
+    fetchAndRender();
+    setInterval(fetchAndRender, 10000);
+  });
+})();
 // Minimal dashboard frontend (replaces Lovable bundle)
 (() => {
     const API_BASE = window.API_BASE || '';
