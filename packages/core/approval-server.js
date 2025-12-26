@@ -394,7 +394,52 @@ Or visit the approval dashboard: http://${this.host}:${this.port}/
             try {
                 const businesses = this.db ? await this.db.getAllBusinesses() : [];
                 const approvals = this.db ? await this.db.getPendingApprovals() : [];
-                const logs = this.db ? await this.db.getLogs(100) : [];
+                const logs = this.db ? await this.db.getLogs(200) : [];
+
+                // Derive tasks: activeTasks (running/queued) and recentTasks (completed/failed)
+                let activeTasks = [];
+                let recentTasks = [];
+                if (this.db) {
+                    try {
+                        const allTasks = await this.db.db.all('SELECT * FROM tasks ORDER BY created_at DESC LIMIT 500');
+                        activeTasks = allTasks.filter(t => t.status === 'running' || t.status === 'queued' || t.status === 'pending').map(t => ({
+                            id: t.id,
+                            name: t.name,
+                            status: t.status,
+                            module: t.phase || t.plan_id || null,
+                            progress: t.progress || 0,
+                            business_id: t.business_id,
+                            created_at: t.created_at
+                        }));
+                        recentTasks = allTasks.filter(t => t.status === 'completed' || t.status === 'failed').slice(0, 50).map(t => ({
+                            id: t.id,
+                            name: t.name,
+                            status: t.status,
+                            module: t.phase || t.plan_id || null,
+                            startedAt: t.created_at
+                        }));
+                    } catch (e) {
+                        activeTasks = [];
+                        recentTasks = [];
+                    }
+                }
+
+                // Activities: summarize logs into activity items
+                const activities = (logs || []).slice(0, 200).map(l => ({
+                    id: `log-${l.id}`,
+                    message: l.message,
+                    type: l.type || 'log',
+                    timestamp: l.timestamp,
+                    module: l.phase || l.business_id || null
+                }));
+
+                // Chat messages: extract logs of type 'chat' or 'ai' if present
+                const chat = (logs || []).filter(l => (l.type || '').toLowerCase().includes('chat') || (l.type || '').toLowerCase().includes('ai')).slice(0, 200).map(l => ({
+                    id: `chat-${l.id}`,
+                    role: (l.type && l.type.toLowerCase().includes('ai')) ? 'ai' : 'user',
+                    content: l.message,
+                    timestamp: l.timestamp
+                }));
 
                 const totalProfit = (businesses && businesses.length) ? businesses.length * 1500 : 0;
 
@@ -413,6 +458,10 @@ Or visit the approval dashboard: http://${this.host}:${this.port}/
                     businesses,
                     approvals,
                     logs,
+                    activeTasks,
+                    recentTasks,
+                    activities,
+                    chat,
                     totalProfit,
                     ceoStatus
                 }));
