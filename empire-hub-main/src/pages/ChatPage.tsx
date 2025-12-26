@@ -26,7 +26,7 @@ const ChatPage = () => {
     scrollToBottom();
   }, [messages]);
 
-  const handleSend = (content: string) => {
+  const handleSend = async (content: string) => {
     const userMessage: Message = {
       id: `m${Date.now()}`,
       role: "user",
@@ -37,19 +37,38 @@ const ChatPage = () => {
     setMessages((prev) => [...prev, userMessage]);
     setIsTyping(true);
 
-    // Simulate AI response
-    setTimeout(() => {
+    try {
+      const resp = await fetch('/api/command', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ command: content }),
+      });
+
+      const data = await resp.json();
+
+      const aiContent = data?.reply || data?.message || JSON.stringify(data || {});
+      const thinking = data?.thoughts || undefined;
+
       const aiMessage: Message = {
         id: `m${Date.now() + 1}`,
-        role: "ai",
-        content: "I understand your request. Let me analyze the situation and provide you with actionable insights.\n\nBased on my analysis of the current portfolio performance and market conditions, I recommend proceeding with caution on any major expansions this quarter. The key metrics suggest focusing on optimizing existing operations first.\n\nShall I create a detailed optimization plan for CloudSync Pro?",
-        thinking: "Processing request...\n\nQuerying internal knowledge base and real-time market data...\n\nCross-referencing with current portfolio status:\n- CloudSync Pro: Growth phase, needs optimization\n- DataVault: Stable, minor improvements needed\n- AIWriter Hub: Pre-launch, on track\n\nRisk assessment: LOW for optimization focus\nConfidence: 92%\n\nPreparing response with strategic recommendations...",
-        timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        role: 'ai',
+        content: String(aiContent),
+        thinking,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
 
       setMessages((prev) => [...prev, aiMessage]);
+    } catch (e: any) {
+      const errMessage: Message = {
+        id: `m${Date.now() + 2}`,
+        role: 'ai',
+        content: `Error: ${e?.message || 'Failed to reach CEO service'}`,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      };
+      setMessages((prev) => [...prev, errMessage]);
+    } finally {
       setIsTyping(false);
-    }, 2000);
+    }
   };
 
   return (
