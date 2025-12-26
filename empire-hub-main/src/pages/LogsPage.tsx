@@ -97,10 +97,12 @@ const LogsPage = () => {
   const [levelFilter, setLevelFilter] = useState<string>("all");
 
   const filteredLogs = logEntries.filter((log) => {
+    const msg = (log.message || '').toString();
+    const mod = (log.module || '').toString();
     const matchesSearch =
-      log.message.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      log.module.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesLevel = levelFilter === "all" || log.level === levelFilter;
+      msg.toLowerCase().includes((searchQuery || '').toLowerCase()) ||
+      mod.toLowerCase().includes((searchQuery || '').toLowerCase());
+    const matchesLevel = levelFilter === "all" || (log.level || '').toLowerCase() === (levelFilter || '').toLowerCase();
     return matchesSearch && matchesLevel;
   });
 
