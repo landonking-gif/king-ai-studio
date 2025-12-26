@@ -199,7 +199,7 @@ const TasksPage = () => {
           <div className="space-y-6">
             <div className="glass-card p-5">
               <h3 className="text-lg font-semibold mb-4">Execution Log</h3>
-              <ActivityFeed activities={activities} maxHeight="500px" />
+              <ActivityFeed activities={activitiesState} maxHeight="500px" />
             </div>
           </div>
         </div>
