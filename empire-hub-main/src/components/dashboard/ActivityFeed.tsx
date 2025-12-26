@@ -24,7 +24,7 @@ interface ActivityFeedProps {
   maxHeight?: string;
 }
 
-const activityConfig = {
+  const activityConfig = {
   success: { icon: CheckCircle, color: "text-success", bg: "bg-success/10" },
   error: { icon: AlertCircle, color: "text-destructive", bg: "bg-destructive/10" },
   info: { icon: Info, color: "text-blue-400", bg: "bg-blue-400/10" },
@@ -34,6 +34,8 @@ const activityConfig = {
   business: { icon: Building2, color: "text-amber-400", bg: "bg-amber-400/10" },
 };
 
+const defaultActivity = { icon: Info, color: "text-muted-foreground", bg: "bg-muted-foreground/10" };
+
 export function ActivityFeed({ activities, maxHeight = "400px" }: ActivityFeedProps) {
   return (
     <div
@@ -41,7 +43,7 @@ export function ActivityFeed({ activities, maxHeight = "400px" }: ActivityFeedPr
       style={{ maxHeight }}
     >
       {activities.map((activity, index) => {
-        const config = activityConfig[activity.type];
+        const config = (activityConfig as any)[activity.type] || defaultActivity;
         const Icon = config.icon;
         return (
           <div

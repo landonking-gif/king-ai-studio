@@ -49,6 +49,8 @@ const statusConfig = {
   },
 };
 
+const defaultStatus = { icon: Clock, color: "text-muted-foreground", bg: "bg-muted-foreground/10", animate: false };
+
 export function TaskStatusCard({ tasks, title, showProgress }: TaskStatusCardProps) {
   return (
     <div className="glass-card p-5">
@@ -65,7 +67,7 @@ export function TaskStatusCard({ tasks, title, showProgress }: TaskStatusCardPro
           </p>
         ) : (
           tasks.map((task) => {
-            const config = statusConfig[task.status];
+            const config = (statusConfig as any)[task.status] || defaultStatus;
             const Icon = config.icon;
             return (
               <div

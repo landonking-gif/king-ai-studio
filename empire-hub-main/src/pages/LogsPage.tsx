@@ -82,13 +82,15 @@ const logEntries = [
   },
 ];
 
-const levelConfig = {
+  const levelConfig = {
   info: { icon: Info, color: "text-blue-400", bg: "bg-blue-400/10" },
   success: { icon: CheckCircle, color: "text-success", bg: "bg-success/10" },
   error: { icon: AlertCircle, color: "text-destructive", bg: "bg-destructive/10" },
   action: { icon: Zap, color: "text-primary", bg: "bg-primary/10" },
   thinking: { icon: Brain, color: "text-purple-400", bg: "bg-purple-400/10" },
 };
+
+const defaultLevel = { icon: Info, color: "text-muted-foreground", bg: "bg-muted-foreground/10" };
 
 const LogsPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -179,7 +181,7 @@ const LogsPage = () => {
               </thead>
               <tbody>
                 {filteredLogs.map((log) => {
-                  const config = levelConfig[log.level as keyof typeof levelConfig];
+                  const config = (levelConfig as any)[log.level] || defaultLevel;
                   const Icon = config.icon;
                   return (
                     <tr
@@ -217,7 +219,7 @@ const LogsPage = () => {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           {Object.entries(levelConfig).map(([level, config]) => {
             const count = logEntries.filter((l) => l.level === level).length;
-            const Icon = config.icon;
+            const Icon = (config && config.icon) || defaultLevel.icon;
             return (
               <div
                 key={level}

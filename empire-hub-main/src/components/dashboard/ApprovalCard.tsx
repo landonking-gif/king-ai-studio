@@ -28,6 +28,8 @@ const typeConfig = {
   technical: { icon: FileText, color: "bg-purple-500/20 text-purple-400" },
 };
 
+const defaultType = { icon: FileText, color: "bg-secondary/20 text-muted-foreground" };
+
 const urgencyColors = {
   low: "border-muted-foreground/30 text-muted-foreground",
   medium: "border-warning/50 text-warning",
@@ -35,13 +37,14 @@ const urgencyColors = {
 };
 
 export function ApprovalCard({ approval, onApprove, onReject }: ApprovalCardProps) {
-  const TypeIcon = typeConfig[approval.type].icon;
+  const cfg = (typeConfig as any)[approval.type] || defaultType;
+  const TypeIcon = cfg.icon;
 
   return (
     <div className="glass-card-hover p-5 space-y-4">
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className={cn("p-2 rounded-lg", typeConfig[approval.type].color)}>
+          <div className={cn("p-2 rounded-lg", cfg.color)}>
             <TypeIcon className="w-5 h-5" />
           </div>
           <div>
