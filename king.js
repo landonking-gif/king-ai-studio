@@ -87,6 +87,10 @@ async function run() {
         let envContent = fs.readFileSync(path.join(ROOT_DIR, '.env'), 'utf8');
         const ollamaUrl = `http://${serverIP}:11434`;
 
+        // Expose the chosen Ollama URL to the running process immediately
+        // so any child processes or subsequent logic can read it via process.env.
+        process.env.OLLAMA_URL = ollamaUrl;
+
         if (envContent.includes('OLLAMA_URL=')) {
             // Robust regex: matches the line starting with OLLAMA_URL (potentially commented)
             // but preserves anything else on other lines.
@@ -160,7 +164,7 @@ async function run() {
 
         const sshOpts = '-o StrictHostKeyChecking=no';
         // Run the script and stream output directly to local terminal
-        execSync(`ssh -i "${keyFile}" ${sshOpts} ubuntu@${serverIP} "./deploy.sh"`, { stdio: 'inherit' });
+        execSync(`ssh -i "${resolvedKeyPath}" ${sshOpts} ubuntu@${serverIP} "./deploy.sh"`, { stdio: 'inherit' });
 
         console.log('═══════════════════════════════════════════════════════════');
     } catch (e) {
