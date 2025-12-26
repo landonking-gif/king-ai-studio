@@ -18,7 +18,7 @@ cd C:\Users\dmilner.AGV-040318-PC\Downloads\landon\king-ai-studio
 # 2. Login to the AWS Ubuntu Server
 ssh -i "king-ai-studio.pem (1)" ubuntu@ec2-18-216-0-221.us-east-2.compute.amazonaws.com
 ```
-
+ssh -i "C:\Users\dmilner.AGV-040318-PC\Downloads\landon\king-ai-studio\king-ai-studio (1).pem" ubuntu@ec2-98-83-219-105.compute-1.amazonaws.com
 ### 2. Updating the Studio
 If you receive a notification that I have pushed a fix or a new feature, run this on the server:
 ```bash
