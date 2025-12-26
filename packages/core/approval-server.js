@@ -48,6 +48,28 @@ export class ApprovalServer {
 
     async init() {
         await this.db.init();
+
+        // If no command handler / status provider registered, attempt to auto-wire
+        // a local CEOAgent so the dashboard has live CEO functionality by default.
+        if (!this.commandHandler || !this.statusProvider) {
+            try {
+                const modPath = path.join(__dirname, '../../packages/ceo/ceo-agent.js');
+                if (fs.existsSync(modPath)) {
+                    const { CEOAgent } = await import(modPath);
+                    const ceo = new CEOAgent({ db: this.db });
+                    // initialize silently
+                    await ceo.init();
+                    // Only set handlers if not already provided by the host
+                    if (!this.commandHandler) this.setCommandHandler((cmd) => ceo.handleCommand(cmd));
+                    if (!this.statusProvider) this.setStatusProvider(() => ceo.getStatus());
+                    console.log('[ApprovalServer] Auto-wired local CEOAgent for command/status APIs');
+                }
+            } catch (e) {
+                // Do not fail init if CEOAgent isn't available — it's optional.
+                console.warn('[ApprovalServer] Could not auto-wire CEOAgent:', e.message);
+            }
+        }
+
         return this;
     }
 
