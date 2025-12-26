@@ -1,0 +1,204 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap');
+
+@layer base {
+  :root {
+    /* Empire Dark Theme - Royal Command Center */
+    --background: 222 47% 6%;
+    --foreground: 45 20% 95%;
+
+    --card: 222 47% 9%;
+    --card-foreground: 45 20% 95%;
+
+    --popover: 222 47% 8%;
+    --popover-foreground: 45 20% 95%;
+
+    /* Royal Gold Primary */
+    --primary: 43 74% 49%;
+    --primary-foreground: 222 47% 6%;
+
+    /* Deep Navy Secondary */
+    --secondary: 222 30% 15%;
+    --secondary-foreground: 45 20% 90%;
+
+    --muted: 222 30% 12%;
+    --muted-foreground: 220 15% 55%;
+
+    /* Amber Accent */
+    --accent: 38 92% 50%;
+    --accent-foreground: 222 47% 6%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Success Green */
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+
+    /* Warning Amber */
+    --warning: 38 92% 50%;
+    --warning-foreground: 222 47% 6%;
+
+    --border: 222 30% 18%;
+    --input: 222 30% 15%;
+    --ring: 43 74% 49%;
+
+    --radius: 0.75rem;
+
+    /* Custom Empire Variables */
+    --gold-glow: 0 0 30px hsl(43 74% 49% / 0.3);
+    --card-glow: 0 4px 40px hsl(222 47% 0% / 0.5);
+    --glass-bg: hsl(222 47% 9% / 0.8);
+    --glass-border: hsl(222 30% 25% / 0.5);
+
+    /* Gradients */
+    --gradient-gold: linear-gradient(135deg, hsl(43 74% 49%), hsl(38 92% 50%));
+    --gradient-dark: linear-gradient(180deg, hsl(222 47% 9%), hsl(222 47% 6%));
+    --gradient-glass: linear-gradient(135deg, hsl(222 47% 12% / 0.6), hsl(222 47% 8% / 0.4));
+
+    /* Sidebar */
+    --sidebar-background: 222 47% 7%;
+    --sidebar-foreground: 45 20% 90%;
+    --sidebar-primary: 43 74% 49%;
+    --sidebar-primary-foreground: 222 47% 6%;
+    --sidebar-accent: 222 30% 12%;
+    --sidebar-accent-foreground: 45 20% 95%;
+    --sidebar-border: 222 30% 15%;
+    --sidebar-ring: 43 74% 49%;
+  }
+
+  .dark {
+    /* Same as root - empire is always dark mode */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  h1, h2, h3 {
+    font-family: 'Playfair Display', serif;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-card/80 backdrop-blur-xl border border-border/50 rounded-xl;
+    box-shadow: var(--card-glow);
+  }
+
+  .glass-card-hover {
+    @apply glass-card transition-all duration-300;
+  }
+
+  .glass-card-hover:hover {
+    @apply border-primary/30;
+    box-shadow: var(--gold-glow), var(--card-glow);
+  }
+
+  .gold-text {
+    @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
+  }
+
+  .gold-border {
+    @apply border-primary/50;
+  }
+
+  .status-active {
+    @apply bg-success/20 text-success border-success/30;
+  }
+
+  .status-pending {
+    @apply bg-warning/20 text-warning border-warning/30;
+  }
+
+  .status-error {
+    @apply bg-destructive/20 text-destructive border-destructive/30;
+  }
+
+  .thinking-panel {
+    @apply bg-muted/50 border-l-2 border-primary/30 pl-4 py-3 my-2 rounded-r-lg;
+    font-size: 0.875rem;
+  }
+
+  .chat-bubble-ai {
+    @apply bg-secondary border border-border/50 rounded-2xl rounded-tl-sm px-4 py-3;
+  }
+
+  .chat-bubble-user {
+    @apply bg-primary/20 border border-primary/30 rounded-2xl rounded-tr-sm px-4 py-3;
+  }
+
+  .metric-card {
+    @apply glass-card p-5 flex flex-col gap-2;
+  }
+
+  .nav-item {
+    @apply flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 text-muted-foreground hover:text-foreground hover:bg-secondary/50;
+  }
+
+  .nav-item-active {
+    @apply bg-primary/10 text-primary border-l-2 border-primary;
+  }
+}
+
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted)) transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted));
+    border-radius: 3px;
+  }
+
+  .animate-pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes glow {
+    from {
+      box-shadow: 0 0 10px hsl(43 74% 49% / 0.2);
+    }
+    to {
+      box-shadow: 0 0 25px hsl(43 74% 49% / 0.4);
+    }
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
