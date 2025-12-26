@@ -50,5 +50,8 @@
   "optionalDependencies": {
     "puppeteer": "^23.11.1",
     "stripe": "^14.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
   }
 }
