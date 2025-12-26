@@ -51,7 +51,8 @@ const TasksPage = () => {
 
   const filteredTasks = allTasks.filter((task) => {
     const matchesFilter = filter === "all" || task.status === filter;
-    const matchesSearch = task.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const name = (task.name || '').toString();
+    const matchesSearch = name.toLowerCase().includes((searchQuery || '').toLowerCase());
     return matchesFilter && matchesSearch;
   });
 
