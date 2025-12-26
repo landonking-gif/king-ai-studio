@@ -1491,3 +1491,4 @@ function initSettings() {
             addNotification(type, title, msg, icon);
         }
     }
+}
