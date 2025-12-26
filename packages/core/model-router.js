@@ -237,7 +237,9 @@ export class ModelRouter {
      */
     async checkOllama() {
         try {
-            const response = await fetch('http://localhost:11434/api/tags');
+            // Use configured OLLAMA URL (may point to an AWS-hosted Ollama instance)
+            const base = this.ollamaUrl.replace(/\/$/, '');
+            const response = await fetch(`${base}/api/tags`);
             if (!response.ok) return { available: false };
             const data = await response.json();
             return {
@@ -247,6 +249,13 @@ export class ModelRouter {
         } catch (e) {
             return { available: false, error: e.message };
         }
+    }
+
+    /**
+     * Return true if any cloud API provider keys are configured
+     */
+    hasApiProviders() {
+        return Object.values(this.apiKeys).some(arr => Array.isArray(arr) && arr.length > 0);
     }
 
     /**
@@ -523,11 +532,11 @@ export class ModelRouter {
             const randomTopic = topics[Math.floor(Math.random() * topics.length)];
 
             if (lowerPrompt.includes('status') || lowerPrompt.includes('doing')) {
-                content = "Systems online. Operating in autonomous heuristic mode due to neural link interruption. Maintaining empire stability.";
+                content = "Systems online. Running in fallback simulation mode — primary model connection is unavailable. Monitoring systems and maintaining stability.";
             } else if (lowerPrompt.includes('hello') || lowerPrompt.includes('hi ')) {
-                content = "Greetings. Neural uplink is currently limited, but I am monitoring all business vectors.";
+                content = "Hello — primary model link is limited right now. I'm operating from a safe, simulated fallback and monitoring system state.";
             } else {
-                content = `I've received your input: "${prompt.substring(0, 50)}${prompt.length > 50 ? '...' : ''}". \n\nStandard neural processing is currently offline. Operating on backup protocol ${Math.floor(Math.random() * 900) + 100}. \n\nPending your command to re-establish full AI connectivity.`;
+                content = `Received your input: "${prompt.substring(0, 50)}${prompt.length > 50 ? '...' : ''}".\n\nPrimary model access is currently limited; responding using a safe simulation fallback (protocol ${Math.floor(Math.random() * 900) + 100}).\n\nIssue the 'reconnect' command to attempt restoring full AI connectivity.`;
             }
 
         }

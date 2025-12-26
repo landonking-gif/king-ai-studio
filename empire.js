@@ -130,15 +130,20 @@ class Empire {
             console.log('🗄️ Initializing Database...');
             await this.db.init();
 
-            // Check AI availability
+            // Check AI availability. Priority: Cloud API providers -> Remote Ollama (AWS) -> Local simulation
             console.log('🔍 Checking AI availability...');
-            const ollamaStatus = await this.ai.checkOllama();
-            if (!ollamaStatus.available) {
-                console.log('⚠️ Ollama is not running. Falling back to Cloud/Simulation Mode.');
-                this.simulationMode = true;
-            } else {
-                console.log(`✅ Ollama connected (${ollamaStatus.models.length} models available)`);
+            if (this.ai.hasApiProviders && this.ai.hasApiProviders()) {
+                console.log('🔐 Cloud API keys detected. Preferring cloud providers for model routing.');
                 this.simulationMode = false;
+            } else {
+                const ollamaStatus = await this.ai.checkOllama();
+                if (!ollamaStatus.available) {
+                    console.log('⚠️ Ollama is not reachable. Entering simulation fallback mode.');
+                    this.simulationMode = true;
+                } else {
+                    console.log(`✅ Ollama connected (${ollamaStatus.models.length} models available)`);
+                    this.simulationMode = false;
+                }
             }
 
             // Start approval server
