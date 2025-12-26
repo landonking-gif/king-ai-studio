@@ -34,3 +34,40 @@ export const activities = (remote.activities) || _FALLBACK.activities;
 export const businesses = (remote.businesses) || _FALLBACK.businesses;
 export const chatMessages = (remote.chat || remote.chatMessages) || _FALLBACK.chatMessages;
 
+// Load remote data from backend endpoint with graceful fallback to _FALLBACK
+export async function loadRemote(timeout = 3000) {
+  // Prefer preloaded window value
+  try {
+    if (typeof window !== 'undefined' && (window).__EMPIRE_REMOTE__) {
+      return { ...(window).__EMPIRE_REMOTE__ };
+    }
+
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), timeout);
+
+    const resp = await fetch('/api/all-data', { signal: controller.signal });
+    clearTimeout(id);
+    if (!resp.ok) throw new Error('no-data');
+    const json = await resp.json();
+    return {
+      activeTasks: json.activeTasks || _FALLBACK.activeTasks,
+      recentTasks: json.recentTasks || _FALLBACK.recentTasks,
+      approvals: json.approvals || _FALLBACK.pendingApprovals,
+      activities: json.activities || _FALLBACK.activities,
+      businesses: json.businesses || _FALLBACK.businesses,
+      chat: json.chat || _FALLBACK.chatMessages,
+      ceoStatus: json.ceoStatus || null,
+    };
+  } catch (e) {
+    return {
+      activeTasks: _FALLBACK.activeTasks,
+      recentTasks: _FALLBACK.recentTasks,
+      approvals: _FALLBACK.pendingApprovals,
+      activities: _FALLBACK.activities,
+      businesses: _FALLBACK.businesses,
+      chat: _FALLBACK.chatMessages,
+      ceoStatus: null,
+    };
+  }
+}
+

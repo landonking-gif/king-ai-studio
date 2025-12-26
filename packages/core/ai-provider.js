@@ -228,16 +228,16 @@ export class AIProvider {
             console.log('[SimulatedAI] Matched: Generic Generate');
             content = "Here is the generated content for your request.";
         } else {
-            console.log('[SimulatedAI] No match, using default response');
-            content = "Simulated response: The system is operating in fallback mode. Task completed successfully.";
+            console.log('[SimulatedAI] No match, using default fallback response');
+            content = "Fallback response: The system recorded the request and responded with a safe local fallback.";
         }
 
         return {
             success: true,
             content,
-            reasoning: "Simulated fallback triggered due to LLM failure.",
+            reasoning: "Local fallback responder produced this output due to external LLM unavailability.",
             model: 'simulation-engine',
-            provider: 'simulated'
+            provider: 'fallback'
         };
     }
 

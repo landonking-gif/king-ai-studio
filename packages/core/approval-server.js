@@ -450,7 +450,9 @@ Or visit the approval dashboard: http://${this.host}:${this.port}/
                 const activities = (logs || []).slice(0, 200).map(l => ({
                     id: `log-${l.id}`,
                     message: l.message,
-                    type: l.type || 'log',
+                    type: (l.type || 'log').toString(),
+                    level: (l.level || 'info').toString(),
+                    icon: l.icon || 'log',
                     timestamp: l.timestamp,
                     module: l.phase || l.business_id || null
                 }));
@@ -536,8 +538,9 @@ Or visit the approval dashboard: http://${this.host}:${this.port}/
                     response = await this.commandHandler(data.command);
                 } else {
                     response = {
-                        reply: `Ceo Note: I have processed your instruction regarding "${data.command}". System is in simulation mode (no live agent connected).`,
-                        thoughts: `Simulated response. Waiting for live connection.`
+                        reply: `Received command: "${data.command}". No live agent currently connected; the request was recorded.`,
+                        thoughts: null,
+                        fallback: true
                     };
                 }
 

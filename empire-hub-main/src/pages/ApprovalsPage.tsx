@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { ApprovalCard } from "@/components/dashboard/ApprovalCard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { pendingApprovals } from "@/data/mockData";
+import { _FALLBACK, loadRemote } from "@/data/mockData";
 import { useToast } from "@/hooks/use-toast";
 import {
   Shield,
@@ -41,7 +41,15 @@ const approvalHistory = [
 
 const ApprovalsPage = () => {
   const { toast } = useToast();
-  const [approvals, setApprovals] = useState(pendingApprovals);
+  const [approvals, setApprovals] = useState(_FALLBACK.pendingApprovals);
+  useEffect(() => {
+    let mounted = true;
+    loadRemote().then((d) => {
+      if (!mounted) return;
+      setApprovals(d.approvals || _FALLBACK.pendingApprovals);
+    });
+    return () => { mounted = false };
+  }, []);
   const [filter, setFilter] = useState<string>("all");
 
   const handleApprove = (id: string) => {
@@ -62,11 +70,11 @@ const ApprovalsPage = () => {
   };
 
   const filterCounts = {
-    all: pendingApprovals.length,
-    legal: pendingApprovals.filter((a) => a.type === "legal").length,
-    financial: pendingApprovals.filter((a) => a.type === "financial").length,
-    strategic: pendingApprovals.filter((a) => a.type === "strategic").length,
-    technical: pendingApprovals.filter((a) => a.type === "technical").length,
+    all: approvals.length,
+    legal: approvals.filter((a) => a.type === "legal").length,
+    financial: approvals.filter((a) => a.type === "financial").length,
+    strategic: approvals.filter((a) => a.type === "strategic").length,
+    technical: approvals.filter((a) => a.type === "technical").length,
   };
 
   const filteredApprovals = approvals.filter(

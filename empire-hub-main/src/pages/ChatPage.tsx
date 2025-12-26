@@ -2,7 +2,8 @@ import { useState, useRef, useEffect } from "react";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { ChatMessage } from "@/components/chat/ChatMessage";
 import { ChatInput } from "@/components/chat/ChatInput";
-import { chatMessages } from "@/data/mockData";
+import { _FALLBACK, loadRemote } from "@/data/mockData";
+import { useEffect } from "react";
 import { Crown, Sparkles } from "lucide-react";
 
 interface Message {
@@ -14,7 +15,7 @@ interface Message {
 }
 
 const ChatPage = () => {
-  const [messages, setMessages] = useState<Message[]>(chatMessages);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -25,6 +26,22 @@ const ChatPage = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  useEffect(() => {
+    let mounted = true;
+    loadRemote().then((d) => {
+      if (!mounted) return;
+      const msgs = (d.chat || _FALLBACK.chatMessages).map((m: any, i: number) => ({
+        id: m.id || `m_init_${i}`,
+        role: m.role || 'ai',
+        content: m.content || m.message || '',
+        thinking: m.thinking,
+        timestamp: m.timestamp || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      }));
+      setMessages(msgs);
+    });
+    return () => { mounted = false };
+  }, []);
 
   const handleSend = async (content: string) => {
     const userMessage: Message = {

@@ -2,13 +2,25 @@ import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { BusinessCard } from "@/components/portfolio/BusinessCard";
 import { MetricCard } from "@/components/dashboard/MetricCard";
 import { Button } from "@/components/ui/button";
-import { businesses } from "@/data/mockData";
+import { _FALLBACK, loadRemote } from "@/data/mockData";
+import { useEffect, useState } from "react";
 import { Plus, Building2, TrendingUp, DollarSign, Users } from "lucide-react";
 
 const PortfolioPage = () => {
-  const totalRevenue = businesses.reduce((sum, b) => sum + b.revenue, 0);
-  const totalCustomers = businesses.reduce((sum, b) => sum + b.customers, 0);
-  const activeCount = businesses.filter((b) => b.status === "active").length;
+  const [businessesState, setBusinessesState] = useState(_FALLBACK.businesses);
+
+  useEffect(() => {
+    let mounted = true;
+    loadRemote().then((d) => {
+      if (!mounted) return;
+      setBusinessesState(d.businesses || _FALLBACK.businesses);
+    });
+    return () => { mounted = false };
+  }, []);
+
+  const totalRevenue = businessesState.reduce((sum, b) => sum + (b.revenue || 0), 0);
+  const totalCustomers = businessesState.reduce((sum, b) => sum + (b.customers || 0), 0);
+  const activeCount = businessesState.filter((b) => b.status === "active").length;
 
   return (
     <DashboardLayout>
@@ -60,7 +72,7 @@ const PortfolioPage = () => {
         <div>
           <h2 className="text-xl font-semibold mb-4">All Ventures</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {businesses.map((business) => (
+            {businessesState.map((business) => (
               <BusinessCard key={business.id} business={business} />
             ))}
 

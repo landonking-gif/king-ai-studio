@@ -5,7 +5,8 @@ import { ApprovalCard } from "@/components/dashboard/ApprovalCard";
 import { ActivityFeed } from "@/components/dashboard/ActivityFeed";
 import { RevenueChart } from "@/components/dashboard/RevenueChart";
 import { TaskDistributionChart } from "@/components/dashboard/TaskDistributionChart";
-import { activeTasks, recentTasks, pendingApprovals, activities } from "@/data/mockData";
+import { _FALLBACK, loadRemote } from "@/data/mockData";
+import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import {
   Crown,
@@ -18,6 +19,22 @@ import {
 
 const Index = () => {
   const { toast } = useToast();
+  const [activeTasksState, setActiveTasksState] = useState(_FALLBACK.activeTasks);
+  const [recentTasksState, setRecentTasksState] = useState(_FALLBACK.recentTasks);
+  const [pendingApprovalsState, setPendingApprovalsState] = useState(_FALLBACK.pendingApprovals);
+  const [activitiesState, setActivitiesState] = useState(_FALLBACK.activities);
+
+  useEffect(() => {
+    let mounted = true;
+    loadRemote().then((d) => {
+      if (!mounted) return;
+      setActiveTasksState(d.activeTasks || _FALLBACK.activeTasks);
+      setRecentTasksState(d.recentTasks || _FALLBACK.recentTasks);
+      setPendingApprovalsState(d.approvals || _FALLBACK.pendingApprovals);
+      setActivitiesState(d.activities || _FALLBACK.activities);
+    });
+    return () => { mounted = false };
+  }, []);
 
   const handleApprove = (id: string) => {
     toast({
@@ -78,7 +95,7 @@ const Index = () => {
           />
           <MetricCard
             title="Pending Approvals"
-            value={pendingApprovals.length}
+            value={pendingApprovalsState.length}
             icon={<Clock className="w-5 h-5" />}
           />
         </div>
@@ -92,7 +109,7 @@ const Index = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <TaskStatusCard
                 title="Active Tasks"
-                tasks={activeTasks}
+                tasks={activeTasksState}
                 showProgress
               />
               <TaskDistributionChart />
@@ -106,7 +123,7 @@ const Index = () => {
                 <Activity className="w-5 h-5 text-primary" />
                 Live Activity
               </h3>
-              <ActivityFeed activities={activities} maxHeight="300px" />
+              <ActivityFeed activities={activitiesState} maxHeight="300px" />
             </div>
 
             <div className="glass-card p-5">
@@ -115,7 +132,7 @@ const Index = () => {
                 Awaiting Your Decision
               </h3>
               <div className="space-y-4">
-                {pendingApprovals.slice(0, 2).map((approval) => (
+                {pendingApprovalsState.slice(0, 2).map((approval) => (
                   <ApprovalCard
                     key={approval.id}
                     approval={approval}

@@ -65,12 +65,12 @@
     actionsPanel.appendChild(el('h3', {}, 'Actions'));
     actionsPanel.appendChild(el('div', {}, `
       <div style="margin-bottom:8px">
-        <input id="launch-idea" placeholder="New venture idea" />
+        <input id="launch-idea" placeholder="" />
         <div style="height:8px"></div>
         <button id="launch-btn">Launch Venture</button>
       </div>
       <div style="margin-top:8px">
-        <input id="command-input" placeholder="CEO command" />
+        <input id="command-input" placeholder="" />
         <div style="height:8px"></div>
         <button id="command-btn">Send Command</button>
       </div>

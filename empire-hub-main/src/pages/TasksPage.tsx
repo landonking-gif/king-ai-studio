@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { TaskStatusCard, TaskStatus } from "@/components/dashboard/TaskStatusCard";
 import { ActivityFeed } from "@/components/dashboard/ActivityFeed";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { activeTasks, recentTasks, activities } from "@/data/mockData";
+import { _FALLBACK, loadRemote } from "@/data/mockData";
 import {
   Search,
   Filter,
@@ -18,34 +18,50 @@ import {
   Clock,
 } from "lucide-react";
 
-const allTasks = [
-  ...activeTasks,
-  ...recentTasks,
-  {
-    id: "8",
-    name: "Competitor Analysis Report",
-    status: "pending" as TaskStatus,
-    module: "BusinessAnalyzer",
-    startedAt: "Queued",
-  },
-  {
-    id: "9",
-    name: "Email Campaign Setup",
-    status: "pending" as TaskStatus,
-    module: "MarketingEngine",
-    startedAt: "Queued",
-  },
-];
-
-const statusCounts = {
-  all: allTasks.length,
-  running: allTasks.filter((t) => t.status === "running").length,
-  pending: allTasks.filter((t) => t.status === "pending").length,
-  completed: allTasks.filter((t) => t.status === "completed").length,
-  failed: allTasks.filter((t) => t.status === "failed").length,
-};
-
 const TasksPage = () => {
+  const [dataLoaded, setDataLoaded] = useState(false);
+  const [activeTasksState, setActiveTasksState] = useState(_FALLBACK.activeTasks);
+  const [recentTasksState, setRecentTasksState] = useState(_FALLBACK.recentTasks);
+  const [activitiesState, setActivitiesState] = useState(_FALLBACK.activities);
+
+  useEffect(() => {
+    let mounted = true;
+    loadRemote().then((d) => {
+      if (!mounted) return;
+      setActiveTasksState(d.activeTasks || _FALLBACK.activeTasks);
+      setRecentTasksState(d.recentTasks || _FALLBACK.recentTasks);
+      setActivitiesState(d.activities || _FALLBACK.activities);
+      setDataLoaded(true);
+    });
+    return () => { mounted = false };
+  }, []);
+
+  const allTasks = [
+    ...activeTasksState,
+    ...recentTasksState,
+    {
+      id: "8",
+      name: "Competitor Analysis Report",
+      status: "pending" as TaskStatus,
+      module: "BusinessAnalyzer",
+      startedAt: "Queued",
+    },
+    {
+      id: "9",
+      name: "Email Campaign Setup",
+      status: "pending" as TaskStatus,
+      module: "MarketingEngine",
+      startedAt: "Queued",
+    },
+  ];
+
+  const statusCounts = {
+    all: allTasks.length,
+    running: allTasks.filter((t) => t.status === "running").length,
+    pending: allTasks.filter((t) => t.status === "pending").length,
+    completed: allTasks.filter((t) => t.status === "completed").length,
+    failed: allTasks.filter((t) => t.status === "failed").length,
+  };
   const [filter, setFilter] = useState<TaskStatus | "all">("all");
   const [searchQuery, setSearchQuery] = useState("");
 

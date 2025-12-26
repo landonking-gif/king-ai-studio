@@ -443,7 +443,7 @@ export class ModelRouter {
             }
 
             // Ultimate Fallback: High-ROI Safety Simulation
-            console.log('[ModelRouter] 🚨 ALL ENGINES OFFLINE. Entering Autonomous Simulation Mode.');
+            console.log('[ModelRouter] ⚠️ No external providers available — using local fallback responder.');
             return this.completeSimulated(prompt, taskType);
         }
 
@@ -522,7 +522,7 @@ export class ModelRouter {
             } else {
                 content = JSON.stringify({
                     status: "success",
-                    data: "Simulated response generated to maintain autonomous continuity.",
+                    data: "Fallback response generated to maintain continuity.",
                     metadata: { source: "heuristic-v3", taskType }
                 });
             }
@@ -532,11 +532,11 @@ export class ModelRouter {
             const randomTopic = topics[Math.floor(Math.random() * topics.length)];
 
             if (lowerPrompt.includes('status') || lowerPrompt.includes('doing')) {
-                content = "Systems online. Running in fallback simulation mode — primary model connection is unavailable. Monitoring systems and maintaining stability.";
+                content = "Systems online. Using fallback responder while external models are unavailable.";
             } else if (lowerPrompt.includes('hello') || lowerPrompt.includes('hi ')) {
-                content = "Hello — primary model link is limited right now. I'm operating from a safe, simulated fallback and monitoring system state.";
+                content = "Hello — primary model link is limited. Responding from local fallback responder.";
             } else {
-                content = `Received your input: "${prompt.substring(0, 50)}${prompt.length > 50 ? '...' : ''}".\n\nPrimary model access is currently limited; responding using a safe simulation fallback (protocol ${Math.floor(Math.random() * 900) + 100}).\n\nIssue the 'reconnect' command to attempt restoring full AI connectivity.`;
+                content = `Received your input: "${prompt.substring(0, 50)}${prompt.length > 50 ? '...' : ''}".\n\nExternal model access is limited; responding with a local fallback response.\n\nSend 'reconnect' to attempt restoring external connectivity.`;
             }
 
         }
@@ -545,9 +545,9 @@ export class ModelRouter {
             success: true,
             content,
             modelId: 'simulation:high-roi',
-            provider: 'simulated',
-            simulated: true,
-            reasoning: "Synthetic intelligence engine generated this response to prevent system halt during API outage."
+            provider: 'fallback',
+            fallback: true,
+            reasoning: "Heuristic fallback responder produced this output to maintain system continuity."
         };
     }
 
