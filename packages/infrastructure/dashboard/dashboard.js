@@ -1,6 +1,122 @@
-/**
- * 👑 King AI Dashboard - Core Intelligence
- */
+// Minimal dashboard frontend (replaces Lovable bundle)
+(() => {
+    const API_BASE = window.API_BASE || '';
+
+    async function fetchData() {
+        const root = document.getElementById('root');
+        if (!root) return;
+        root.innerHTML = `<div class="container"><div class="header"><div class="h1">King AI Dashboard</div><div><button id="refresh">Refresh</button></div></div><div class="panel">Loading…</div></div>`;
+
+        try {
+            const res = await fetch(`${API_BASE}/api/all-data`);
+            if (!res.ok) throw new Error(`Status ${res.status}`);
+            const data = await res.json();
+            render(root, data);
+        } catch (err) {
+            root.innerHTML = `<div class="container"><div class="panel">Error loading data: ${err.message}</div></div>`;
+        }
+    }
+
+    function render(root, data) {
+        const businesses = (data.businesses || []).slice(0, 100);
+        const logs = (data.logs || []).slice(0, 200);
+        const approvals = (data.approvals || []).slice(0, 50);
+
+        root.innerHTML = `
+            <div class="container">
+                <div class="header">
+                    <div class="h1">King AI Dashboard</div>
+                    <div class="small">Last sync: ${new Date().toLocaleString()}</div>
+                </div>
+
+                <div class="grid">
+                    <div>
+                        <div class="panel">
+                            <h3>Businesses (${businesses.length})</h3>
+                            ${businesses.map(b => `
+                                <div class="business">
+                                    <div style="display:flex;justify-content:space-between;align-items:center">
+                                        <strong>${escapeHtml(b.name || 'Unnamed')}</strong>
+                                        <span class="badge">${escapeHtml(b.status || 'n/a')}</span>
+                                    </div>
+                                    <div class="small">${escapeHtml(b.industry || '')} • ${b.progress || 0}%</div>
+                                    <div class="small">${escapeHtml(b.last_action || '')}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        <div class="panel">
+                            <h3>Approvals (${approvals.length})</h3>
+                            ${approvals.length === 0 ? '<div class="small">No pending approvals</div>' : approvals.map(a => `
+                                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                                    <div style="flex:1;margin-right:8px"><strong>${escapeHtml(a.title||a.type||'Approval')}</strong><div class="small">${escapeHtml(a.description||'')}</div></div>
+                                    <div style="display:flex;flex-direction:column;gap:6px"><button onclick="window.__approve('${a.id}')">Approve</button><button onclick="window.__reject('${a.id}')" style="background:#d44">Reject</button></div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="panel">
+                            <h3>Recent Logs</h3>
+                            <div style="max-height:360px;overflow:auto">
+                                ${logs.map(l => `<div class="log"><div class="small">${new Date(l.timestamp||Date.now()).toLocaleString()}</div><div>${escapeHtml(l.message||'')}</div></div>`).join('')}
+                            </div>
+                        </div>
+
+                        <div class="panel">
+                            <h3>Actions</h3>
+                            <div style="display:flex;flex-direction:column;gap:8px">
+                                <input id="launch-idea" placeholder="New venture idea" />
+                                <button id="launch-btn">Launch Venture</button>
+                                <input id="command-input" placeholder="CEO command" />
+                                <button id="command-btn">Send Command</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer">Data from backend API at ${API_BASE || 'same origin'}</div>
+            </div>
+        `;
+
+        document.getElementById('refresh').addEventListener('click', fetchData);
+        document.getElementById('launch-btn').addEventListener('click', async () => {
+            const idea = document.getElementById('launch-idea').value.trim();
+            if (!idea) return alert('Enter idea');
+            try {
+                await fetch(`${API_BASE}/api/launch`, { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ idea }) });
+                fetchData();
+            } catch (e) { alert(e.message) }
+        });
+        document.getElementById('command-btn').addEventListener('click', async () => {
+            const cmd = document.getElementById('command-input').value.trim();
+            if (!cmd) return alert('Enter command');
+            try {
+                await fetch(`${API_BASE}/api/command`, { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ command: cmd }) });
+                fetchData();
+            } catch (e) { alert(e.message) }
+        });
+
+        // expose approve/reject helpers
+        window.__approve = async (id) => { await actionPost('/api/approve', { id }); };
+        window.__reject = async (id) => { await actionPost('/api/reject', { id }); };
+    }
+
+    async function actionPost(path, body) {
+        try {
+            const res = await fetch(`${API_BASE}${path}`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) });
+            if (!res.ok) throw new Error('Request failed');
+            fetchData();
+        } catch (e) { alert(e.message); }
+    }
+
+    function escapeHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    document.addEventListener('DOMContentLoaded', () => { fetchData(); setInterval(fetchData, 10000); });
+
+})();
+
 
 const STATE = {
     businesses: [],
