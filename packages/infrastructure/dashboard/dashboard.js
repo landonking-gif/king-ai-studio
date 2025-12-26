@@ -16,6 +16,9 @@ const STATE = {
     notifications: []
 };
 
+// Base URL for API requests (set by index.html or defaults to same origin)
+const API_BASE = window.API_BASE || '';
+
 // --- Initialization ---
 document.addEventListener('DOMContentLoaded', () => {
     initNavigation();
@@ -122,7 +125,7 @@ async function fetchData() {
         STATE.connectionStatus = 'connecting';
         updateConnectionStatus();
 
-        const response = await fetch('/api/all-data');
+        const response = await fetch(`${API_BASE}/api/all-data`);
         if (!response.ok) throw new Error('API unreachable');
 
         const data = await response.json();
@@ -657,7 +660,7 @@ function initSettings() {
         showToast(decision ? "Authorizing action..." : "Rejecting action...", 'info');
 
         try {
-            const endpoint = decision ? '/api/approve' : '/api/reject';
+            const endpoint = decision ? `${API_BASE}/api/approve` : `${API_BASE}/api/reject`;
             const res = await fetch(endpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -711,7 +714,7 @@ function initSettings() {
 
             try {
                 document.getElementById('ceo-status').textContent = 'THINKING...';
-                const res = await fetch('/api/command', {
+                const res = await fetch(`${API_BASE}/api/command`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ command: cmd })
@@ -749,7 +752,7 @@ function initSettings() {
 
             try {
                 document.getElementById('ceo-full-status').textContent = 'THINKING...';
-                const res = await fetch('/api/command', {
+                const res = await fetch(`${API_BASE}/api/command`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ command: cmd })
@@ -837,7 +840,7 @@ function initSettings() {
             modal.classList.add('hidden');
 
             try {
-                const res = await fetch('/api/launch', {
+                const res = await fetch(`${API_BASE}/api/launch`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ idea })
