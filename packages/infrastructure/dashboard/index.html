@@ -17,12 +17,14 @@
     <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
     <!-- Expose backend API base to the frontend (defaults to same origin) -->
     <script>window.API_BASE = window.API_BASE || location.origin;</script>
-    <script type="module" crossorigin src="/assets/index-BK6gwlSk.js"></script>
+    <!-- Load dashboard runtime (served as /dashboard.js) -->
+    <link rel="modulepreload" href="/dashboard.js">
     <link rel="stylesheet" crossorigin href="/assets/index-D-vRk57U.css">
   </head>
 
   <body>
     <div id="root"></div>
 
+    <script src="/dashboard.js"></script>
   </body>
 </html>
