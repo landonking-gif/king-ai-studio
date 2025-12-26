@@ -19,7 +19,15 @@ export class ApprovalServer {
         this.port = config.port || process.env.APPROVAL_PORT || 3847;
         this.host = config.host || '0.0.0.0';
         this.dataDir = config.dataDir || path.join(__dirname, '../../data/ceo');
-        this.dashboardDir = path.join(__dirname, '../infrastructure/dashboard');
+        // Prefer a built frontend in the repo (empire-hub-main/dist) when present.
+        const candidate = path.join(__dirname, '../../empire-hub-main/dist');
+        if (config.dashboardDir) {
+            this.dashboardDir = config.dashboardDir;
+        } else if (fs.existsSync(candidate)) {
+            this.dashboardDir = candidate;
+        } else {
+            this.dashboardDir = path.join(__dirname, '../infrastructure/dashboard');
+        }
         this.db = config.db || new Database(config);
 
         this.emailNotifier = config.emailNotifier;
