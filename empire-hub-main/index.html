@@ -22,19 +22,16 @@
   <body>
     <div id="root"></div>
     <script>
-      (async function(){
+      (function(){
         try{
           const API_BASE = window.API_BASE || '';
-          const res = await fetch((API_BASE || '') + '/api/all-data');
-          if (res && res.ok) {
-            try{ window.__EMPIRE_REMOTE__ = await res.json(); }catch(e){ window.__EMPIRE_REMOTE__ = null; }
-          }
+          fetch((API_BASE || '') + '/api/all-data')
+            .then(res => res.ok ? res.json().catch(()=>null) : null)
+            .then(data => { if (data) window.__EMPIRE_REMOTE__ = data; })
+            .catch(()=>{});
         }catch(e){ /* ignore fetch errors */ }
-        const s = document.createElement('script');
-        s.type = 'module';
-        s.src = '/src/main.tsx';
-        document.body.appendChild(s);
       })();
     </script>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
