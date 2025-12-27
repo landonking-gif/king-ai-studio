@@ -32,9 +32,10 @@ function initSettings() {
             showToast('✅ System configuration updated', 'success');
         });
     }
+}
 
-
-    function renderAnalytics() {
+// --- Charts ---
+function renderAnalytics() {
         const revenueCtx = document.getElementById('revenue-growth-chart');
         if (!revenueCtx) return;
 
@@ -151,107 +152,118 @@ function initSettings() {
                 }
             });
         }
-    }
+}
 
-    function renderBusinessPerformanceChart() {
-        const perfContainer = document.querySelector('.grid-layout');
-        if (!perfContainer) return;
+function renderBusinessPerformanceChart() {
+    const perfContainer = document.querySelector('.grid-layout');
+    if (!perfContainer) return;
 
-        // Create new chart container if it doesn't exist
-        let perfChartContainer = document.getElementById('performance-chart-container');
-        if (!perfChartContainer) {
-            perfChartContainer = document.createElement('div');
-            perfChartContainer.id = 'performance-chart-container';
-            perfChartContainer.className = 'grid-span-6';
-            perfChartContainer.innerHTML = `
+    // Create new chart container if it doesn't exist
+    let perfChartContainer = document.getElementById('performance-chart-container');
+    if (!perfChartContainer) {
+        perfChartContainer = document.createElement('div');
+        perfChartContainer.id = 'performance-chart-container';
+        perfChartContainer.className = 'grid-span-6';
+        perfChartContainer.innerHTML = `
             <div class="content-panel">
                 <h3>Business Performance</h3>
                 <canvas id="business-performance-chart" height="300"></canvas>
             </div>
         `;
-            perfContainer.appendChild(perfChartContainer);
-        }
+        perfContainer.appendChild(perfChartContainer);
+    }
 
-        const perfCtx = document.getElementById('business-performance-chart');
-        if (!perfCtx) return;
+    const perfCtx = document.getElementById('business-performance-chart');
+    if (!perfCtx) return;
 
-        if (window.performanceChart) window.performanceChart.destroy();
+    if (window.performanceChart) window.performanceChart.destroy();
 
-        // Prepare data for business performance
-        const businessData = STATE.businesses.map(b => ({
-            name: b.name || 'Unknown',
-            progress: b.progress || 0,
-            status: b.status || 'unknown'
-        }));
+    // Prepare data for business performance
+    const businessData = STATE.businesses.map(b => ({
+        name: b.name || 'Unknown',
+        progress: b.progress || 0,
+        status: b.status || 'unknown'
+    }));
 
-        window.performanceChart = new Chart(perfCtx.getContext('2d'), {
-            type: 'bar',
-            data: {
-                labels: businessData.map(b => b.name.substring(0, 15) + (b.name.length > 15 ? '...' : '')),
-                datasets: [{
-                    label: 'Progress (%)',
-                    data: businessData.map(b => b.progress),
-                    backgroundColor: businessData.map(b => {
-                        switch (b.status) {
-                            case 'running': return '#00ff88';
-                            case 'paused': return '#ffcc00';
-                            case 'stopped': return '#ff4d4d';
-                            default: return '#5851db';
-                        }
-                    }),
-                    borderRadius: 4,
-                    borderSkipped: false
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        backgroundColor: 'rgba(0,0,0,0.8)',
-                        titleColor: '#fff',
-                        bodyColor: '#fff',
-                        callbacks: {
-                            title: function (context) {
-                                return businessData[context[0].dataIndex].name;
-                            },
-                            label: function (context) {
-                                const business = businessData[context.dataIndex];
-                                return [
-                                    `Progress: ${business.progress}%`,
-                                    `Status: ${business.status}`
-                                ];
-                            }
-                        }
+    window.performanceChart = new Chart(perfCtx.getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: businessData.map(b => b.name.substring(0, 15) + (b.name.length > 15 ? '...' : '')),
+            datasets: [{
+                label: 'Progress (%)',
+                data: businessData.map(b => b.progress),
+                backgroundColor: businessData.map(b => {
+                    switch (b.status) {
+                        case 'running': return '#00ff88';
+                        case 'paused': return '#ffcc00';
+                        case 'stopped': return '#ff4d4d';
+                        default: return '#5851db';
                     }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 100,
-                        grid: { color: 'rgba(255,255,255,0.05)' },
-                        border: { display: false },
-                        ticks: { color: '#a0a0b8' }
-                    },
-                    x: {
-                        grid: { display: false },
-                        border: { display: false },
-                        ticks: {
-                            color: '#a0a0b8',
-                            maxRotation: 45,
-                            minRotation: 45
+                }),
+                borderRadius: 4,
+                borderSkipped: false
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: 'rgba(0,0,0,0.8)',
+                    titleColor: '#fff',
+                    bodyColor: '#fff',
+                    callbacks: {
+                        title: function (context) {
+                            return businessData[context[0].dataIndex].name;
+                        },
+                        label: function (context) {
+                            const business = businessData[context.dataIndex];
+                            return [
+                                `Progress: ${business.progress}%`,
+                                `Status: ${business.status}`
+                            ];
                         }
                     }
                 }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    grid: { color: 'rgba(255,255,255,0.05)' },
+                    border: { display: false },
+                    ticks: { color: '#a0a0b8' }
+                },
+                x: {
+                    grid: { display: false },
+                    border: { display: false },
+                    ticks: {
+                        color: '#a0a0b8',
+                        maxRotation: 45,
+                        minRotation: 45
+                    }
+                }
             }
-        });
-    }
+        }
+    });
+}
 
-    function renderSettings() {
-        // Placeholder to satisfy the refresh logic
-        console.log("Settings view activated");
+function setupCharts() {
+    // Initialize charts on dashboard load
+    // Charts will be rendered when their respective views are shown
+    if (STATE.currentTab === 'analytics') {
+        renderAnalytics();
     }
+    if (STATE.currentTab === 'dashboard') {
+        renderBusinessPerformanceChart();
+    }
+}
+
+function renderSettings() {
+    // Placeholder to satisfy the refresh logic
+    console.log("Settings view activated");
+}
 
     async function handleApproval(id, decision) {
         const notes = prompt(decision ? "Additional authorization notes?" : "Reason for rejection?");
@@ -1167,12 +1179,23 @@ async function fetchData() {
 
 function updateUI() {
     // Stats
-    document.getElementById('stat-roi').textContent = `$${STATE.totalProfit.toLocaleString()}`;
-    document.getElementById('stat-active').textContent = STATE.businesses.filter(b => b.status === 'running').length;
-    document.getElementById('stat-tasks').textContent = STATE.logs.length.toLocaleString();
-    document.getElementById('stat-pending').textContent = STATE.approvals.length;
-    document.getElementById('pending-count').textContent = STATE.approvals.length;
-    document.getElementById('entity-count').textContent = STATE.businesses.length;
+    const roiEl = document.getElementById('stat-roi');
+    if (roiEl) roiEl.textContent = `$${STATE.totalProfit.toLocaleString()}`;
+    
+    const activeEl = document.getElementById('stat-active');
+    if (activeEl) activeEl.textContent = STATE.businesses.filter(b => b.status === 'running').length;
+    
+    const tasksEl = document.getElementById('stat-tasks');
+    if (tasksEl) tasksEl.textContent = STATE.logs.length.toLocaleString();
+    
+    const pendingEl = document.getElementById('stat-pending');
+    if (pendingEl) pendingEl.textContent = STATE.approvals.length;
+    
+    const pendingCountEl = document.getElementById('pending-count');
+    if (pendingCountEl) pendingCountEl.textContent = STATE.approvals.length;
+    
+    const entityCountEl = document.getElementById('entity-count');
+    if (entityCountEl) entityCountEl.textContent = STATE.businesses.length;
 
     // Components
     renderBusinesses();
