@@ -74,14 +74,14 @@ const Index = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <MetricCard
             title="Active Businesses"
-            value={4}
+            value={5}
             change={25}
             changeLabel="this quarter"
             icon={<Building2 className="w-5 h-5" />}
           />
           <MetricCard
             title="Monthly Revenue"
-            value="$10.67K"
+            value="$10.6K"
             change={18}
             changeLabel="vs last month"
             icon={<DollarSign className="w-5 h-5" />}
