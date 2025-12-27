@@ -5,247 +5,161 @@
 
 import path from 'path';
 import { fileURLToPath } from 'url';
-import BetterSqlite3 from 'better-sqlite3';
+import sqlite3 from 'sqlite3';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export class Database {
-    constructor(config = {}) {
-        this.dbPath = config.dbPath || path.join(__dirname, '../../data/king-ai.db');
-        this.db = null;
-        this.queryCache = new Map(); // Simple in-memory cache for read queries
-    }
+  constructor(config) {
+    this.dbPath = config?.dbPath
+      ? path.join(__dirname, config.dbPath)
+      : path.join(__dirname, '..', '..', 'data', 'king-ai.db');
 
-    /**
-     * Initialize the database and create tables
-     */
-    init() {
-        this.db = new BetterSqlite3(this.dbPath);
-        this.db.pragma('journal_mode = WAL');
-        this.db.pragma('busy_timeout = 5000');
+    this.db = new sqlite3.Database(
+      this.dbPath,
+      sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE,
+      (err) => {
+        if (err) {
+          console.error('Database connection failed:', err);
+          return;
+        }
+        console.log(`Database connected at ${this.dbPath}`);
+      }
+    );
+  }
 
+  // Called by orchestrator.js
+  async init() {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        this.db.run('PRAGMA journal_mode = WAL');
+        this.db.run('PRAGMA busy_timeout = 10000');
         this.createTables();
         console.log(`[Database] Initialized at ${this.dbPath}`);
-        return this;
-    }
+        resolve(this);
+      }, 200);
+    });
+  }
 
-    /**
-     * Create necessary tables if they don't exist
-     */
-    createTables() {
-        // Businesses table
-        this.db.exec(`
-            CREATE TABLE IF NOT EXISTS businesses (
-                id TEXT PRIMARY KEY,
-                name TEXT,
-                idea TEXT,
-                analysis_id TEXT,
-                plan_id TEXT,
-                status TEXT,
-                started_at TEXT,
-                revenue REAL DEFAULT 0,
-                expenses REAL DEFAULT 0,
-                priority REAL DEFAULT 1.0,
-                metadata TEXT
-            )
-        `);
+  createTables() {
+    // Businesses table
+    this.db.run(`CREATE TABLE IF NOT EXISTS businesses (
+      id TEXT PRIMARY KEY,
+      name TEXT,
+      idea TEXT,
+      analysisid TEXT,
+      planid TEXT,
+      status TEXT,
+      startedat TEXT,
+      revenue REAL DEFAULT 0,
+      expenses REAL DEFAULT 0,
+      priority REAL DEFAULT 1.0,
+      metadata TEXT
+    )`);
 
-        // Tasks table
-        this.db.exec(`
-            CREATE TABLE IF NOT EXISTS tasks (
-                id TEXT PRIMARY KEY,
-                business_id TEXT,
-                plan_id TEXT,
-                phase TEXT,
-                name TEXT,
-                description TEXT,
-                automated INTEGER,
-                requires_approval INTEGER,
-                status TEXT,
-                result TEXT,
-                priority REAL DEFAULT 0,
-                created_at TEXT,
-                FOREIGN KEY(business_id) REFERENCES businesses(id)
-            )
-        `);
+    // Tasks table
+    this.db.run(`CREATE TABLE IF NOT EXISTS tasks (
+      id TEXT PRIMARY KEY,
+      businessid TEXT,
+      planid TEXT,
+      phase TEXT,
+      name TEXT,
+      description TEXT,
+      automated INTEGER,
+      requiresapproval INTEGER,
+      status TEXT,
+      result TEXT,
+      priority REAL DEFAULT 0,
+      createdat TEXT
+    )`);
 
-        // Approvals table
-        this.db.exec(`
-            CREATE TABLE IF NOT EXISTS approvals (
-                id TEXT PRIMARY KEY,
-                task_id TEXT,
-                type TEXT,
-                title TEXT,
-                description TEXT,
-                amount REAL,
-                impact INTEGER,
-                recommendation TEXT,
-                status TEXT,
-                created_at TEXT,
-                decided_at TEXT,
-                notes TEXT,
-                FOREIGN KEY(task_id) REFERENCES tasks(id)
-            )
-        `);
+    // Approvals table
+    this.db.run(`CREATE TABLE IF NOT EXISTS approvals (
+      id TEXT PRIMARY KEY,
+      taskid TEXT,
+      type TEXT,
+      title TEXT,
+      description TEXT,
+      amount REAL,
+      impact INTEGER,
+      recommendation TEXT,
+      status TEXT,
+      createdat TEXT
+    )`);
 
-        // System/Execution Logs
-        this.db.exec(`
-            CREATE TABLE IF NOT EXISTS logs (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                business_id TEXT,
-                timestamp TEXT,
-                type TEXT,
-                message TEXT,
-                phase TEXT,
-                FOREIGN KEY(business_id) REFERENCES businesses(id)
-            )
-        `);
+    // Logs table
+    this.db.run(`CREATE TABLE IF NOT EXISTS logs (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      businessid TEXT,
+      timestamp TEXT,
+      type TEXT,
+      message TEXT
+    )`);
+  }
 
-        // Empire State
-        this.db.exec(`
-            CREATE TABLE IF NOT EXISTS empire_state (
-                key TEXT PRIMARY KEY,
-                value TEXT
-            )
-        `);
-
-        // Negotiations table for ROI #2
-        this.db.exec(`
-            CREATE TABLE IF NOT EXISTS negotiations (
-                id TEXT PRIMARY KEY,
-                business_id TEXT,
-                vendor_name TEXT,
-                item TEXT,
-                status TEXT,
-                offers TEXT, -- JSON array of offers
-                final_offer TEXT, -- JSON object
-                created_at TEXT,
-                updated_at TEXT,
-                FOREIGN KEY(business_id) REFERENCES businesses(id)
-            )
-        `);
-
-        // Migrations (Naive) - Ensure new columns exist
-        const columns = ['revenue', 'expenses', 'priority'];
-        for (const col of columns) {
-            try {
-                this.db.exec(`ALTER TABLE businesses ADD COLUMN ${col} REAL DEFAULT 0`);
-            } catch (e) {
-                // Ignore if column already exists
-            }
+  getQueuedTasks() {
+    return new Promise((resolve, reject) => {
+      this.db.all(
+        "SELECT * FROM tasks WHERE status = 'queued' ORDER BY priority DESC",
+        (err, rows) => {
+          if (err) reject(err);
+          else resolve(rows);
         }
+      );
+    });
+  }
 
-        // Migration for tasks.priority
-        try {
-            this.db.exec(`ALTER TABLE tasks ADD COLUMN priority REAL DEFAULT 0`);
-        } catch (e) {
-            // Ignore
+  getAllBusinesses() {
+    return new Promise((resolve, reject) => {
+      this.db.all('SELECT * FROM businesses', (err, rows) => {
+        if (err) reject(err);
+        else resolve(rows);
+      });
+    });
+  }
+
+  saveBusiness(business) {
+    return new Promise((resolve, reject) => {
+      const stmt = this.db.prepare(`
+        INSERT OR REPLACE INTO businesses 
+        (id, name, idea, analysisid, planid, status, startedat, revenue, expenses, priority, metadata)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `);
+      stmt.run(
+        [
+          business.id,
+          business.name,
+          business.idea || '',
+          business.analysisid || '',
+          business.planid || '',
+          business.status || 'active',
+          business.startedat || new Date().toISOString(),
+          business.revenue || 0,
+          business.expenses || 0,
+          business.priority || 1.0,
+          JSON.stringify(business.metadata || {}),
+        ],
+        function (err) {
+          if (err) reject(err);
+          else resolve({ id: this.lastID });
         }
+      );
+    });
+  }
 
-        // Ensure 'system' business exists
-        this.db.prepare(`
-            INSERT OR IGNORE INTO businesses (id, name, idea, status, started_at)
-            VALUES (?, ?, ?, ?, ?)
-        `).run('system', 'System', 'System Operations', 'active', new Date().toISOString());
-    }
-
-    // --- Business Methods ---
-
-    saveBusiness(business) {
-        const { id, name, idea, analysis_id, plan_id, status, started_at, revenue, expenses, priority, ...metadata } = business;
-        this.db.prepare(
-            `INSERT OR REPLACE INTO businesses (id, name, idea, analysis_id, plan_id, status, started_at, revenue, expenses, priority, metadata) 
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
-        ).run(id, name, idea, analysis_id, plan_id, status, started_at, revenue || 0, expenses || 0, priority || 1.0, JSON.stringify(metadata));
-        this.queryCache.delete('all_businesses');
-    }
-
-    getBusiness(id) {
-        const row = this.db.prepare('SELECT * FROM businesses WHERE id = ?').get(id);
-        if (row && row.metadata) {
-            return { ...row, ...JSON.parse(row.metadata) };
+  log(businessId, type, message) {
+    return new Promise((resolve, reject) => {
+      this.db.run(
+        'INSERT INTO logs (businessid, timestamp, type, message) VALUES (?, ?, ?, ?)',
+        [businessId, new Date().toISOString(), type, message],
+        function (err) {
+          if (err) reject(err);
+          else resolve();
         }
-        return row;
-    }
-
-    getAllBusinesses() {
-        const cacheKey = 'all_businesses';
-        if (this.queryCache.has(cacheKey)) {
-            return this.queryCache.get(cacheKey);
-        }
-        const rows = this.db.prepare('SELECT * FROM businesses').all();
-        const results = rows.map(row => ({ ...row, ...(row.metadata ? JSON.parse(row.metadata) : {}) }));
-        this.queryCache.set(cacheKey, results);
-        return results;
-    }
-
-    // --- Task Methods ---
-
-    saveTask(task) {
-        const { id, business_id, plan_id, phase, name, description, automated, requires_approval, status, result, priority, created_at } = task;
-        this.db.prepare(
-            `INSERT OR REPLACE INTO tasks (id, business_id, plan_id, phase, name, description, automated, requires_approval, status, result, priority, created_at) 
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
-        ).run(id, business_id, plan_id, phase, name, description, automated ? 1 : 0, requires_approval ? 1 : 0, status, JSON.stringify(result), priority || 0, created_at);
-    }
-
-    getTasksForBusiness(businessId) {
-        const rows = this.db.prepare('SELECT * FROM tasks WHERE business_id = ?').all(businessId);
-        return rows.map(row => ({ ...row, result: row.result ? JSON.parse(row.result) : null }));
-    }
-
-    getQueuedTasks() {
-        const rows = this.db.prepare("SELECT * FROM tasks WHERE status = 'queued' ORDER BY priority DESC").all();
-        return rows.map(row => ({ ...row, result: row.result ? JSON.parse(row.result) : null }));
-    }
-
-    // --- Approval Methods ---
-
-    saveApproval(approval) {
-        const { id, task_id, type, title, description, amount, impact, recommendation, status, created_at, decided_at, notes } = approval;
-        this.db.prepare(
-            `INSERT OR REPLACE INTO approvals (id, task_id, type, title, description, amount, impact, recommendation, status, created_at, decided_at, notes) 
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
-        ).run(id, task_id, type, title, description, amount, impact, recommendation, status, created_at, decided_at, notes);
-    }
-
-    getPendingApprovals() {
-        return this.db.prepare("SELECT * FROM approvals WHERE status = 'pending'").all();
-    }
-
-    // --- Logging Methods ---
-
-    log(businessId, type, message, phase = null) {
-        this.db.prepare(
-            'INSERT INTO logs (business_id, timestamp, type, message, phase) VALUES (?, ?, ?, ?, ?)'
-        ).run(businessId, new Date().toISOString(), type, message, phase);
-    }
-
-    getLogs(limit = 100) {
-        return this.db.prepare(
-            'SELECT * FROM logs ORDER BY timestamp DESC LIMIT ?'
-        ).all(limit);
-    }
-
-    // --- Empire State Methods ---
-
-    setEmpireState(key, value) {
-        this.db.prepare(
-            'INSERT OR REPLACE INTO empire_state (key, value) VALUES (?, ?)'
-        ).run(key, JSON.stringify(value));
-    }
-
-    getEmpireState(key) {
-        const row = this.db.prepare('SELECT value FROM empire_state WHERE key = ?').get(key);
-        return row ? JSON.parse(row.value) : null;
-    }
-
-    close() {
-        if (this.db) {
-            this.db.close();
-        }
-    }
+      );
+    });
+  }
 }
 
 export default Database;
