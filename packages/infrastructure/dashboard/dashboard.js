@@ -265,39 +265,39 @@ function renderSettings() {
     console.log("Settings view activated");
 }
 
-    async function handleApproval(id, decision) {
-        const notes = prompt(decision ? "Additional authorization notes?" : "Reason for rejection?");
-        if (notes === null) return; // Cancelled
+async function handleApproval(id, decision) {
+    const notes = prompt(decision ? "Additional authorization notes?" : "Reason for rejection?");
+    if (notes === null) return; // Cancelled
 
-        showToast(decision ? "Authorizing action..." : "Rejecting action...", 'info');
+    showToast(decision ? "Authorizing action..." : "Rejecting action...", 'info');
 
-        try {
-            const endpoint = decision ? `${API_BASE}/api/approve` : `${API_BASE}/api/reject`;
-            const res = await fetch(endpoint, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id, notes, reason: notes })
-            });
+    try {
+        const endpoint = decision ? `${API_BASE}/api/approve` : `${API_BASE}/api/reject`;
+        const res = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, notes, reason: notes })
+        });
 
-            if (res.ok) {
-                showToast(decision ? "✅ Action Authorized" : "❌ Action Rejected", 'success');
-                fetchData();
-            }
-        } catch (e) {
-            showToast("Communication link failed", 'error');
+        if (res.ok) {
+            showToast(decision ? "✅ Action Authorized" : "❌ Action Rejected", 'success');
+            fetchData();
         }
+    } catch (e) {
+        showToast("Communication link failed", 'error');
+    }
+}
+
+function renderFullApprovals() {
+    const container = document.getElementById('full-approval-container');
+    if (!container) return;
+
+    if (STATE.approvals.length === 0) {
+        container.innerHTML = '<div class="empty-state">All systems GO. No approvals pending.</div>';
+        return;
     }
 
-    function renderFullApprovals() {
-        const container = document.getElementById('full-approval-container');
-        if (!container) return;
-
-        if (STATE.approvals.length === 0) {
-            container.innerHTML = '<div class="empty-state">All systems GO. No approvals pending.</div>';
-            return;
-        }
-
-        container.innerHTML = STATE.approvals.map(a => `
+    container.innerHTML = STATE.approvals.map(a => `
         <div class="approval-card panel">
             <div class="approval-info">
                 <h3>${a.title}</h3>
@@ -310,39 +310,35 @@ function renderSettings() {
             </div>
         </div>
     `).join('');
+}
+
+// --- Theme Toggle ---
+function initThemeToggle() {
+    const themeToggle = document.getElementById('theme-toggle');
+    if (!themeToggle) return;
+
+    // Load saved theme preference
+    const savedTheme = localStorage.getItem('king-ai-theme') || 'dark';
+    document.body.className = `${savedTheme}-theme`;
+    updateThemeIcon(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+        const currentTheme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+        document.body.className = `${newTheme}-theme`;
+        localStorage.setItem('king-ai-theme', newTheme);
+        updateThemeIcon(newTheme);
+
+        showToast(`Switched to ${newTheme} theme`, 'info');
+    });
+}
+
+function updateThemeIcon(theme) {
+    const icon = document.querySelector('#theme-toggle i');
+    if (icon) {
+        icon.className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
     }
-
-
-
-    // --- Theme Toggle ---
-    function initThemeToggle() {
-        const themeToggle = document.getElementById('theme-toggle');
-        if (!themeToggle) return;
-
-        // Load saved theme preference
-        const savedTheme = localStorage.getItem('king-ai-theme') || 'dark';
-        document.body.className = `${savedTheme}-theme`;
-        updateThemeIcon(savedTheme);
-
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-
-            document.body.className = `${newTheme}-theme`;
-            localStorage.setItem('king-ai-theme', newTheme);
-            updateThemeIcon(newTheme);
-
-            showToast(`Switched to ${newTheme} theme`, 'info');
-        });
-    }
-
-    function updateThemeIcon(theme) {
-        const icon = document.querySelector('#theme-toggle i');
-        if (icon) {
-            icon.className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
-        }
-    }
-
 }
 
 // --- CEO Command Center ---
