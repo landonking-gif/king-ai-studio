@@ -36,6 +36,7 @@ export class ApprovalServer {
         this.onRejection = config.onRejection || (() => { });
 
         this.ensureDataDir();
+        this.approvalsFile = path.join(this.dataDir, 'pending-approvals.json');
     }
 
     setCommandHandler(handler) {
@@ -80,33 +81,51 @@ export class ApprovalServer {
     }
 
     /**
-     * Load pending approvals
+     * Load pending approvals (Legacy/Fallback)
      */
     loadApprovals() {
         if (fs.existsSync(this.approvalsFile)) {
-            return JSON.parse(fs.readFileSync(this.approvalsFile, 'utf-8'));
+            try {
+                return JSON.parse(fs.readFileSync(this.approvalsFile, 'utf-8'));
+            } catch (e) {
+                return [];
+            }
         }
         return [];
     }
 
     /**
-     * Save approvals
+     * Save approvals (Legacy/Fallback)
      */
     saveApprovals(approvals) {
-        fs.writeFileSync(this.approvalsFile, JSON.stringify(approvals, null, 2));
+        try {
+            fs.writeFileSync(this.approvalsFile, JSON.stringify(approvals, null, 2));
+        } catch (e) { }
     }
 
     /**
      * Add a pending approval
      */
-    addApproval(approval) {
-        const approvals = this.loadApprovals();
+    async addApproval(approval) {
+        const id = `approval-${Date.now()}`;
         const entry = {
-            id: `approval-${Date.now()}`,
+            id,
             ...approval,
             status: 'pending',
-            createdAt: new Date().toISOString()
+            created_at: new Date().toISOString()
         };
+
+        // Save to DB
+        if (this.db) {
+            try {
+                await this.db.saveApproval(entry);
+            } catch (e) {
+                console.warn('[ApprovalServer] Failed to save approval to DB:', e.message);
+            }
+        }
+
+        // Save to file (backward compatibility)
+        const approvals = this.loadApprovals();
         approvals.push(entry);
         this.saveApprovals(approvals);
 
@@ -139,9 +158,8 @@ Or visit the approval dashboard: http://${this.host}:${this.port}/
     async approve(id, notes = '') {
         try {
             if (this.db) {
-                const result = await this.db.pool.query('SELECT * FROM approvals WHERE id = $1 AND status = $2', [id, 'pending']);
-                if (result.rows.length > 0) {
-                    const app = result.rows[0];
+                const app = await this.db.getApproval(id, 'pending');
+                if (app) {
                     app.status = 'approved';
                     app.decided_at = new Date().toISOString();
                     app.notes = notes;
@@ -160,9 +178,8 @@ Or visit the approval dashboard: http://${this.host}:${this.port}/
     async reject(id, reason = '') {
         try {
             if (this.db) {
-                const result = await this.db.pool.query('SELECT * FROM approvals WHERE id = $1 AND status = $2', [id, 'pending']);
-                if (result.rows.length > 0) {
-                    const app = result.rows[0];
+                const app = await this.db.getApproval(id, 'pending');
+                if (app) {
                     app.status = 'rejected';
                     app.decided_at = new Date().toISOString();
                     app.notes = reason;
