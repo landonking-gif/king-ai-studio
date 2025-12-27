@@ -21,7 +21,7 @@ import { ApprovalServer } from './packages/core/approval-server.js';
 import { SelfImprovement } from './packages/core/self-improvement.js';
 
 // CEO imports
-import { CEOAgent } from './packages/ceo/ceo-agent.js';
+import CEOAgent from './packages/ceo/ceo-agent.js';
 import { BusinessAnalyzer } from './packages/ceo/business-analyzer.js';
 
 // Orchestrator

@@ -28,8 +28,8 @@ async function launch() {
         try {
             console.log('   - Pulling deepseek-r1:8b (Reasoning)');
             execSync('ollama pull deepseek-r1:8b', { stdio: 'inherit' });
-            console.log('   - Pulling llama3.1:8b (General)');
-            execSync('ollama pull llama3.1:8b', { stdio: 'inherit' });
+            console.log('   - Pulling llama3.3:70b (General)');
+            execSync('ollama pull llama3.3:70b', { stdio: 'inherit' });
         } catch (e) {
             console.warn('   ⚠️ Ollama not reachable or error pulling models. Continuing with Cloud-mode check.');
         }
