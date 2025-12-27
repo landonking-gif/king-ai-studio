@@ -45,8 +45,8 @@ else
 fi
 
 # Pull the model (idempotent - skips if already exists)
-log "Ensuring llama3.1:8b model is available..."
-ollama pull llama3.1:8b || log "⚠️ Warning: Failed to pull model. Check internet/disk."
+log "Ensuring llama3.3:70b model is available..."
+ollama pull llama3.3:70b || log "⚠️ Warning: Failed to pull model. Check internet/disk."
 
 # 3. APP DIRECTORY
 APP_DIR="$HOME/king-ai-studio"
@@ -55,6 +55,10 @@ cd "$APP_DIR"
 # 4. DEPENDENCIES
 log "Installing NPM packages..."
 npm install --no-audit --no-fund --production 2>&1 | tail -5
+if ! npm install --no-audit --no-fund --production; then
+    log "ERROR: npm install failed"
+    exit 1
+fi
 
 # 5. DATABASE MIGRATION
 log "Running database migration..."

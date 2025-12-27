@@ -26,7 +26,7 @@ async function testPriority() {
 
     // Test 3: Fallback check
     console.log("\n--- Test 3: Fallback Check (AWS/Ollama) ---");
-    const result2 = await router.complete("Hello from AWS check", 'fast', { model: 'ollama:llama3.1:8b' });
+    const result2 = await router.complete("Hello from AWS check", 'fast', { model: 'ollama:llama3.3:70b' });
     if (result2.success) {
         console.log("✅ AWS/Ollama Success:", result2.content.substring(0, 50) + "...");
     } else {

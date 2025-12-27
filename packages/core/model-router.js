@@ -62,9 +62,9 @@ export class ModelRouter {
         // Model configurations
         this.models = {
             // Local (Ollama) - No rate limits
-            'ollama:llama3.1:8b': {
+            'ollama:llama3.3:70b': {
                 provider: 'ollama',
-                model: 'llama3.1:8b',
+                model: 'llama3.3:70b',
                 type: 'reasoning',
                 rateLimit: Infinity,
                 cost: 0,
@@ -78,9 +78,9 @@ export class ModelRouter {
                 cost: 0,
                 priority: 1
             },
-            'ollama:llama3.2:1b': {
+            'ollama:llama3.3:70b': {
                 provider: 'ollama',
-                model: 'llama3.2:1b',
+                model: 'llama3.3:70b',
                 type: 'rapid',
                 rateLimit: Infinity,
                 cost: 0,
@@ -178,7 +178,7 @@ export class ModelRouter {
             // Dark-Pool / Private Models (ROI #20)
             'private:llama-3-70b-stealth': {
                 provider: 'private',
-                model: 'llama3.1:8b',
+                model: 'llama3.3:70b',
                 type: 'reasoning',
                 rateLimit: 5000,
                 cost: 0,
@@ -186,7 +186,7 @@ export class ModelRouter {
             },
             'private:mistral-large-secure': {
                 provider: 'private',
-                model: 'llama3.1:8b',
+                model: 'llama3.3:70b',
                 type: 'fast',
                 rateLimit: 5000,
                 cost: 0,
@@ -196,8 +196,8 @@ export class ModelRouter {
 
         // Task type to model preference
         this.taskPreferences = {
-            reasoning: ['gemini:gemini-pro', 'gemini:gemini-1.5-flash', 'openai:gpt-4o', 'anthropic:claude-3-5-sonnet', 'ollama:llama3.1:8b', 'ollama:fast'],
-            coding: ['anthropic:claude-3-5-sonnet', 'openai:gpt-4o', 'gemini:gemini-2.0-flash', 'ollama:llama3.1:8b', 'ollama:fast'],
+            reasoning: ['gemini:gemini-pro', 'gemini:gemini-1.5-flash', 'openai:gpt-4o', 'anthropic:claude-3-5-sonnet', 'ollama:llama3.3:70b', 'ollama:fast'],
+            coding: ['anthropic:claude-3-5-sonnet', 'openai:gpt-4o', 'gemini:gemini-2.0-flash', 'ollama:llama3.3:70b', 'ollama:fast'],
             fast: ['gemini:gemini-2.0-flash', 'gemini:gemini-2.5-flash', 'openai:gpt-4o-mini', 'anthropic:claude-3-haiku', 'ollama:fast'],
             creative: ['gemini:gemini-pro', 'anthropic:claude-3-5-sonnet', 'openai:gpt-4o'],
             bulk: ['gemini:gemini-2.5-flash', 'gemini:gemini-2.0-flash', 'openai:gpt-4o-mini', 'ollama:fast']
@@ -388,7 +388,7 @@ export class ModelRouter {
 
         // Fallback to first available Ollama model
         console.log('[ModelRouter] All cloud models unavailable, falling back to Ollama');
-        return 'ollama:llama3.1:8b';
+        return 'ollama:llama3.3:70b';
     }
 
     /**

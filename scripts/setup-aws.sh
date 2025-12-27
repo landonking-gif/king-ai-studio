@@ -19,7 +19,7 @@ echo "⏳ Waiting for Ollama service..."
 sleep 5
 # Pulling models recommended by ModelRouter
 ollama pull deepseek-r1:8b
-ollama pull llama3.1:8b
+ollama pull llama3.3:70b
 ollama pull codellama:7b
 
 # 5. Install PM2 for process management

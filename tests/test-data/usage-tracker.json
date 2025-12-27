@@ -17,7 +17,7 @@
     ],
     "totalCost": 0
   },
-  "ollama:llama3.1:8b": {
+  "ollama:llama3.3:70b": {
     "requests": [
       1766467129335
     ],

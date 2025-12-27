@@ -80,7 +80,7 @@ To use the 16-core CPU of your AWS instance instead of paid APIs, you must start
 # Run this once in a separate terminal window on the server
 curl -fsSL https://ollama.com/install.sh | sh
 ollama serve & 
-ollama run llama3.1:8b
+ollama run llama3.3:70b
 ```
 
 ---
