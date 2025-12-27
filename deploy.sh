@@ -5,7 +5,6 @@ set -e
 log() {
     echo "[DEPLOY] $(date +'%Y-%m-%d %H:%M:%S') - $1" | tee -a $HOME/deploy.log
 }
-
 log "=== DEPLOYMENT START ==="
 log "Host: $(hostname)"
 
