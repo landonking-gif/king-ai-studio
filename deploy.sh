@@ -57,26 +57,18 @@ fi
 # ==============================================================================
 # MULTI-MODEL PULL
 # ==============================================================================
-# Check disk space before pulling models (~70GB total)
+# Check disk space before pulling models
 AVAILABLE_SPACE=$(df -BG --output=avail / | tail -1 | tr -d 'G ')
 log "Available disk space: ${AVAILABLE_SPACE}GB"
-if [ "$AVAILABLE_SPACE" -lt 80 ]; then
-    log "⚠️ WARNING: Less than 80GB free. Model downloads may fail."
-fi
 
-log "📦 Pulling AI Models (this may take a while on first run)..."
+log "📦 Ensuring primary model is available..."
 
-# Primary Model - llama3.3:70b (~40GB)
-log "  [1/3] Pulling $PRIMARY_MODEL (Complex Reasoning)..."
+# Primary Model - llama3.3:70b (already on server from previous deployments)
+log "  [1/1] Verifying $PRIMARY_MODEL (Complex Reasoning)..."
 ollama pull $PRIMARY_MODEL || log "⚠️ Warning: Failed to pull $PRIMARY_MODEL"
 
-# Coding Model - deepseek-coder:33b (~20GB)
-log "  [2/3] Pulling $CODING_MODEL (Coding Expert)..."
-ollama pull $CODING_MODEL || log "⚠️ Warning: Failed to pull $CODING_MODEL"
-
-# Fast Model - qwen2.5:14b (~10GB)
-log "  [3/3] Pulling $FAST_MODEL (Fast Responses)..."
-ollama pull $FAST_MODEL || log "⚠️ Warning: Failed to pull $FAST_MODEL"
+# Note: Additional models (codellama:13b, qwen2.5:14b) can be pulled manually
+# when disk space is available. Use: ollama pull <model_name>
 
 log "🎯 Available Ollama models:"
 ollama list
