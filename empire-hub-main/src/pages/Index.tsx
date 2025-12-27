@@ -81,7 +81,7 @@ const Index = () => {
           />
           <MetricCard
             title="Monthly Revenue"
-            value="$22.8K"
+            value="$10.67K"
             change={18}
             changeLabel="vs last month"
             icon={<DollarSign className="w-5 h-5" />}
