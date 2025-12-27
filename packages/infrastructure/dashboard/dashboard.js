@@ -363,404 +363,6 @@ const STATE = {
 
 // Base URL for API requests (set by index.html or defaults to same origin)
 const API_BASE = window.API_BASE || '';
-
-// --- Initialization ---
-document.addEventListener('DOMContentLoaded', () => {
-    initNavigation();
-    initModals();
-    initCommandCenter();
-    initFullCommandCenter();
-    initSearch();
-    // initThemeToggle(); // Removed - Dark mode enforced
-    initNotifications();
-    initSettings();
-    initKeyboardShortcuts();
-    startSync();
-    setupCharts();
-    monitorConnection();
-});
-
-// --- Navigation & Routing ---
-function initNavigation() {
-    const navItems = document.querySelectorAll('.nav-item');
-    navItems.forEach((item, index) => {
-        item.addEventListener('click', (e) => {
-            e.preventDefault();
-            const tab = item.getAttribute('data-tab');
-            switchTab(tab);
-        });
-
-        // Add keyboard navigation
-        item.setAttribute('tabindex', '0');
-        item.setAttribute('role', 'button');
-        item.setAttribute('aria-label', `Navigate to ${item.querySelector('span').textContent}`);
-
-        item.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                item.click();
-            }
-
-            // Arrow key navigation
-            if (e.key === 'ArrowDown') {
-                e.preventDefault();
-                const nextItem = navItems[index + 1] || navItems[0];
-                nextItem.focus();
-            }
-            if (e.key === 'ArrowUp') {
-                e.preventDefault();
-                const prevItem = navItems[index - 1] || navItems[navItems.length - 1];
-                prevItem.focus();
-            }
-        });
-    });
-
-    // Handle hash routing
-    if (window.location.hash) {
-        const hash = window.location.hash.substring(1);
-        if (['dashboard', 'empire', 'approvals', 'ceo', 'analytics', 'settings'].includes(hash)) {
-            switchTab(hash);
-        }
-    }
-}
-
-function switchTab(tabId) {
-    STATE.currentTab = tabId;
-    window.location.hash = tabId;
-
-    // Update Nav UI
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.classList.toggle('active', item.getAttribute('data-tab') === tabId);
-    });
-
-    // Update View UI
-    document.querySelectorAll('.view').forEach(view => {
-        view.classList.add('hidden');
-        view.classList.remove('visible');
-    });
-
-    const targetView = document.getElementById(`${tabId}-view`);
-    if (targetView) {
-        targetView.classList.remove('hidden');
-        setTimeout(() => targetView.classList.add('visible'), 10);
-    }
-
-    // Refresh data for the specific view
-    if (tabId === 'approvals') renderFullApprovals();
-    if (tabId === 'empire') renderEmpire();
-    if (tabId === 'analytics') {
-        // Lazy load analytics charts
-        setTimeout(() => renderAnalytics(), 100);
-    }
-    if (tabId === 'settings') renderSettings();
-}
-
-// --- Data Synchronization ---
-async function startSync() {
-    await fetchData();
-    // Use longer interval for better performance
-    setInterval(fetchData, 10000); // Changed from 5000 to 10000ms
-}
-
-async function fetchData() {
-    const statusElement = document.getElementById('connection-status');
-    const wasOffline = STATE.connectionStatus === 'offline';
-
-    try {
-        STATE.connectionStatus = 'connecting';
-        updateConnectionStatus();
-
-        const response = await fetch(`${API_BASE}/api/all-data`);
-        if (!response.ok) throw new Error('API unreachable');
-
-        const data = await response.json();
-
-        STATE.businesses = data.businesses || [];
-        STATE.approvals = data.approvals || [];
-        STATE.logs = data.logs || [];
-        STATE.totalProfit = data.totalProfit || 0;
-
-        // Add ceoStatus to STATE if returned
-        STATE.ceoStatus = data.ceoStatus || {};
-
-        STATE.lastSync = new Date();
-        STATE.connectionStatus = 'online';
-
-        // If we were offline and now we're back online
-        if (wasOffline) {
-            showToast('🔗 Connection restored', 'success');
-        }
-
-        updateUI();
-        applySearchFilter();
-
-        // Rebuild notifications from fresh server data
-        try {
-            generateInitialNotifications();
-            updateNotificationBadge();
-            renderNotifications();
-        } catch (e) {
-            console.warn('Could not update notifications:', e);
-        }
-
-        // Update Live Status
-        if (data.ceoStatus) {
-            updateLiveStatus(data.ceoStatus);
-        }
-
-    } catch (error) {
-        console.error('Core sync failed:', error);
-        STATE.connectionStatus = 'offline';
-
-        if (STATE.connectionStatus !== 'offline') {
-            showToast('📡 Connection lost. Retrying...', 'warning');
-        }
-
-        // Show cached data if available
-        if (STATE.businesses.length > 0) {
-            updateUI();
-            applySearchFilter();
-        }
-    }
-
-    updateConnectionStatus();
-}
-
-function updateUI() {
-    // Stats
-    document.getElementById('stat-roi').textContent = `$${STATE.totalProfit.toLocaleString()}`;
-    document.getElementById('stat-active').textContent = STATE.businesses.filter(b => b.status === 'running').length;
-    document.getElementById('stat-tasks').textContent = STATE.logs.length.toLocaleString();
-    document.getElementById('stat-pending').textContent = STATE.approvals.length;
-    document.getElementById('pending-count').textContent = STATE.approvals.length;
-    document.getElementById('entity-count').textContent = STATE.businesses.length;
-
-    // Components
-    renderBusinesses();
-    renderLogs();
-    renderMiniApprovals();
-}
-
-function updateLiveStatus(status) {
-    const projectEl = document.getElementById('sidebar-project');
-    const stepEl = document.getElementById('sidebar-step');
-    const activityEl = document.getElementById('sidebar-activity');
-
-    if (projectEl) projectEl.textContent = status.activeBusiness?.idea || status.activeBusiness?.name || "Idle / Scouting";
-    if (stepEl) {
-        // Show current step or default to status text
-        const stepText = status.currentStep || status.status || "Waiting...";
-        stepEl.textContent = stepText.substring(0, 30) + (stepText.length > 30 ? '...' : '');
-    }
-    if (activityEl) {
-        // Show latest highlight with a "streaming" feel
-        const activity = status.latestHighlight || "...";
-        if (activityEl.textContent !== activity) {
-            activityEl.textContent = activity;
-            activityEl.title = activity;
-
-            // Simple trigger for "pulse" animation
-            activityEl.style.animation = 'none';
-            activityEl.offsetHeight; /* trigger reflow */
-            activityEl.style.animation = 'pulse-text 1s ease';
-        }
-    }
-}
-
-// --- Renderers ---
-function renderBusinesses() {
-    const container = document.getElementById('business-container');
-    if (!container) return;
-
-    const businessesToShow = STATE.searchQuery ? STATE.filteredBusinesses : STATE.businesses;
-
-    if (STATE.connectionStatus === 'connecting' && STATE.businesses.length === 0) {
-        // Show loading skeletons
-        container.innerHTML = `
-            <div class="skeleton-card">
-                <div class="skeleton-header">
-                    <div class="skeleton-title"></div>
-                    <div class="skeleton-badge"></div>
-                </div>
-                <div class="skeleton-body"></div>
-            </div>
-            <div class="skeleton-card">
-                <div class="skeleton-header">
-                    <div class="skeleton-title"></div>
-                    <div class="skeleton-badge"></div>
-                </div>
-                <div class="skeleton-body"></div>
-            </div>
-        `;
-        return;
-    }
-
-    if (businessesToShow.length === 0) {
-        const message = STATE.searchQuery ?
-            `No businesses match "${STATE.searchQuery}"` :
-            'No active ventures yet. Launch your first project!';
-        container.innerHTML = `
-            <div class="empty-state">
-                <i class="fas fa-briefcase"></i>
-                <p>${message}</p>
-            </div>
-        `;
-        return;
-    }
-
-    container.innerHTML = businessesToShow.map((b, index) => `
-        <div class="business-card" onclick="showBusinessDetails(${index})" style="cursor: pointer;">
-            <div class="card-top">
-                <div>
-                    <div class="biz-name">${b.name || 'Incognito Venture'}</div>
-                    <div class="biz-type">${b.industry || 'R&D'}</div>
-                </div>
-                <div class="status-badge status-${b.status}">${b.status}</div>
-            </div>
-            <div class="progress-container">
-                <div class="progress-label">
-                    <span>${b.current_phase || 'Phase 1'}</span>
-                    <span>${b.progress || 0}%</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: ${b.progress || 0}%"></div>
-                </div>
-            </div>
-            <div class="mt-20">
-                <p style="font-size: 0.8rem; color: var(--text-secondary)">${b.last_action || 'System initializing...'}</p>
-            </div>
-        </div>
-    `).join('');
-}
-
-function renderLogs() {
-    const container = document.getElementById('log-container');
-    if (!container) return;
-
-    const logsToShow = STATE.searchQuery ? STATE.filteredLogs : STATE.logs;
-
-    if (logsToShow.length === 0) {
-        const message = STATE.searchQuery ?
-            `No logs match "${STATE.searchQuery}"` :
-            'No activity logs yet.';
-        container.innerHTML = `<div class="empty-state" style="padding: 40px 0;"><p>${message}</p></div>`;
-        return;
-    }
-
-    container.innerHTML = logsToShow.slice(0, 50).map(l => `
-        <div class="log-entry ${l.type || 'info'}">
-            <span class="log-time">${new Date(l.timestamp).toLocaleTimeString()}</span>
-            <span class="log-msg">${l.message}</span>
-        </div>
-    `).join('');
-}
-
-function renderMiniApprovals() {
-    // This is already being handled partially by updateUI calling stat-pending
-}
-
-function renderEmpire() {
-    const container = document.getElementById('empire-business-container');
-    if (!container) return;
-
-    if (STATE.businesses.length === 0) {
-        container.innerHTML = `
-            <div class="empty-state">
-                <i class="fas fa-city"></i>
-                <p>The empire is currently dormant. Launch a venture to expand.</p>
-            </div>
-        `;
-        return;
-    }
-
-    // Check if we should render table instead
-    if (STATE.isTableView) {
-        renderEmpireTable();
-        return;
-    }
-
-    container.innerHTML = STATE.businesses.map(b => `
-        <div class="business-card">
-            <div class="card-top">
-                <div>
-                    <div class="biz-name">${b.name || 'Incognito Venture'}</div>
-                    <div class="biz-type">${b.industry || 'R&D'}</div>
-                </div>
-                <div class="status-badge status-${b.status}">${b.status}</div>
-            </div>
-            <div class="progress-container">
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: ${b.progress}%"></div>
-                </div>
-            </div>
-            <div class="mt-20">
-                <p style="font-size: 0.85rem; color: var(--text-secondary)"><strong>Last Action:</strong> ${b.last_action || 'Awaiting autonomous pulse...'}</p>
-                <div class="btn-group mt-10">
-                    <button class="btn-text" onclick="showVentureDetails('${b.id || ''}')">Details</button>
-                    <!-- rebalanceVenture removed as it was placeholder -->
-                </div>
-            </div>
-        </div>
-    `).join('');
-}
-
-// --- Empire View Features ---
-function toggleTableView() {
-    STATE.isTableView = !STATE.isTableView;
-    const cardContainer = document.getElementById('empire-business-container');
-    const tableContainer = document.getElementById('business-table-container');
-    const toggleBtn = document.querySelector('#empire-view .view-actions button:first-child');
-
-    if (STATE.isTableView) {
-        cardContainer.classList.add('hidden');
-        tableContainer.classList.remove('hidden');
-        if (toggleBtn) toggleBtn.innerHTML = '<i class="fas fa-grid-2"></i> Card View';
-        renderEmpireTable();
-    } else {
-        cardContainer.classList.remove('hidden');
-        tableContainer.classList.add('hidden');
-        if (toggleBtn) toggleBtn.innerHTML = '<i class="fas fa-table"></i> Table View';
-        renderEmpire();
-    }
-}
-
-function renderEmpireTable() {
-    const tbody = document.getElementById('business-table-body');
-    if (!tbody) return;
-
-    if (STATE.businesses.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 20px;">No active businesses</td></tr>';
-        return;
-    }
-
-    tbody.innerHTML = STATE.businesses.map(b => `
-        <tr>
-            <td>${b.name || 'Unknown'}</td>
-            <td>${b.industry || 'Unknown'}</td>
-            <td><span class="status-badge status-${b.status}">${b.status}</span></td>
-            <td>
-                <div class="progress-container" style="width: 100px;">
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: ${b.progress}%"></div>
-                    </div>
-                </div>
-            </td>
-             <td>$${(b.progress * 1000).toLocaleString()}</td>
-            <td>${b.last_action || '-'}</td>
-            <td>
-                <button class="btn-text" onclick="showVentureDetails('${b.id}')">View</button>
-            </td>
-        </tr>
-    `).join('');
-
-    // Update pagination info (mock)
-    document.getElementById('total-entries').textContent = STATE.businesses.length;
-}
-
-function exportBusinessData() {
-    exportToCSV('empire-export');
-}
-
 // --- Settings ---
 function initSettings() {
     const saveBtn = document.getElementById('save-settings-btn');
@@ -1721,3 +1323,401 @@ function initSettings() {
         }
     }
 }
+
+// --- Initialization ---
+document.addEventListener('DOMContentLoaded', () => {
+    initNavigation();
+    initModals();
+    initCommandCenter();
+    initFullCommandCenter();
+    initSearch();
+    // initThemeToggle(); // Removed - Dark mode enforced
+    initNotifications();
+    initSettings();
+    initKeyboardShortcuts();
+    startSync();
+    setupCharts();
+    monitorConnection();
+});
+
+// --- Navigation & Routing ---
+function initNavigation() {
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach((item, index) => {
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
+            const tab = item.getAttribute('data-tab');
+            switchTab(tab);
+        });
+
+        // Add keyboard navigation
+        item.setAttribute('tabindex', '0');
+        item.setAttribute('role', 'button');
+        item.setAttribute('aria-label', `Navigate to ${item.querySelector('span').textContent}`);
+
+        item.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                item.click();
+            }
+
+            // Arrow key navigation
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                const nextItem = navItems[index + 1] || navItems[0];
+                nextItem.focus();
+            }
+            if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                const prevItem = navItems[index - 1] || navItems[navItems.length - 1];
+                prevItem.focus();
+            }
+        });
+    });
+
+    // Handle hash routing
+    if (window.location.hash) {
+        const hash = window.location.hash.substring(1);
+        if (['dashboard', 'empire', 'approvals', 'ceo', 'analytics', 'settings'].includes(hash)) {
+            switchTab(hash);
+        }
+    }
+}
+
+function switchTab(tabId) {
+    STATE.currentTab = tabId;
+    window.location.hash = tabId;
+
+    // Update Nav UI
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.toggle('active', item.getAttribute('data-tab') === tabId);
+    });
+
+    // Update View UI
+    document.querySelectorAll('.view').forEach(view => {
+        view.classList.add('hidden');
+        view.classList.remove('visible');
+    });
+
+    const targetView = document.getElementById(`${tabId}-view`);
+    if (targetView) {
+        targetView.classList.remove('hidden');
+        setTimeout(() => targetView.classList.add('visible'), 10);
+    }
+
+    // Refresh data for the specific view
+    if (tabId === 'approvals') renderFullApprovals();
+    if (tabId === 'empire') renderEmpire();
+    if (tabId === 'analytics') {
+        // Lazy load analytics charts
+        setTimeout(() => renderAnalytics(), 100);
+    }
+    if (tabId === 'settings') renderSettings();
+}
+
+// --- Data Synchronization ---
+async function startSync() {
+    await fetchData();
+    // Use longer interval for better performance
+    setInterval(fetchData, 10000); // Changed from 5000 to 10000ms
+}
+
+async function fetchData() {
+    const statusElement = document.getElementById('connection-status');
+    const wasOffline = STATE.connectionStatus === 'offline';
+
+    try {
+        STATE.connectionStatus = 'connecting';
+        updateConnectionStatus();
+
+        const response = await fetch(`${API_BASE}/api/all-data`);
+        if (!response.ok) throw new Error('API unreachable');
+
+        const data = await response.json();
+
+        STATE.businesses = data.businesses || [];
+        STATE.approvals = data.approvals || [];
+        STATE.logs = data.logs || [];
+        STATE.totalProfit = data.totalProfit || 0;
+
+        // Add ceoStatus to STATE if returned
+        STATE.ceoStatus = data.ceoStatus || {};
+
+        STATE.lastSync = new Date();
+        STATE.connectionStatus = 'online';
+
+        // If we were offline and now we're back online
+        if (wasOffline) {
+            showToast('🔗 Connection restored', 'success');
+        }
+
+        updateUI();
+        applySearchFilter();
+
+        // Rebuild notifications from fresh server data
+        try {
+            generateInitialNotifications();
+            updateNotificationBadge();
+            renderNotifications();
+        } catch (e) {
+            console.warn('Could not update notifications:', e);
+        }
+
+        // Update Live Status
+        if (data.ceoStatus) {
+            updateLiveStatus(data.ceoStatus);
+        }
+
+    } catch (error) {
+        console.error('Core sync failed:', error);
+        STATE.connectionStatus = 'offline';
+
+        if (STATE.connectionStatus !== 'offline') {
+            showToast('📡 Connection lost. Retrying...', 'warning');
+        }
+
+        // Show cached data if available
+        if (STATE.businesses.length > 0) {
+            updateUI();
+            applySearchFilter();
+        }
+    }
+
+    updateConnectionStatus();
+}
+
+function updateUI() {
+    // Stats
+    document.getElementById('stat-roi').textContent = `$${STATE.totalProfit.toLocaleString()}`;
+    document.getElementById('stat-active').textContent = STATE.businesses.filter(b => b.status === 'running').length;
+    document.getElementById('stat-tasks').textContent = STATE.logs.length.toLocaleString();
+    document.getElementById('stat-pending').textContent = STATE.approvals.length;
+    document.getElementById('pending-count').textContent = STATE.approvals.length;
+    document.getElementById('entity-count').textContent = STATE.businesses.length;
+
+    // Components
+    renderBusinesses();
+    renderLogs();
+    renderMiniApprovals();
+}
+
+function updateLiveStatus(status) {
+    const projectEl = document.getElementById('sidebar-project');
+    const stepEl = document.getElementById('sidebar-step');
+    const activityEl = document.getElementById('sidebar-activity');
+
+    if (projectEl) projectEl.textContent = status.activeBusiness?.idea || status.activeBusiness?.name || "Idle / Scouting";
+    if (stepEl) {
+        // Show current step or default to status text
+        const stepText = status.currentStep || status.status || "Waiting...";
+        stepEl.textContent = stepText.substring(0, 30) + (stepText.length > 30 ? '...' : '');
+    }
+    if (activityEl) {
+        // Show latest highlight with a "streaming" feel
+        const activity = status.latestHighlight || "...";
+        if (activityEl.textContent !== activity) {
+            activityEl.textContent = activity;
+            activityEl.title = activity;
+
+            // Simple trigger for "pulse" animation
+            activityEl.style.animation = 'none';
+            activityEl.offsetHeight; /* trigger reflow */
+            activityEl.style.animation = 'pulse-text 1s ease';
+        }
+    }
+}
+
+// --- Renderers ---
+function renderBusinesses() {
+    const container = document.getElementById('business-container');
+    if (!container) return;
+
+    const businessesToShow = STATE.searchQuery ? STATE.filteredBusinesses : STATE.businesses;
+
+    if (STATE.connectionStatus === 'connecting' && STATE.businesses.length === 0) {
+        // Show loading skeletons
+        container.innerHTML = `
+            <div class="skeleton-card">
+                <div class="skeleton-header">
+                    <div class="skeleton-title"></div>
+                    <div class="skeleton-badge"></div>
+                </div>
+                <div class="skeleton-body"></div>
+            </div>
+            <div class="skeleton-card">
+                <div class="skeleton-header">
+                    <div class="skeleton-title"></div>
+                    <div class="skeleton-badge"></div>
+                </div>
+                <div class="skeleton-body"></div>
+            </div>
+        `;
+        return;
+    }
+
+    if (businessesToShow.length === 0) {
+        const message = STATE.searchQuery ?
+            `No businesses match "${STATE.searchQuery}"` :
+            'No active ventures yet. Launch your first project!';
+        container.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-briefcase"></i>
+                <p>${message}</p>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = businessesToShow.map((b, index) => `
+        <div class="business-card" onclick="showBusinessDetails(${index})" style="cursor: pointer;">
+            <div class="card-top">
+                <div>
+                    <div class="biz-name">${b.name || 'Incognito Venture'}</div>
+                    <div class="biz-type">${b.industry || 'R&D'}</div>
+                </div>
+                <div class="status-badge status-${b.status}">${b.status}</div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-label">
+                    <span>${b.current_phase || 'Phase 1'}</span>
+                    <span>${b.progress || 0}%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${b.progress || 0}%"></div>
+                </div>
+            </div>
+            <div class="mt-20">
+                <p style="font-size: 0.8rem; color: var(--text-secondary)">${b.last_action || 'System initializing...'}</p>
+            </div>
+        </div>
+    `).join('');
+}
+
+function renderLogs() {
+    const container = document.getElementById('log-container');
+    if (!container) return;
+
+    const logsToShow = STATE.searchQuery ? STATE.filteredLogs : STATE.logs;
+
+    if (logsToShow.length === 0) {
+        const message = STATE.searchQuery ?
+            `No logs match "${STATE.searchQuery}"` :
+            'No activity logs yet.';
+        container.innerHTML = `<div class="empty-state" style="padding: 40px 0;"><p>${message}</p></div>`;
+        return;
+    }
+
+    container.innerHTML = logsToShow.slice(0, 50).map(l => `
+        <div class="log-entry ${l.type || 'info'}">
+            <span class="log-time">${new Date(l.timestamp).toLocaleTimeString()}</span>
+            <span class="log-msg">${l.message}</span>
+        </div>
+    `).join('');
+}
+
+function renderMiniApprovals() {
+    // This is already being handled partially by updateUI calling stat-pending
+}
+
+function renderEmpire() {
+    const container = document.getElementById('empire-business-container');
+    if (!container) return;
+
+    if (STATE.businesses.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-city"></i>
+                <p>The empire is currently dormant. Launch a venture to expand.</p>
+            </div>
+        `;
+        return;
+    }
+
+    // Check if we should render table instead
+    if (STATE.isTableView) {
+        renderEmpireTable();
+        return;
+    }
+
+    container.innerHTML = STATE.businesses.map(b => `
+        <div class="business-card">
+            <div class="card-top">
+                <div>
+                    <div class="biz-name">${b.name || 'Incognito Venture'}</div>
+                    <div class="biz-type">${b.industry || 'R&D'}</div>
+                </div>
+                <div class="status-badge status-${b.status}">${b.status}</div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${b.progress}%"></div>
+                </div>
+            </div>
+            <div class="mt-20">
+                <p style="font-size: 0.85rem; color: var(--text-secondary)"><strong>Last Action:</strong> ${b.last_action || 'Awaiting autonomous pulse...'}</p>
+                <div class="btn-group mt-10">
+                    <button class="btn-text" onclick="showVentureDetails('${b.id || ''}')">Details</button>
+                    <!-- rebalanceVenture removed as it was placeholder -->
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// --- Empire View Features ---
+function toggleTableView() {
+    STATE.isTableView = !STATE.isTableView;
+    const cardContainer = document.getElementById('empire-business-container');
+    const tableContainer = document.getElementById('business-table-container');
+    const toggleBtn = document.querySelector('#empire-view .view-actions button:first-child');
+
+    if (STATE.isTableView) {
+        cardContainer.classList.add('hidden');
+        tableContainer.classList.remove('hidden');
+        if (toggleBtn) toggleBtn.innerHTML = '<i class="fas fa-grid-2"></i> Card View';
+        renderEmpireTable();
+    } else {
+        cardContainer.classList.remove('hidden');
+        tableContainer.classList.add('hidden');
+        if (toggleBtn) toggleBtn.innerHTML = '<i class="fas fa-table"></i> Table View';
+        renderEmpire();
+    }
+}
+
+function renderEmpireTable() {
+    const tbody = document.getElementById('business-table-body');
+    if (!tbody) return;
+
+    if (STATE.businesses.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 20px;">No active businesses</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = STATE.businesses.map(b => `
+        <tr>
+            <td>${b.name || 'Unknown'}</td>
+            <td>${b.industry || 'Unknown'}</td>
+            <td><span class="status-badge status-${b.status}">${b.status}</span></td>
+            <td>
+                <div class="progress-container" style="width: 100px;">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${b.progress}%"></div>
+                    </div>
+                </div>
+            </td>
+             <td>$${(b.progress * 1000).toLocaleString()}</td>
+            <td>${b.last_action || '-'}</td>
+            <td>
+                <button class="btn-text" onclick="showVentureDetails('${b.id}')">View</button>
+            </td>
+        </tr>
+    `).join('');
+
+    // Update pagination info (mock)
+    document.getElementById('total-entries').textContent = STATE.businesses.length;
+}
+
+function exportBusinessData() {
+    exportToCSV('empire-export');
+}
+
