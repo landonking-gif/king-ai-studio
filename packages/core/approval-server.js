@@ -440,7 +440,7 @@ Or visit the approval dashboard: http://${this.host}:${this.port}/
                 let recentTasks = [];
                 if (this.db) {
                     try {
-                        const allTasks = await this.db.db.all('SELECT * FROM tasks ORDER BY created_at DESC LIMIT 500');
+                        const allTasks = await this.db.getAllTasks(500);
                         activeTasks = allTasks.filter(t => t.status === 'running' || t.status === 'queued' || t.status === 'pending').map(t => ({
                             id: t.id,
                             name: t.name,
@@ -458,6 +458,7 @@ Or visit the approval dashboard: http://${this.host}:${this.port}/
                             startedAt: t.created_at
                         }));
                     } catch (e) {
+                        console.warn('[ApprovalServer] Task extraction failed:', e.message);
                         activeTasks = [];
                         recentTasks = [];
                     }
