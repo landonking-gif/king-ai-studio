@@ -590,8 +590,8 @@ export class ModelRouter {
         // Check cache
         const cacheKey = this.hashPrompt(prompt);
         const cached = this.cache.get(`${modelId}:${cacheKey}`);
-        if (cached) {
-            return { ...cached, cached: true };
+        if (cached && (Date.now() - cached.time < 60000)) {
+            return { ...cached.result, cached: true };
         }
 
         this.recordRequest(modelId);
@@ -629,7 +629,7 @@ export class ModelRouter {
 
             // Cache successful results
             if (result.success) {
-                this.cache.set(`${modelId}:${cacheKey}`, result);
+                this.cache.set(`${modelId}:${cacheKey}`, { result, time: Date.now() });
                 this.recordCircuitSuccess(model.provider);
             }
 

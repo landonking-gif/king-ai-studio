@@ -8,10 +8,12 @@
         "outDir": "./dist",
         "rootDir": ".",
         "declaration": true,
-        "skipLibCheck": true
+        "skipLibCheck": true,
+        "allowJs": true
     },
     "include": [
-        "packages/**/*.ts"
+        "packages/**/*.ts",
+        "packages/**/*.js"
     ],
     "exclude": [
         "node_modules",

@@ -5,8 +5,7 @@
 
 import path from 'path';
 import { fileURLToPath } from 'url';
-import sqlite3 from 'sqlite3';
-import { open } from 'sqlite';
+import Database from 'better-sqlite3';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -21,13 +20,12 @@ export class Database {
     /**
      * Initialize the database and create tables
      */
-    async init() {
-        this.db = await open({
-            filename: this.dbPath,
-            driver: sqlite3.Database
-        });
+    init() {
+        this.db = new Database(this.dbPath);
+        this.db.pragma('journal_mode = WAL');
+        this.db.pragma('busy_timeout = 5000');
 
-        await this.createTables();
+        this.createTables();
         console.log(`[Database] Initialized at ${this.dbPath}`);
         return this;
     }
@@ -35,9 +33,9 @@ export class Database {
     /**
      * Create necessary tables if they don't exist
      */
-    async createTables() {
+    createTables() {
         // Businesses table
-        await this.db.exec(`
+        this.db.exec(`
             CREATE TABLE IF NOT EXISTS businesses (
                 id TEXT PRIMARY KEY,
                 name TEXT,
@@ -54,7 +52,7 @@ export class Database {
         `);
 
         // Tasks table
-        await this.db.exec(`
+        this.db.exec(`
             CREATE TABLE IF NOT EXISTS tasks (
                 id TEXT PRIMARY KEY,
                 business_id TEXT,
@@ -73,7 +71,7 @@ export class Database {
         `);
 
         // Approvals table
-        await this.db.exec(`
+        this.db.exec(`
             CREATE TABLE IF NOT EXISTS approvals (
                 id TEXT PRIMARY KEY,
                 task_id TEXT,
@@ -92,7 +90,7 @@ export class Database {
         `);
 
         // System/Execution Logs
-        await this.db.exec(`
+        this.db.exec(`
             CREATE TABLE IF NOT EXISTS logs (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 business_id TEXT,
@@ -105,7 +103,7 @@ export class Database {
         `);
 
         // Empire State
-        await this.db.exec(`
+        this.db.exec(`
             CREATE TABLE IF NOT EXISTS empire_state (
                 key TEXT PRIMARY KEY,
                 value TEXT
@@ -113,7 +111,7 @@ export class Database {
         `);
 
         // Negotiations table for ROI #2
-        await this.db.exec(`
+        this.db.exec(`
             CREATE TABLE IF NOT EXISTS negotiations (
                 id TEXT PRIMARY KEY,
                 business_id TEXT,
@@ -132,7 +130,7 @@ export class Database {
         const columns = ['revenue', 'expenses', 'priority'];
         for (const col of columns) {
             try {
-                await this.db.exec(`ALTER TABLE businesses ADD COLUMN ${col} REAL DEFAULT 0`);
+                this.db.exec(`ALTER TABLE businesses ADD COLUMN ${col} REAL DEFAULT 0`);
             } catch (e) {
                 // Ignore if column already exists
             }
@@ -140,44 +138,43 @@ export class Database {
 
         // Migration for tasks.priority
         try {
-            await this.db.exec(`ALTER TABLE tasks ADD COLUMN priority REAL DEFAULT 0`);
+            this.db.exec(`ALTER TABLE tasks ADD COLUMN priority REAL DEFAULT 0`);
         } catch (e) {
             // Ignore
         }
 
         // Ensure 'system' business exists
-        await this.db.run(`
+        this.db.prepare(`
             INSERT OR IGNORE INTO businesses (id, name, idea, status, started_at)
             VALUES (?, ?, ?, ?, ?)
-        `, ['system', 'System', 'System Operations', 'active', new Date().toISOString()]);
+        `).run('system', 'System', 'System Operations', 'active', new Date().toISOString());
     }
 
     // --- Business Methods ---
 
-    async saveBusiness(business) {
+    saveBusiness(business) {
         const { id, name, idea, analysis_id, plan_id, status, started_at, revenue, expenses, priority, ...metadata } = business;
-        await this.db.run(
+        this.db.prepare(
             `INSERT OR REPLACE INTO businesses (id, name, idea, analysis_id, plan_id, status, started_at, revenue, expenses, priority, metadata) 
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-            [id, name, idea, analysis_id, plan_id, status, started_at, revenue || 0, expenses || 0, priority || 1.0, JSON.stringify(metadata)]
-        );
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+        ).run(id, name, idea, analysis_id, plan_id, status, started_at, revenue || 0, expenses || 0, priority || 1.0, JSON.stringify(metadata));
         this.queryCache.delete('all_businesses');
     }
 
-    async getBusiness(id) {
-        const row = await this.db.get('SELECT * FROM businesses WHERE id = ?', [id]);
+    getBusiness(id) {
+        const row = this.db.prepare('SELECT * FROM businesses WHERE id = ?').get(id);
         if (row && row.metadata) {
             return { ...row, ...JSON.parse(row.metadata) };
         }
         return row;
     }
 
-    async getAllBusinesses() {
+    getAllBusinesses() {
         const cacheKey = 'all_businesses';
         if (this.queryCache.has(cacheKey)) {
             return this.queryCache.get(cacheKey);
         }
-        const rows = await this.db.all('SELECT * FROM businesses');
+        const rows = this.db.prepare('SELECT * FROM businesses').all();
         const results = rows.map(row => ({ ...row, ...(row.metadata ? JSON.parse(row.metadata) : {}) }));
         this.queryCache.set(cacheKey, results);
         return results;
@@ -185,73 +182,68 @@ export class Database {
 
     // --- Task Methods ---
 
-    async saveTask(task) {
+    saveTask(task) {
         const { id, business_id, plan_id, phase, name, description, automated, requires_approval, status, result, priority, created_at } = task;
-        await this.db.run(
+        this.db.prepare(
             `INSERT OR REPLACE INTO tasks (id, business_id, plan_id, phase, name, description, automated, requires_approval, status, result, priority, created_at) 
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-            [id, business_id, plan_id, phase, name, description, automated ? 1 : 0, requires_approval ? 1 : 0, status, JSON.stringify(result), priority || 0, created_at]
-        );
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+        ).run(id, business_id, plan_id, phase, name, description, automated ? 1 : 0, requires_approval ? 1 : 0, status, JSON.stringify(result), priority || 0, created_at);
     }
 
-    async getTasksForBusiness(businessId) {
-        const rows = await this.db.all('SELECT * FROM tasks WHERE business_id = ?', [businessId]);
+    getTasksForBusiness(businessId) {
+        const rows = this.db.prepare('SELECT * FROM tasks WHERE business_id = ?').all(businessId);
         return rows.map(row => ({ ...row, result: row.result ? JSON.parse(row.result) : null }));
     }
 
-    async getQueuedTasks() {
-        const rows = await this.db.all("SELECT * FROM tasks WHERE status = 'queued' ORDER BY priority DESC");
+    getQueuedTasks() {
+        const rows = this.db.prepare("SELECT * FROM tasks WHERE status = 'queued' ORDER BY priority DESC").all();
         return rows.map(row => ({ ...row, result: row.result ? JSON.parse(row.result) : null }));
     }
 
     // --- Approval Methods ---
 
-    async saveApproval(approval) {
+    saveApproval(approval) {
         const { id, task_id, type, title, description, amount, impact, recommendation, status, created_at, decided_at, notes } = approval;
-        await this.db.run(
+        this.db.prepare(
             `INSERT OR REPLACE INTO approvals (id, task_id, type, title, description, amount, impact, recommendation, status, created_at, decided_at, notes) 
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-            [id, task_id, type, title, description, amount, impact, recommendation, status, created_at, decided_at, notes]
-        );
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+        ).run(id, task_id, type, title, description, amount, impact, recommendation, status, created_at, decided_at, notes);
     }
 
-    async getPendingApprovals() {
-        return await this.db.all("SELECT * FROM approvals WHERE status = 'pending'");
+    getPendingApprovals() {
+        return this.db.prepare("SELECT * FROM approvals WHERE status = 'pending'").all();
     }
 
     // --- Logging Methods ---
 
-    async log(businessId, type, message, phase = null) {
-        await this.db.run(
-            'INSERT INTO logs (business_id, timestamp, type, message, phase) VALUES (?, ?, ?, ?, ?)',
-            [businessId, new Date().toISOString(), type, message, phase]
-        );
+    log(businessId, type, message, phase = null) {
+        this.db.prepare(
+            'INSERT INTO logs (business_id, timestamp, type, message, phase) VALUES (?, ?, ?, ?, ?)'
+        ).run(businessId, new Date().toISOString(), type, message, phase);
     }
 
-    async getLogs(limit = 100) {
-        return await this.db.all(
-            'SELECT * FROM logs ORDER BY timestamp DESC LIMIT ?',
-            [limit]
-        );
+    getLogs(limit = 100) {
+        return this.db.prepare(
+            'SELECT * FROM logs ORDER BY timestamp DESC LIMIT ?'
+        ).all(limit);
     }
 
     // --- Empire State Methods ---
 
-    async setEmpireState(key, value) {
-        await this.db.run(
-            'INSERT OR REPLACE INTO empire_state (key, value) VALUES (?, ?)',
-            [key, JSON.stringify(value)]
-        );
+    setEmpireState(key, value) {
+        this.db.prepare(
+            'INSERT OR REPLACE INTO empire_state (key, value) VALUES (?, ?)'
+        ).run(key, JSON.stringify(value));
     }
 
-    async getEmpireState(key) {
-        const row = await this.db.get('SELECT value FROM empire_state WHERE key = ?', [key]);
+    getEmpireState(key) {
+        const row = this.db.prepare('SELECT value FROM empire_state WHERE key = ?').get(key);
         return row ? JSON.parse(row.value) : null;
     }
 
-    async close() {
+    close() {
         if (this.db) {
-            await this.db.close();
+            this.db.close();
         }
     }
 }
