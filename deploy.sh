@@ -6,8 +6,8 @@ set -e
 # ==============================================================================
 # Primary model for complex reasoning (highest quality)
 PRIMARY_MODEL="llama3.3:70b"
-# Coding specialist model
-CODING_MODEL="deepseek-coder:33b"
+# Coding specialist model (smaller to save disk space)
+CODING_MODEL="codellama:13b"
 # Fast response model for simple tasks
 FAST_MODEL="qwen2.5:14b"
 

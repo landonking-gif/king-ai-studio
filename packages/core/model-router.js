@@ -69,9 +69,9 @@ export class ModelRouter {
                 cost: 0,
                 priority: 1
             },
-            'ollama:deepseek-coder:33b': {
+            'ollama:codellama:13b': {
                 provider: 'ollama',
-                model: 'deepseek-coder:33b',
+                model: 'codellama:13b',
                 type: 'coding',
                 rateLimit: Infinity,
                 cost: 0,
@@ -204,7 +204,7 @@ export class ModelRouter {
         // Task type to model preference (updated for multi-model strategy)
         this.taskPreferences = {
             reasoning: ['gemini:gemini-pro', 'gemini:gemini-1.5-flash', 'openai:gpt-4o', 'anthropic:claude-3-5-sonnet', 'ollama:llama3.3:70b', 'ollama:qwen2.5:14b'],
-            coding: ['ollama:deepseek-coder:33b', 'anthropic:claude-3-5-sonnet', 'openai:gpt-4o', 'gemini:gemini-2.0-flash', 'ollama:llama3.3:70b'],
+            coding: ['ollama:codellama:13b', 'anthropic:claude-3-5-sonnet', 'openai:gpt-4o', 'gemini:gemini-2.0-flash', 'ollama:llama3.3:70b'],
             fast: ['ollama:qwen2.5:14b', 'gemini:gemini-2.0-flash', 'gemini:gemini-2.5-flash', 'openai:gpt-4o-mini', 'anthropic:claude-3-haiku', 'ollama:fast'],
             creative: ['gemini:gemini-pro', 'anthropic:claude-3-5-sonnet', 'openai:gpt-4o', 'ollama:llama3.3:70b'],
             bulk: ['ollama:qwen2.5:14b', 'gemini:gemini-2.5-flash', 'gemini:gemini-2.0-flash', 'openai:gpt-4o-mini', 'ollama:fast']
