@@ -5,7 +5,7 @@
 
 import path from 'path';
 import { fileURLToPath } from 'url';
-import Database from 'better-sqlite3';
+import BetterSqlite3 from 'better-sqlite3';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -21,7 +21,7 @@ export class Database {
      * Initialize the database and create tables
      */
     init() {
-        this.db = new Database(this.dbPath);
+        this.db = new BetterSqlite3(this.dbPath);
         this.db.pragma('journal_mode = WAL');
         this.db.pragma('busy_timeout = 5000');
 
