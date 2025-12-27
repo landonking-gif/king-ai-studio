@@ -67,7 +67,7 @@ async function run() {
 
     // Step 2: AWS Info
     console.log('🌐 [2/4] AWS Server Details');
-    const defaultIP = 'ec2-3-91-94-2.compute-1.amazonaws.com';
+    const defaultIP = 'ec2-54-161-126-33.compute-1.amazonaws.com';
     const serverIP = await question(`Enter AWS Server IP/DNS [Default: ${defaultIP}]: `) || defaultIP;
     let keyFile = 'king-ai-studio (1).pem';
 
@@ -141,33 +141,34 @@ async function run() {
     // Upload deploy script
     const deployScript = 'deploy.sh';
     console.log(`\n📦 [3.5/4] Uploading deployment script...`);
-        try {
-            const sshOpts = '-o StrictHostKeyChecking=no -o ConnectTimeout=10';
-            execSync(`scp -i "${resolvedKeyPath}" ${sshOpts} "${deployScript}" ubuntu@${serverIP}:~/deploy.sh`, { stdio: 'ignore' });
-            execSync(`ssh -i "${resolvedKeyPath}" ${sshOpts} ubuntu@${serverIP} "chmod +x ~/deploy.sh"`, { stdio: 'ignore' });
-        } catch (e) {
-            console.error(`❌ Failed to upload deployment script: ${e.message}`);
-            process.exit(1);
-        }
+    try {
+        const sshOpts = '-o StrictHostKeyChecking=no -o ConnectTimeout=10';
+        execSync(`scp -i "${resolvedKeyPath}" ${sshOpts} "${deployScript}" ubuntu@${serverIP}:~/deploy.sh`, { stdio: 'ignore' });
+        // Fix line endings (CRLF -> LF) and make executable
+        execSync(`ssh -i "${resolvedKeyPath}" ${sshOpts} ubuntu@${serverIP} "sed -i 's/\\r$//' ~/deploy.sh && chmod +x ~/deploy.sh"`, { stdio: 'ignore' });
+    } catch (e) {
+        console.error(`❌ Failed to upload deployment script: ${e.message}`);
+        process.exit(1);
+    }
 
     // Sync entire project to server (since repo is private)
     console.log(`\n📂 [3.6/4] Syncing project files to server...`);
-        try {
-            const sshOpts = '-o StrictHostKeyChecking=no -o ConnectTimeout=10';
-            console.log('   Creating secure stream and uploading...');
+    try {
+        const sshOpts = '-o StrictHostKeyChecking=no -o ConnectTimeout=10';
+        console.log('   Creating secure stream and uploading...');
 
-            // Ensure destination exists
-            execSync(`ssh -i "${resolvedKeyPath}" ${sshOpts} ubuntu@${serverIP} "mkdir -p ~/king-ai-studio"`, { stdio: 'ignore' });
+        // Ensure destination exists
+        execSync(`ssh -i "${resolvedKeyPath}" ${sshOpts} ubuntu@${serverIP} "mkdir -p ~/king-ai-studio"`, { stdio: 'ignore' });
 
-            // Use tar to bundle everything except node_modules/git/data and stream to server
-            // This is extremely fast and avoids GitHub private repo issues
-            execSync(`tar --exclude=node_modules --exclude=.git --exclude=data -cf - . | ssh -i "${resolvedKeyPath}" ${sshOpts} ubuntu@${serverIP} "cd ~/king-ai-studio && tar -xf -"`, { stdio: 'inherit' });
-            console.log('✅ Project files synced.');
-        } catch (e) {
-            console.error('❌ Failed to sync project files.');
-            console.error('   Error:', e.message);
-            process.exit(1);
-        }
+        // Use tar to bundle everything except node_modules/git/data and stream to server
+        // This is extremely fast and avoids GitHub private repo issues
+        execSync(`tar --exclude=node_modules --exclude=.git --exclude=data -cf - . | ssh -i "${resolvedKeyPath}" ${sshOpts} ubuntu@${serverIP} "cd ~/king-ai-studio && tar -xf - && find . -name '*.sh' -exec sed -i 's/\\r$//' {} +"`, { stdio: 'inherit' });
+        console.log('✅ Project files synced and sanitized.');
+    } catch (e) {
+        console.error('❌ Failed to sync project files.');
+        console.error('   Error:', e.message);
+        process.exit(1);
+    }
 
     try {
         console.log('\n⏳ Initiating remote deployment (this will stream live output)...');
