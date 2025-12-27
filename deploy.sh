@@ -60,7 +60,11 @@ if ! npm install --no-audit --no-fund --production; then
     exit 1
 fi
 
-# 5. DATABASE MIGRATION
+# 5. DATABASE RESET (force fresh schema)
+log "Resetting database for schema upgrade..."
+rm -f "$APP_DIR/data/king-ai.db" 2>/dev/null || true
+
+# 5.1 DATABASE MIGRATION
 log "Running database migration..."
 node scripts/migrate-to-sqlite.js 2>&1 || log "Migration skipped or already done."
 
