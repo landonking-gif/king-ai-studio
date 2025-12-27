@@ -1,6 +1,16 @@
 #!/bin/bash
 set -e
 
+# ==============================================================================
+# OLLAMA MODEL CONFIGURATION
+# ==============================================================================
+# Primary model for complex reasoning (highest quality)
+PRIMARY_MODEL="llama3.3:70b"
+# Coding specialist model
+CODING_MODEL="deepseek-coder:33b"
+# Fast response model for simple tasks
+FAST_MODEL="qwen2.5:14b"
+
 # Logging helper
 log() {
     echo "[DEPLOY] $(date +'%Y-%m-%d %H:%M:%S') - $1" | tee -a $HOME/deploy.log
@@ -44,9 +54,32 @@ else
     log "Ollama service is running."
 fi
 
-# Pull the model (idempotent - skips if already exists)
-log "Ensuring llama3.3:70b model is available..."
-ollama pull llama3.3:70b || log "⚠️ Warning: Failed to pull model. Check internet/disk."
+# ==============================================================================
+# MULTI-MODEL PULL
+# ==============================================================================
+# Check disk space before pulling models (~70GB total)
+AVAILABLE_SPACE=$(df -BG --output=avail / | tail -1 | tr -d 'G ')
+log "Available disk space: ${AVAILABLE_SPACE}GB"
+if [ "$AVAILABLE_SPACE" -lt 80 ]; then
+    log "⚠️ WARNING: Less than 80GB free. Model downloads may fail."
+fi
+
+log "📦 Pulling AI Models (this may take a while on first run)..."
+
+# Primary Model - llama3.3:70b (~40GB)
+log "  [1/3] Pulling $PRIMARY_MODEL (Complex Reasoning)..."
+ollama pull $PRIMARY_MODEL || log "⚠️ Warning: Failed to pull $PRIMARY_MODEL"
+
+# Coding Model - deepseek-coder:33b (~20GB)
+log "  [2/3] Pulling $CODING_MODEL (Coding Expert)..."
+ollama pull $CODING_MODEL || log "⚠️ Warning: Failed to pull $CODING_MODEL"
+
+# Fast Model - qwen2.5:14b (~10GB)
+log "  [3/3] Pulling $FAST_MODEL (Fast Responses)..."
+ollama pull $FAST_MODEL || log "⚠️ Warning: Failed to pull $FAST_MODEL"
+
+log "🎯 Available Ollama models:"
+ollama list
 
 # 3. APP DIRECTORY
 APP_DIR="$HOME/king-ai-studio"
@@ -81,9 +114,9 @@ nohup npm run empire:daemon > $HOME/empire.log 2>&1 &
 EMPIRE_PID=$!
 log "Empire PID: $EMPIRE_PID"
 
-# 8. HEALTH CHECK (Wait for HTTP)
-log "Waiting for dashboard to respond (up to 30s)..."
-MAX_ATTEMPTS=15
+# 8. HEALTH CHECK (Wait for HTTP - extended for 70B model warmup)
+log "Waiting for dashboard to respond (up to 60s for large model warmup)..."
+MAX_ATTEMPTS=30
 ATTEMPT=0
 DASHBOARD_UP=false
 
@@ -111,10 +144,14 @@ if [ "$DASHBOARD_UP" = true ]; then
     PUBLIC_IP=$(curl -s ifconfig.me 2>/dev/null || echo "YOUR_SERVER_IP")
     log "✅ SUCCESS: Dashboard is LIVE!"
     log "🌐 Dashboard URL: http://$PUBLIC_IP:3847"
+    log ""
+    log "🤖 Installed Models:"
+    log "   - $PRIMARY_MODEL (Complex reasoning, analysis)"
+    log "   - $CODING_MODEL (Code generation, debugging)"
+    log "   - $FAST_MODEL (Quick responses, simple tasks)"
 else
-    log "⚠️ WARNING: Dashboard not responding after 30s. Check $HOME/empire.log"
+    log "⚠️ WARNING: Dashboard not responding after 60s. Check $HOME/empire.log"
     tail -20 $HOME/empire.log
-    # Don't exit 1 here - process might still be starting
 fi
 
 log "=== DEPLOYMENT COMPLETE ==="

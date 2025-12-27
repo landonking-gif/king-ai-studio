@@ -61,11 +61,26 @@ export class ModelRouter {
 
         // Model configurations
         this.models = {
-            // Local (Ollama) - No rate limits
             'ollama:llama3.3:70b': {
                 provider: 'ollama',
                 model: 'llama3.3:70b',
                 type: 'reasoning',
+                rateLimit: Infinity,
+                cost: 0,
+                priority: 1
+            },
+            'ollama:deepseek-coder:33b': {
+                provider: 'ollama',
+                model: 'deepseek-coder:33b',
+                type: 'coding',
+                rateLimit: Infinity,
+                cost: 0,
+                priority: 1
+            },
+            'ollama:qwen2.5:14b': {
+                provider: 'ollama',
+                model: 'qwen2.5:14b',
+                type: 'fast',
                 rateLimit: Infinity,
                 cost: 0,
                 priority: 1
@@ -76,15 +91,7 @@ export class ModelRouter {
                 type: 'fast',
                 rateLimit: Infinity,
                 cost: 0,
-                priority: 1
-            },
-            'ollama:llama3.3:70b': {
-                provider: 'ollama',
-                model: 'llama3.3:70b',
-                type: 'rapid',
-                rateLimit: Infinity,
-                cost: 0,
-                priority: 1
+                priority: 2
             },
 
             // OpenAI
@@ -194,13 +201,13 @@ export class ModelRouter {
             }
         };
 
-        // Task type to model preference
+        // Task type to model preference (updated for multi-model strategy)
         this.taskPreferences = {
-            reasoning: ['gemini:gemini-pro', 'gemini:gemini-1.5-flash', 'openai:gpt-4o', 'anthropic:claude-3-5-sonnet', 'ollama:llama3.3:70b', 'ollama:fast'],
-            coding: ['anthropic:claude-3-5-sonnet', 'openai:gpt-4o', 'gemini:gemini-2.0-flash', 'ollama:llama3.3:70b', 'ollama:fast'],
-            fast: ['gemini:gemini-2.0-flash', 'gemini:gemini-2.5-flash', 'openai:gpt-4o-mini', 'anthropic:claude-3-haiku', 'ollama:fast'],
-            creative: ['gemini:gemini-pro', 'anthropic:claude-3-5-sonnet', 'openai:gpt-4o'],
-            bulk: ['gemini:gemini-2.5-flash', 'gemini:gemini-2.0-flash', 'openai:gpt-4o-mini', 'ollama:fast']
+            reasoning: ['gemini:gemini-pro', 'gemini:gemini-1.5-flash', 'openai:gpt-4o', 'anthropic:claude-3-5-sonnet', 'ollama:llama3.3:70b', 'ollama:qwen2.5:14b'],
+            coding: ['ollama:deepseek-coder:33b', 'anthropic:claude-3-5-sonnet', 'openai:gpt-4o', 'gemini:gemini-2.0-flash', 'ollama:llama3.3:70b'],
+            fast: ['ollama:qwen2.5:14b', 'gemini:gemini-2.0-flash', 'gemini:gemini-2.5-flash', 'openai:gpt-4o-mini', 'anthropic:claude-3-haiku', 'ollama:fast'],
+            creative: ['gemini:gemini-pro', 'anthropic:claude-3-5-sonnet', 'openai:gpt-4o', 'ollama:llama3.3:70b'],
+            bulk: ['ollama:qwen2.5:14b', 'gemini:gemini-2.5-flash', 'gemini:gemini-2.0-flash', 'openai:gpt-4o-mini', 'ollama:fast']
         };
 
         // Rate limit tracking
@@ -302,6 +309,80 @@ export class ModelRouter {
     saveUsageTracker() {
         const trackerFile = path.join(this.dataDir, 'usage-tracker.json');
         fs.writeFileSync(trackerFile, JSON.stringify(this.usageTracker, null, 2));
+    }
+
+    /**
+     * Get daily prompt quotas for all models
+     * Calculates: (rate limit per minute) * 60 * 24 = daily limit
+     * Returns object with remaining daily quota for each model
+     */
+    getDailyQuotas() {
+        const quotas = {};
+        const now = Date.now();
+        const dayStart = new Date().setHours(0, 0, 0, 0);
+
+        for (const [modelId, model] of Object.entries(this.models)) {
+            const usage = this.usageTracker[modelId] || { requests: [] };
+
+            // Calculate daily limit from per-minute rate
+            const dailyLimit = model.rateLimit === Infinity
+                ? Infinity
+                : model.rateLimit * 60 * 24;
+
+            // Count requests today
+            const todaysRequests = (usage.requests || []).filter(t => t >= dayStart).length;
+
+            // Calculate remaining quota
+            const remaining = dailyLimit === Infinity
+                ? Infinity
+                : Math.max(0, dailyLimit - todaysRequests);
+
+            quotas[modelId] = {
+                provider: model.provider,
+                model: model.model,
+                type: model.type,
+                dailyLimit,
+                used: todaysRequests,
+                remaining,
+                cost: model.cost,
+                priority: model.priority,
+                isLocal: model.provider === 'ollama',
+                // ROI score: higher for free/local models with unlimited quota
+                roiScore: model.cost === 0
+                    ? (remaining === Infinity ? 100 : Math.min(99, remaining / 10))
+                    : Math.max(1, 50 - (model.cost * 1000))
+            };
+        }
+
+        return quotas;
+    }
+
+    /**
+     * Get the best model based on ROI (remaining quota and cost)
+     */
+    selectModelByROI(taskType = 'fast') {
+        const quotas = this.getDailyQuotas();
+        const preferences = this.taskPreferences[taskType] || this.taskPreferences.fast;
+
+        // Filter to models that are suitable for this task and have remaining quota
+        const candidates = preferences
+            .filter(modelId => quotas[modelId] && quotas[modelId].remaining > 0)
+            .map(modelId => ({ modelId, ...quotas[modelId] }))
+            .sort((a, b) => {
+                // Sort by: isLocal desc, roiScore desc, priority asc
+                if (a.isLocal !== b.isLocal) return b.isLocal - a.isLocal;
+                if (a.roiScore !== b.roiScore) return b.roiScore - a.roiScore;
+                return a.priority - b.priority;
+            });
+
+        if (candidates.length === 0) {
+            console.log('[ModelRouter] No models with remaining quota, using fallback');
+            return 'ollama:llama3.3:70b';
+        }
+
+        const selected = candidates[0];
+        console.log(`[ModelRouter] ROI Selection: ${selected.modelId} (ROI: ${selected.roiScore.toFixed(1)}, Remaining: ${selected.remaining})`);
+        return selected.modelId;
     }
 
     /**
