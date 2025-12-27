@@ -409,57 +409,6 @@ function initSettings() {
         container.scrollTop = container.scrollHeight;
     }
 
-    // --- Modals ---
-    function initModals() {
-        const modal = document.getElementById('new-business-modal');
-        const businessDetailModal = document.getElementById('business-detail-modal');
-        const openBtn = document.getElementById('new-business-btn');
-        const closeBtns = document.querySelectorAll('.close-modal');
-        const confirmBtn = document.getElementById('confirm-launch-btn');
-        const optimizeBtn = document.getElementById('optimize-business-btn');
-
-        openBtn.onclick = () => modal.classList.remove('hidden');
-        closeBtns.forEach(b => b.onclick = (e) => {
-            const parentModal = b.closest('.modal');
-            if (parentModal) {
-                parentModal.classList.add('hidden');
-            } else {
-                // Fallback for buttons not inside a modal structure
-                modal.classList.add('hidden');
-                businessDetailModal.classList.add('hidden');
-                const shortcutsModal = document.getElementById('keyboard-shortcuts-modal');
-                if (shortcutsModal) shortcutsModal.classList.add('hidden');
-            }
-        });
-
-        confirmBtn.onclick = async () => {
-            const idea = document.getElementById('new-business-idea').value;
-            if (!idea) return;
-
-            showToast('🚀 Launching new venture...', 'info');
-            modal.classList.add('hidden');
-
-            try {
-                const res = await fetch(`${API_BASE}/api/launch`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ idea })
-                });
-                if (res.ok) {
-                    showToast('✅ Venture initialized successfully!', 'success');
-                    fetchData();
-                }
-            } catch (e) {
-                showToast('❌ Launch sequence failed.', 'error');
-            }
-        };
-
-        optimizeBtn.onclick = () => {
-            showToast('🎯 Optimization commands sent to CEO', 'info');
-            businessDetailModal.classList.add('hidden');
-        };
-    }
-
     // --- Business Details ---
     function showBusinessDetails(index) {
         const businesses = STATE.searchQuery ? STATE.filteredBusinesses : STATE.businesses;
@@ -974,6 +923,64 @@ function initSettings() {
 
             addNotification(type, title, msg, icon);
         }
+    }
+}
+
+// --- Modals ---
+function initModals() {
+    const modal = document.getElementById('new-business-modal');
+    const businessDetailModal = document.getElementById('business-detail-modal');
+    const openBtn = document.getElementById('new-business-btn');
+    const closeBtns = document.querySelectorAll('.close-modal');
+    const confirmBtn = document.getElementById('confirm-launch-btn');
+    const optimizeBtn = document.getElementById('optimize-business-btn');
+
+    if (openBtn) {
+        openBtn.onclick = () => modal.classList.remove('hidden');
+    }
+    
+    closeBtns.forEach(b => b.onclick = (e) => {
+        const parentModal = b.closest('.modal');
+        if (parentModal) {
+            parentModal.classList.add('hidden');
+        } else {
+            // Fallback for buttons not inside a modal structure
+            if (modal) modal.classList.add('hidden');
+            if (businessDetailModal) businessDetailModal.classList.add('hidden');
+            const shortcutsModal = document.getElementById('keyboard-shortcuts-modal');
+            if (shortcutsModal) shortcutsModal.classList.add('hidden');
+        }
+    });
+
+    if (confirmBtn) {
+        confirmBtn.onclick = async () => {
+            const idea = document.getElementById('new-business-idea').value;
+            if (!idea) return;
+
+            showToast('🚀 Launching new venture...', 'info');
+            modal.classList.add('hidden');
+
+            try {
+                const res = await fetch(`${API_BASE}/api/launch`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ idea })
+                });
+                if (res.ok) {
+                    showToast('✅ Venture initialized successfully!', 'success');
+                    fetchData();
+                }
+            } catch (e) {
+                showToast('❌ Launch sequence failed.', 'error');
+            }
+        };
+    }
+
+    if (optimizeBtn) {
+        optimizeBtn.onclick = () => {
+            showToast('🎯 Optimization commands sent to CEO', 'info');
+            businessDetailModal.classList.add('hidden');
+        };
     }
 }
 
