@@ -240,11 +240,11 @@ export class ModelRouter {
 
         // Task type to model preference (updated for multi-model strategy)
         this.taskPreferences = {
-            reasoning: ['gemini:gemini-pro', 'gemini:gemini-1.5-flash', 'ollama:llama3:8b', 'ollama:deepseek-r1:8b', 'huggingface:mixtral-8x7b'],
-            coding: ['ollama:deepseek-r1:8b', 'ollama:llama3:8b', 'gemini:gemini-1.5-pro'],
-            fast: ['ollama:llama3.2:1b', 'gemini:gemini-1.5-flash', 'huggingface:mistral-7b', 'ollama:fast'],
-            creative: ['gemini:gemini-pro', 'huggingface:mixtral-8x7b', 'ollama:llama3:8b'],
-            bulk: ['ollama:llama3.2:1b', 'huggingface:mistral-7b', 'ollama:fast']
+            reasoning: ['ollama:llama3.3:70b', 'ollama:llama3:8b', 'ollama:deepseek-r1:8b', 'gemini:gemini-pro', 'gemini:gemini-1.5-flash', 'huggingface:mixtral-8x7b'],
+            coding: ['ollama:codellama:13b', 'ollama:deepseek-r1:8b', 'ollama:llama3:8b', 'gemini:gemini-1.5-pro'],
+            fast: ['ollama:fast', 'ollama:llama3.2:1b', 'gemini:gemini-1.5-flash', 'huggingface:mistral-7b'],
+            creative: ['ollama:llama3.3:70b', 'ollama:llama3:8b', 'gemini:gemini-pro', 'huggingface:mixtral-8x7b'],
+            bulk: ['ollama:fast', 'ollama:llama3.2:1b', 'huggingface:mistral-7b']
         };
 
         // Rate limit tracking

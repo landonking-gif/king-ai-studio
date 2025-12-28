@@ -230,6 +230,52 @@ Return ONLY the raw JavaScript code. No markdown code blocks.`;
 
     async execute(task) {
         if (task.action === 'retrospective' || task.action === 'optimize') return this.optimizeCycle();
+        if (task.action === 'create_system') return this.createNewSystem(task.spec);
+    }
+
+    /**
+     * Create a brand new system/module from scratch
+     */
+    async createNewSystem(spec) {
+        console.log(`\n✨ [RecursiveArchitect] Creating new system: ${spec.name}`);
+        const prompt = `You are a Superintelligent AI Architect.
+GOAL: Create a new system module for King AI Studio.
+NAME: ${spec.name}
+DESCRIPTION: ${spec.description}
+REQUIREMENTS: ${JSON.stringify(spec.requirements || [])}
+
+INSTRUCTIONS:
+1. Write the full JavaScript code for this module.
+2. Include class definition, constructor, and methods.
+3. Use imports from '../core/' as needed (ModelRouter, Database, etc.).
+4. Return ONLY the raw JavaScript code.
+
+OUTPUT FORMAT:
+Return ONLY the raw code.`;
+
+        try {
+            const result = await this.modelRouter.complete(prompt, 'coding');
+            let newCode = result.content.replace(/```javascript/g, '').replace(/```/g, '').trim();
+
+            const fileName = spec.name.toLowerCase().replace(/ds+/g, '-') + '.js';
+            const targetPath = path.join(ROOT_DIR, 'packages/modules', fileName);
+
+            if (fs.existsSync(targetPath)) {
+                console.log(`   ⚠️ Module already exists: ${fileName}. Aborting creation.`);
+                return { success: false, error: 'Module exists' };
+            }
+
+            fs.writeFileSync(targetPath, newCode);
+            await execAsync(`node --check "${targetPath}"`);
+
+            console.log(`   ✅ New System Created: packages/modules/${fileName}`);
+            this.learningMemory.recordAttempt(targetPath, 'CREATE', true, 'New system generated');
+
+            return { success: true, path: targetPath };
+        } catch (e) {
+            console.error(`   ❌ Creation Failed: ${e.message}`);
+            return { success: false, error: e.message };
+        }
     }
 }
 export default SelfImprovement;

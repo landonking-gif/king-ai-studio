@@ -465,14 +465,14 @@ function applySearchFilter() {
         STATE.filteredLogs = STATE.logs;
     } else {
         STATE.filteredBusinesses = STATE.businesses.filter(b =>
-            (b.name && b.name.toLowerCase().includes(STATE.searchQuery)) ||
-            (b.industry && b.industry.toLowerCase().includes(STATE.searchQuery)) ||
-            (b.status && b.status.toLowerCase().includes(STATE.searchQuery))
+            (b.name && String(b.name).toLowerCase().includes(STATE.searchQuery)) ||
+            (b.industry && String(b.industry).toLowerCase().includes(STATE.searchQuery)) ||
+            (b.status && String(b.status).toLowerCase().includes(STATE.searchQuery))
         );
 
         STATE.filteredLogs = STATE.logs.filter(l =>
-            (l.message && l.message.toLowerCase().includes(STATE.searchQuery)) ||
-            (l.type && l.type.toLowerCase().includes(STATE.searchQuery))
+            (l.message && String(l.message).toLowerCase().includes(STATE.searchQuery)) ||
+            (l.type && String(l.type).toLowerCase().includes(STATE.searchQuery))
         );
     }
 

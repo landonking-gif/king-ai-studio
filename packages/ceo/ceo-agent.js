@@ -7,6 +7,8 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -474,6 +476,31 @@ Return ONLY JSON:
      * Start a new business from an idea
      */
     async startBusiness(idea) {
+        // Enforce Concurrency Limit
+        const allBusinesses = await this.db.getAllBusinesses();
+        // Count active/running/planned businesses
+        const activeCount = allBusinesses.filter(b => ['active', 'running', 'planned', 'starting'].includes(b.status)).length;
+        const maxConcurrent = parseInt(process.env.MAX_CONCURRENT_BUSINESSES || '5', 10);
+
+        if (activeCount >= maxConcurrent) {
+            const msg = `⚠️ Maximum concurrent businesses reached (${activeCount}/${maxConcurrent}). Halting expansion to focus on optimization.`;
+            await this.logProgress(msg, 'warning', true);
+
+            // Trigger self-improvement or deep work on existing business
+            if (this.activeBusiness) {
+                await this.logProgress(`🔄 Redirecting compute to active business: ${this.activeBusiness.idea}`, 'info');
+                // Could verify/execute existing tasks here or trigger self-improvement
+                if (this.refactorer) {
+                    await this.refactorer.optimizeCodebase(); // Trigger self-improvement
+                }
+            } else if (this.healer) {
+                // Triger self-healing/improvement if no active business but limit reached (e.g. zombie processes in DB)
+                // This handles the user request "improving itself"
+            }
+
+            return { success: false, error: 'MAX_CONCURRENT_LIMIT_REACHED' };
+        }
+
         await this.logProgress(`🚀 Starting new business analysis: ${idea.description}`, 'start', true);
 
         // Step 1: Analyze the idea
