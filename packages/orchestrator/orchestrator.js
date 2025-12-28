@@ -241,8 +241,8 @@ export class Orchestrator {
         // Start execution loop
         this.runExecutionLoop();
 
-        // Start interactive REPL if in a TTY environment
-        if (process.stdin.isTTY) {
+        // Start interactive REPL if in a TTY environment or forced
+        if (process.stdin.isTTY || process.env.FORCE_REPL === 'true') {
             this.startREPL();
         }
 

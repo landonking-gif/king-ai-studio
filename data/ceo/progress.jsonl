@@ -1,0 +1,7 @@
+{"timestamp":"2025-12-28T18:26:44.944Z","type":"start","message":"🚀 Starting new business analysis: idea.description}"}
+{"timestamp":"2025-12-28T18:26:44.964Z","type":"progress","message":"📊 Analyzing business idea..."}
+{"timestamp":"2025-12-28T18:26:49.616Z","type":"milestone","message":"✅ Analysis complete!\n   Viability Score: 8.5/10\n   Target Market: Niche B2B\n   Revenue Model: SaaS"}
+{"timestamp":"2025-12-28T18:26:49.661Z","type":"progress","message":"📋 Creating detailed business plan..."}
+{"timestamp":"2025-12-28T18:26:54.257Z","type":"milestone","message":"✅ Business plan created!\n   Phases: undefined\n   Mission: undefined"}
+{"timestamp":"2025-12-28T18:26:54.301Z","type":"progress","message":"📝 Extracting actionable tasks..."}
+{"timestamp":"2025-12-28T18:26:54.386Z","type":"milestone","message":"✅ Found 0 tasks to execute\n   Ready to begin execution phase"}

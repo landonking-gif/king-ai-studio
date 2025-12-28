@@ -64,7 +64,8 @@ export class ApprovalServer {
             try {
                 const modPath = path.join(__dirname, '../../packages/ceo/ceo-agent.js');
                 if (fs.existsSync(modPath)) {
-                    const { CEOAgent } = await import(modPath);
+                    const { pathToFileURL } = await import('url');
+                    const { CEOAgent } = await import(pathToFileURL(modPath).href);
                     const ceo = new CEOAgent({ db: this.db });
                     // initialize silently
                     await ceo.init();

@@ -433,6 +433,14 @@ async function main() {
         console.log('');
         console.log('Example:');
         console.log('  node empire.js "AI-powered content writing service for small businesses"');
+        console.log('\nStarting interactive shell...');
+        // The REPL is already started by Orchestrator. We just need to keep the process alive.
+        // If FORCE_REPL is set, we'll stay here.
+        if (process.env.FORCE_REPL === 'true') {
+            console.log('Interactive mode active. Type "help" for commands.');
+        } else {
+            process.exit(0);
+        }
     }
 }
 

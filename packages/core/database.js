@@ -38,87 +38,107 @@ export class Database {
 
   // Called by orchestrator.js or ApprovalServer
   async init() {
-    return new Promise((resolve) => {
-      // Small delay to ensure connection is ready
-      setTimeout(() => {
-        this.db.run('PRAGMA journal_mode = WAL');
-        this.db.run('PRAGMA busy_timeout = 10000');
-        this.createTables();
-        console.log(`[Database] Initialized at ${this.dbPath}`);
-        resolve(this);
-      }, 200);
+    return new Promise((resolve, reject) => {
+      this.db.serialize(() => {
+        try {
+          this.db.run('PRAGMA journal_mode = WAL');
+          this.db.run('PRAGMA busy_timeout = 10000');
+
+          this.createTables((err) => {
+            if (err) {
+              console.error('[Database] Failed to create tables:', err);
+              reject(err);
+            } else {
+              console.log(`[Database] Initialized at ${this.dbPath}`);
+              resolve(this);
+            }
+          });
+        } catch (err) {
+          reject(err);
+        }
+      });
     });
   }
 
-  createTables() {
-    // Businesses table
-    this.db.run(`CREATE TABLE IF NOT EXISTS businesses (
-      id TEXT PRIMARY KEY,
-      name TEXT,
-      idea TEXT,
-      industry TEXT,
-      current_phase TEXT,
-      progress INTEGER DEFAULT 0,
-      last_action TEXT,
-      analysis_id TEXT,
-      plan_id TEXT,
-      status TEXT,
-      started_at TEXT,
-      revenue REAL DEFAULT 0,
-      expenses REAL DEFAULT 0,
-      priority REAL DEFAULT 1.0,
-      metadata TEXT
-    )`);
+  createTables(callback) {
+    this.db.serialize(() => {
+      // Businesses table
+      this.db.run(`CREATE TABLE IF NOT EXISTS businesses (
+        id TEXT PRIMARY KEY,
+        name TEXT,
+        idea TEXT,
+        industry TEXT,
+        current_phase TEXT,
+        progress INTEGER DEFAULT 0,
+        last_action TEXT,
+        analysis_id TEXT,
+        plan_id TEXT,
+        status TEXT,
+        started_at TEXT,
+        revenue REAL DEFAULT 0,
+        expenses REAL DEFAULT 0,
+        priority REAL DEFAULT 1.0,
+        metadata TEXT
+      )`);
 
-    // Tasks table
-    this.db.run(`CREATE TABLE IF NOT EXISTS tasks (
-      id TEXT PRIMARY KEY,
-      business_id TEXT,
-      plan_id TEXT,
-      phase TEXT,
-      name TEXT,
-      description TEXT,
-      progress INTEGER DEFAULT 0,
-      automated INTEGER,
-      requires_approval INTEGER,
-      status TEXT,
-      result TEXT,
-      priority REAL DEFAULT 0,
-      created_at TEXT
-    )`);
+      // Tasks table
+      this.db.run(`CREATE TABLE IF NOT EXISTS tasks (
+        id TEXT PRIMARY KEY,
+        business_id TEXT,
+        plan_id TEXT,
+        phase TEXT,
+        name TEXT,
+        description TEXT,
+        progress INTEGER DEFAULT 0,
+        automated INTEGER,
+        requires_approval INTEGER,
+        status TEXT,
+        result TEXT,
+        priority REAL DEFAULT 0,
+        created_at TEXT
+      )`);
 
-    // Approvals table
-    this.db.run(`CREATE TABLE IF NOT EXISTS approvals (
-      id TEXT PRIMARY KEY,
-      task_id TEXT,
-      type TEXT,
-      title TEXT,
-      description TEXT,
-      amount REAL,
-      impact INTEGER,
-      recommendation TEXT,
-      status TEXT,
-      created_at TEXT,
-      decided_at TEXT,
-      notes TEXT
-    )`);
+      // Approvals table
+      this.db.run(`CREATE TABLE IF NOT EXISTS approvals (
+        id TEXT PRIMARY KEY,
+        task_id TEXT,
+        type TEXT,
+        title TEXT,
+        description TEXT,
+        amount REAL,
+        impact INTEGER,
+        recommendation TEXT,
+        status TEXT,
+        created_at TEXT,
+        decided_at TEXT,
+        notes TEXT
+      )`);
 
-    // Logs table
-    this.db.run(`CREATE TABLE IF NOT EXISTS logs (
+      // Logs table
+      this.db.run(`CREATE TABLE IF NOT EXISTS logs (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       business_id TEXT,
       timestamp TEXT,
       type TEXT,
       message TEXT,
       phase TEXT,
-      level TEXT
-    )`);
+      level TEXT,
+      progress INTEGER DEFAULT 0
+    )`, (err) => {
+        if (!err) {
+          // Double check for missing column (for existing tables)
+          this.db.run("ALTER TABLE logs ADD COLUMN progress INTEGER DEFAULT 0", (alterErr) => {
+            // Ignore if column already exists
+          });
+        }
+      });
 
-    // Key-Value store for state
-    this.db.run(`CREATE TABLE IF NOT EXISTS state (
-      key TEXT PRIMARY KEY,
-      value TEXT
-    )`);
+      // Key-Value store for state
+      this.db.run(`CREATE TABLE IF NOT EXISTS state (
+        key TEXT PRIMARY KEY,
+        value TEXT
+      )`, callback);
+    });
   }
 
   getQueuedTasks() {
@@ -277,11 +297,11 @@ export class Database {
     });
   }
 
-  log(business_id, type, message, phase = null, level = 'info') {
+  log(business_id, type, message, phase = null, level = 'info', progress = 0) {
     return new Promise((resolve, reject) => {
       this.db.run(
-        'INSERT INTO logs (business_id, timestamp, type, message, phase, level) VALUES (?, ?, ?, ?, ?, ?)',
-        [business_id, new Date().toISOString(), type, message, phase, level],
+        'INSERT INTO logs (business_id, timestamp, type, message, phase, level, progress) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        [business_id, new Date().toISOString(), type, message, phase, level, progress],
         function (err) {
           if (err) reject(err);
           else resolve();

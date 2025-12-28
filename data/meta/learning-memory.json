@@ -1,0 +1,15 @@
+{
+  "optimizations": [
+    {
+      "file": "auto-testimonial.js",
+      "type": "OPTIMIZE",
+      "success": false,
+      "details": "Generated code too short, likely failed.",
+      "timestamp": 1766946419029
+    }
+  ],
+  "fileScores": {
+    "auto-testimonial.js": 40
+  },
+  "patterns": []
+}

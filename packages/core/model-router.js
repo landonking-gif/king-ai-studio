@@ -64,7 +64,7 @@ export class ModelRouter {
 
         // Model configurations
         this.models = {
-            'ollama:llama3.3:70b': {
+            'ollama:default': {
                 provider: 'ollama',
                 model: 'llama3.3:70b',
                 type: 'reasoning',
@@ -72,29 +72,13 @@ export class ModelRouter {
                 cost: 0,
                 priority: 1
             },
-            'ollama:codellama:13b': {
-                provider: 'ollama',
-                model: 'codellama:13b',
-                type: 'coding',
-                rateLimit: Infinity,
-                cost: 0,
-                priority: 1
-            },
-            'ollama:qwen2.5:14b': {
-                provider: 'ollama',
-                model: 'qwen2.5:14b',
-                type: 'fast',
-                rateLimit: Infinity,
-                cost: 0,
-                priority: 1
-            },
             'ollama:fast': {
                 provider: 'ollama',
-                model: 'llama3.2:1b',
+                model: 'llama3.3:70b',
                 type: 'fast',
                 rateLimit: Infinity,
                 cost: 0,
-                priority: 2
+                priority: 1
             },
 
             // OpenAI
@@ -240,11 +224,11 @@ export class ModelRouter {
 
         // Task type to model preference (updated for multi-model strategy)
         this.taskPreferences = {
-            reasoning: ['ollama:llama3.3:70b', 'ollama:llama3:8b', 'ollama:deepseek-r1:8b', 'gemini:gemini-pro', 'gemini:gemini-1.5-flash', 'huggingface:mixtral-8x7b'],
-            coding: ['ollama:codellama:13b', 'ollama:deepseek-r1:8b', 'ollama:llama3:8b', 'gemini:gemini-1.5-pro'],
-            fast: ['ollama:fast', 'ollama:llama3.2:1b', 'gemini:gemini-1.5-flash', 'huggingface:mistral-7b'],
-            creative: ['ollama:llama3.3:70b', 'ollama:llama3:8b', 'gemini:gemini-pro', 'huggingface:mixtral-8x7b'],
-            bulk: ['ollama:fast', 'ollama:llama3.2:1b', 'huggingface:mistral-7b']
+            reasoning: ['ollama:default', 'gemini:gemini-pro', 'huggingface:mixtral-8x7b'],
+            coding: ['ollama:default', 'gemini:gemini-1.5-pro'],
+            fast: ['ollama:fast', 'gemini:gemini-1.5-flash', 'huggingface:mistral-7b'],
+            creative: ['ollama:default', 'gemini:gemini-pro', 'huggingface:mixtral-8x7b'],
+            bulk: ['ollama:fast', 'huggingface:mistral-7b']
         };
 
         // Rate limit tracking
@@ -639,20 +623,24 @@ export class ModelRouter {
                     successCriteria: "Self-sustaining revenue > $500/mo"
                 });
             } else {
-                content = JSON.stringify({
-                    status: "success",
-                    data: "Fallback response generated to maintain continuity.",
-                    metadata: { source: "heuristic-v3", taskType }
-                });
-            }
-        } else {
-            // Dynamic Fallback for General Chat
-            if (lowerPrompt.includes('status') || lowerPrompt.includes('doing') || lowerPrompt.includes('how are you')) {
-                content = "Systems online. I am currently in high-ROI autonomous mode. External brain-uplinks are currently unavailable (likely quota or billing related), but my local heuristic engine is maintaining all core systems. All business logic and scheduled tasks remain active.";
-            } else if (lowerPrompt.includes('hello') || lowerPrompt.includes('hi ')) {
-                content = "Greetings. I am the King AI CEO. I am operating on local heuristics for now, but ready to build your empire.";
-            } else {
-                content = "I have processed your request utilizing my local decision engine. For full high-fidelity processing, please check the AI provider connections (specifically Gemini Billing/Quota). Tasks and strategies continue to execute per schedule.";
+                if (isJson) {
+                    // Error out instead of providing fake JSON, to satisfy user request for "no simulation fallback"
+                    return {
+                        success: false,
+                        error: "All AI providers failed. Direct AI connection is required.",
+                        model: 'simulation-engine-disabled',
+                        provider: 'none'
+                    };
+                } else {
+                    // Dynamic Fallback for General Chat
+                    if (lowerPrompt.includes('status') || lowerPrompt.includes('doing') || lowerPrompt.includes('how are you')) {
+                        content = "Systems online. Connectivity issues detected. External brain-uplinks are currently failing (check network/quota). Tasks and strategies continue to execute per schedule.";
+                    } else if (lowerPrompt.includes('hello') || lowerPrompt.includes('hi ')) {
+                        content = "Greetings. I am the King AI CEO. I am currently experiencing connectivity issues with my primary AI clusters. Please verify the OLLAMA_URL and API keys.";
+                    } else {
+                        content = "I was unable to process your request using external AI providers. Please check your connectivity and API status.";
+                    }
+                }
             }
         }
 
@@ -994,7 +982,7 @@ export class ModelRouter {
         // Extract clean model name (remove provider prefix if present)
         const cleanModel = model.replace(/^huggingface:/, '');
 
-        const response = await fetch(`https://api-inference.huggingface.co/models/${cleanModel}/v1/chat/completions`, {
+        const response = await fetch(`https://router.huggingface.co/hf-inference/v1/chat/completions`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

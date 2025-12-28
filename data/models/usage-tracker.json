@@ -24,7 +24,7 @@
   },
   "ollama:llama3.3:70b": {
     "requests": [
-      1766881787419
+      1766946414566
     ],
     "totalCost": 0
   },
@@ -49,8 +49,8 @@
   },
   "ollama:fast": {
     "requests": [
-      1766945951973,
-      1766945956557
+      1766948705056,
+      1766948987028
     ],
     "totalCost": 0
   },
@@ -88,34 +88,45 @@
   },
   "gemini:gemini-1.5-flash": {
     "requests": [
-      1766945951997,
-      1766945956564
+      1766948705062,
+      1766948987032
     ],
     "totalCost": 0
   },
   "gemini:gemini-pro": {
     "requests": [
-      1766711866459,
-      1766711898691,
-      1766711920046,
-      1766711994644,
-      1766712026479,
-      1766712047880,
-      1766712124204
+      1766946414575
     ],
     "totalCost": 0
   },
   "private:mistral-large-secure": {
     "requests": [
-      1766945954278,
-      1766945958818
+      1766948426911
     ],
     "totalCost": 0
   },
   "huggingface:mistral-7b": {
     "requests": [
-      1766945952002,
-      1766945956567
+      1766948705072,
+      1766948987039
+    ],
+    "totalCost": 0
+  },
+  "ollama:llama3:8b": {
+    "requests": [
+      1766946414572
+    ],
+    "totalCost": 0
+  },
+  "huggingface:mixtral-8x7b": {
+    "requests": [
+      1766946414578
+    ],
+    "totalCost": 0
+  },
+  "private:llama-3-8b-stealth": {
+    "requests": [
+      1766946416805
     ],
     "totalCost": 0
   }
