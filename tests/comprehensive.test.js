@@ -13,6 +13,8 @@ import {
 } from '../packages/core/index.js';
 import SecurityVault from '../packages/core/security-vault.js';
 import EmailCampaigner from '../packages/modules/email-campaigner.js';
+import { ErrorAnalyzer } from '../packages/core/error-analyzer.js';
+import { RealtimeAPI } from '../packages/core/realtime-api.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -80,4 +82,51 @@ test('EmailCampaigner - Sequence Generation', async (t) => {
     const sequence = await campaigner.generateSequence({ email: 'test@example.com' }, "SaaS");
     assert.strictEqual(sequence.length, 1);
     assert.strictEqual(sequence[0].subject, "Hello");
+    assert.strictEqual(sequence[0].subject, "Hello");
+});
+
+test('ErrorAnalyzer - Analyze', async (t) => {
+    // Mock AuditLogger
+    const mockLogger = {
+        getTodayLogs: () => [
+            { type: 'execution', status: 'failed', task: { id: 1 }, result: { error: 'Ollama failed' }, timestamp: new Date().toISOString() },
+            { type: 'execution', status: 'failed', task: { id: 2 }, result: { error: 'Ollama failed' }, timestamp: new Date().toISOString() },
+            { type: 'system', event: 'error', details: { message: 'DB Error' }, timestamp: new Date().toISOString() }
+        ]
+    };
+    const analyzer = new ErrorAnalyzer({ auditLogger: mockLogger });
+    const errors = await analyzer.analyzeRecentErrors();
+
+    assert.ok(errors.length >= 2, 'Should group errors');
+    assert.strictEqual(errors[0].count, 2, 'Should count duplicates');
+    assert.strictEqual(errors[0].signature, 'Ollama failed');
+
+    const file = analyzer.guessSourceFile('Ollama failed');
+    assert.ok(file.includes('model-router'), 'Should guess model-router');
+});
+
+test('RealtimeAPI - Broadcast', (t) => {
+    const api = new RealtimeAPI();
+    let received = null;
+
+    // Mock Client
+    const mockRes = {
+        write: (data) => {
+            if (data.startsWith('data:')) {
+                received = JSON.parse(data.substring(6).trim());
+            }
+        },
+        writeHead: () => { },
+        on: () => { } // handle 'close' event
+    };
+
+    api.handleConnection({ on: () => { } }, mockRes);
+    api.broadcast('test-event', { value: 123 });
+
+    assert.ok(received, 'Client should receive broadcast');
+    assert.strictEqual(received.type, 'test-event');
+    assert.strictEqual(received.data.value, 123);
+
+    const stats = api.getStats();
+    assert.strictEqual(stats.clients, 1);
 });

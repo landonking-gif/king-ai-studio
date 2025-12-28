@@ -27,6 +27,7 @@ export class ModelRouter {
             anthropic: { failures: 0, lastFail: 0, state: 'closed' },
             gemini: { failures: 0, lastFail: 0, state: 'closed' },
             deepseek: { failures: 0, lastFail: 0, state: 'closed' },
+            huggingface: { failures: 0, lastFail: 0, state: 'closed' },
             ollama: { failures: 0, lastFail: 0, state: 'closed' }
         };
         this.circuitThreshold = 5; // Failures before opening
@@ -43,7 +44,8 @@ export class ModelRouter {
             openai: getKeys(process.env.OPENAI_API_KEYS, process.env.OPENAI_API_KEY),
             anthropic: getKeys(process.env.ANTHROPIC_API_KEYS, process.env.ANTHROPIC_API_KEY),
             gemini: getKeys(process.env.GEMINI_API_KEYS, process.env.GEMINI_API_KEY),
-            deepseek: getKeys(process.env.DEEPSEEK_API_KEYS, process.env.DEEPSEEK_API_KEY)
+            deepseek: getKeys(process.env.DEEPSEEK_API_KEYS, process.env.DEEPSEEK_API_KEY),
+            huggingface: getKeys(process.env.HUGGING_FACE_API_KEYS, process.env.HUGGING_FACE_API_KEY)
         };
 
         // Remote AI Server (AWS or VPS)
@@ -54,7 +56,8 @@ export class ModelRouter {
                 openai: this.apiKeys.openai.length > 0,
                 anthropic: this.apiKeys.anthropic.length > 0,
                 gemini: this.apiKeys.gemini.length > 0,
-                deepseek: this.apiKeys.deepseek.length > 0
+                deepseek: this.apiKeys.deepseek.length > 0,
+                huggingface: this.apiKeys.huggingface.length > 0
             },
             ollamaUrl: this.ollamaUrl
         });
@@ -182,6 +185,24 @@ export class ModelRouter {
                 priority: 1
             },
 
+            // HuggingFace Inference API
+            'huggingface:mistral-7b': {
+                provider: 'huggingface',
+                model: 'mistralai/Mistral-7B-Instruct-v0.2',
+                type: 'fast',
+                rateLimit: 300,
+                cost: 0,
+                priority: 1
+            },
+            'huggingface:mixtral-8x7b': {
+                provider: 'huggingface',
+                model: 'mistralai/Mixtral-8x7B-Instruct-v0.1',
+                type: 'reasoning',
+                rateLimit: 300,
+                cost: 0,
+                priority: 1
+            },
+
             // Dark-Pool / Private Models (ROI #20)
             'private:llama-3-8b-stealth': {
                 provider: 'private',
@@ -219,11 +240,11 @@ export class ModelRouter {
 
         // Task type to model preference (updated for multi-model strategy)
         this.taskPreferences = {
-            reasoning: ['gemini:gemini-pro', 'gemini:gemini-1.5-flash', 'ollama:llama3:8b', 'ollama:deepseek-r1:8b'],
-            coding: ['ollama:deepseek-r1:8b', 'ollama:llama3:8b'],
-            fast: ['ollama:llama3.2:1b', 'gemini:gemini-1.5-flash', 'ollama:fast'],
-            creative: ['gemini:gemini-pro', 'ollama:llama3:8b'],
-            bulk: ['ollama:llama3.2:1b', 'ollama:fast']
+            reasoning: ['gemini:gemini-pro', 'gemini:gemini-1.5-flash', 'ollama:llama3:8b', 'ollama:deepseek-r1:8b', 'huggingface:mixtral-8x7b'],
+            coding: ['ollama:deepseek-r1:8b', 'ollama:llama3:8b', 'gemini:gemini-1.5-pro'],
+            fast: ['ollama:llama3.2:1b', 'gemini:gemini-1.5-flash', 'huggingface:mistral-7b', 'ollama:fast'],
+            creative: ['gemini:gemini-pro', 'huggingface:mixtral-8x7b', 'ollama:llama3:8b'],
+            bulk: ['ollama:llama3.2:1b', 'huggingface:mistral-7b', 'ollama:fast']
         };
 
         // Rate limit tracking
@@ -234,7 +255,8 @@ export class ModelRouter {
             openai: 0,
             anthropic: 0,
             gemini: 0,
-            deepseek: 0
+            deepseek: 0,
+            huggingface: 0
         };
 
         // System Prompt (Dynamic)
@@ -710,6 +732,9 @@ export class ModelRouter {
                 case 'deepseek':
                     result = await this.completeDeepSeek(model.model, prompt);
                     break;
+                case 'huggingface':
+                    result = await this.completeHuggingFace(model.model, prompt);
+                    break;
                 case 'private':
                     result = await this.completePrivate(model.model, prompt);
                     break;
@@ -960,6 +985,41 @@ export class ModelRouter {
             };
         }
         return stats;
+    }
+
+    async completeHuggingFace(model, prompt) {
+        const apiKey = this.getApiKey('huggingface');
+        if (!apiKey) throw new Error('No HuggingFace API key');
+
+        // Extract clean model name (remove provider prefix if present)
+        const cleanModel = model.replace(/^huggingface:/, '');
+
+        const response = await fetch(`https://api-inference.huggingface.co/models/${cleanModel}/v1/chat/completions`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`
+            },
+            body: JSON.stringify({
+                model: cleanModel,
+                messages: [
+                    ...(this.systemPrompt ? [{ role: 'system', content: this.systemPrompt }] : []),
+                    { role: 'user', content: prompt }
+                ],
+                max_tokens: 4096
+            })
+        });
+
+        if (!response.ok) {
+            const error = await response.json().catch(() => ({}));
+            throw new Error(error.error || `HuggingFace error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return {
+            success: true,
+            content: data.choices[0]?.message?.content || ''
+        };
     }
 
     /**

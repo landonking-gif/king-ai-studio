@@ -16,6 +16,8 @@ import { fileURLToPath } from 'url';
 import { exec } from 'child_process';
 import util from 'util';
 import { ModelRouter } from './model-router.js';
+import { ErrorAnalyzer } from './error-analyzer.js';
+import { LearningMemory } from './learning-memory.js';
 
 const execAsync = util.promisify(exec);
 const __filename = fileURLToPath(import.meta.url);
@@ -26,7 +28,11 @@ export class SelfImprovement {
     constructor(config = {}) {
         this.dataDir = config.dataDir || path.join(__dirname, '../../data/meta');
         this.ensureDataDir();
+
         this.modelRouter = config.modelRouter || new ModelRouter();
+        this.errorAnalyzer = new ErrorAnalyzer(config);
+        this.learningMemory = new LearningMemory(config);
+
         this.backupDir = path.join(this.dataDir, 'backups');
         if (!fs.existsSync(this.backupDir)) fs.mkdirSync(this.backupDir, { recursive: true });
     }
@@ -43,45 +49,88 @@ export class SelfImprovement {
     async optimizeCycle() {
         console.log('\n🧬 [RecursiveOptimiser] Initiating Self-Improvement Cycle...');
 
-        // 1. Scan Codebase
-        const modules = this.scanModules();
-        console.log(`   Found ${modules.length} modules.`);
+        // 1. Analyze Errors to prioritize targets
+        const errors = await this.errorAnalyzer.analyzeRecentErrors();
+        let targetFile = null;
+        let goal = 'OPTIMIZE';
+        let context = '';
 
-        // 2. Select Target (Randomly for now, or based on metrics)
-        const target = modules[Math.floor(Math.random() * modules.length)];
-        console.log(`   Targeting module: ${path.relative(ROOT_DIR, target)}`);
+        if (errors.length > 0) {
+            const topError = errors[0];
+            console.log(`   ⚠️ Detected prioritized error: ${topError.signature} (Count: ${topError.count})`);
+            const guessedFile = this.errorAnalyzer.guessSourceFile(topError.signature);
+            if (guessedFile) {
+                const absPath = path.join(ROOT_DIR, guessedFile);
+                if (fs.existsSync(absPath)) {
+                    targetFile = absPath;
+                    goal = 'FIX_BUG';
+                    context = `Fix this specific error: ${topError.signature}. Examples: ${JSON.stringify(topError.examples.map(e => e.message).slice(0, 2))}`;
+                }
+            }
+        }
+
+        // 2. Fallback to Exploration if no errors (or file not found)
+        if (!targetFile) {
+            const modules = this.scanModules();
+            // Filter out unstable files
+            const stableModules = modules.filter(m => !this.learningMemory.isUnstable(m));
+
+            if (stableModules.length === 0) {
+                console.log('   All modules are currently unstable. Skipping cycle to allow cool-down.');
+                return;
+            }
+
+            targetFile = stableModules[Math.floor(Math.random() * stableModules.length)];
+            goal = 'OPTIMIZE';
+            context = 'Improve efficiency, error handling, or performance.';
+        }
+
+        console.log(`   Targeting module: ${path.relative(ROOT_DIR, targetFile)} [${goal}]`);
 
         // 3. Analyze & Optimize
-        const sourceCode = fs.readFileSync(target, 'utf-8');
-        const optimization = await this.generateOptimization(target, sourceCode);
+        const sourceCode = fs.readFileSync(targetFile, 'utf-8');
+        const optimization = await this.generateOptimization(targetFile, sourceCode, goal, context);
 
         if (!optimization.success) {
             console.log(`   ⚠️ Optimization skipped: ${optimization.reason}`);
+            this.learningMemory.recordAttempt(targetFile, goal, false, optimization.reason);
             return;
         }
 
         // 4. Apply & Verify
-        await this.applyChange(target, optimization.newCode, optimization.explanation);
+        await this.applyChange(targetFile, optimization.newCode, optimization.explanation, goal);
     }
 
     /**
      * Scan for valid JS modules to optimize
+     * Expanded to cover all main packages
      */
     scanModules() {
         const validDirs = [
+            path.join(ROOT_DIR, 'packages/core'),
             path.join(ROOT_DIR, 'packages/ceo'),
             path.join(ROOT_DIR, 'packages/modules'),
-            path.join(ROOT_DIR, 'packages/infrastructure')
+            path.join(ROOT_DIR, 'packages/infrastructure') // Includes dashboard
         ];
 
         let modules = [];
 
         for (const dir of validDirs) {
             if (fs.existsSync(dir)) {
-                const files = fs.readdirSync(dir)
-                    .filter(f => f.endsWith('.js'))
-                    .map(f => path.join(dir, f));
-                modules = modules.concat(files);
+                // Recursive scan helper
+                const scan = (d) => {
+                    const files = fs.readdirSync(d);
+                    for (const f of files) {
+                        const fullPath = path.join(d, f);
+                        const stat = fs.statSync(fullPath);
+                        if (stat.isDirectory()) {
+                            scan(fullPath);
+                        } else if (f.endsWith('.js') && !f.includes('.test.') && !f.includes('node_modules')) {
+                            modules.push(fullPath);
+                        }
+                    }
+                };
+                scan(dir);
             }
         }
 
@@ -91,27 +140,33 @@ export class SelfImprovement {
     /**
      * Generate Optimized Code using AI
      */
-    async generateOptimization(filePath, sourceCode) {
+    async generateOptimization(filePath, sourceCode, goal, context) {
         const fileName = path.basename(filePath);
+        const recentFailures = this.learningMemory.getRecentFailures(filePath);
 
         const prompt = `You are a Superintelligent AI Architect. exist to improve your own code.
 FILE: ${fileName}
-PURPOSE: Optimize this module for PROFIT, SPEED, or AUTONOMY.
+GOAL: ${goal}
+CONTEXT: ${context}
+
+AVOID PREVIOUS MISTAKES:
+${recentFailures.length > 0 ? recentFailures.join('\n- ') : 'None'}
 
 CURRENT CODE:
-${sourceCode.substring(0, 15000)}
+${sourceCode.substring(0, 20000)}
 
 INSTRUCTIONS:
-1. Identify ONE major optimization (e.g., better error handling, concurrency, caching, smarter logic, monetization).
-2. Rewrite the ENTIRE file with this improvement.
-3. Ensure it remains compatible with imports/exports.
-4. maintain existing class names and methods.
+1. Implement the requested improvement or fix.
+2. Rewrite the ENTIRE file.
+3. preserve all exports and class structures.
+4. Maintain compatibility with other modules.
+5. If fixing a bug, add a comment explaining the fix.
 
 OUTPUT FORMAT:
 Return ONLY the raw JavaScript code. No markdown code blocks.`;
 
         try {
-            // Use 'creative' (Claude) for code rewriting as it's better at syntax
+            // Use 'creative' (Claude/Gemini) for code rewriting as it's better at syntax
             const result = await this.modelRouter.complete(prompt, 'creative');
             let newCode = result.content;
 
@@ -132,7 +187,7 @@ Return ONLY the raw JavaScript code. No markdown code blocks.`;
     /**
      * Apply change with Backup & Rollback
      */
-    async applyChange(targetPath, newCode, explanation) {
+    async applyChange(targetPath, newCode, explanation, goal) {
         const fileName = path.basename(targetPath);
         const backupPath = path.join(this.backupDir, `${fileName}.${Date.now()}.bak`);
 
@@ -146,8 +201,12 @@ Return ONLY the raw JavaScript code. No markdown code blocks.`;
             // 3. Verify (Syntax Check)
             await execAsync(`node --check "${targetPath}"`);
 
+            // 3.5 Run Tests? (Future enhancement: run specific tests for this file)
+
             console.log(`   ✅ Optimization Applied: ${explanation}`);
             console.log(`      Backup saved to: ${path.relative(ROOT_DIR, backupPath)}`);
+
+            this.learningMemory.recordAttempt(targetPath, goal, true, explanation);
 
         } catch (error) {
             console.error(`   ❌ Verification Failed! Rolling back...`);
@@ -156,6 +215,8 @@ Return ONLY the raw JavaScript code. No markdown code blocks.`;
             // 4. Rollback
             fs.copyFileSync(backupPath, targetPath);
             console.log(`      🔄 Rolled back to previous version.`);
+
+            this.learningMemory.recordAttempt(targetPath, goal, false, error.message);
         }
     }
 

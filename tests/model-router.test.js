@@ -19,11 +19,23 @@ test('ModelRouter - parseKeys', async (t) => {
 test('ModelRouter - selectModel', async (t) => {
     const router = new ModelRouter();
     // Clear all keys to force fallback
-    router.apiKeys = { openai: [], anthropic: [], gemini: [], deepseek: [] };
-    router.apiKeys.anthropic = ['fake-key'];
-    const model = router.selectModel('reasoning');
-    assert.ok(model, 'Should select a model for reasoning');
-    assert.ok(model.includes('anthropic'), 'Should select anthropic');
+    router.apiKeys = { openai: [], anthropic: [], gemini: [], deepseek: [], huggingface: [] };
+    router.apiKeys.huggingface = ['fake-key'];
+
+    // Use 'creative' task type where huggingface is 2nd preference after gemini
+    const model = router.selectModel('creative');
+    assert.ok(model, 'Should select a model for creative task');
+    assert.ok(model.includes('huggingface'), `Should select huggingface, got ${model}`);
+});
+
+test('ModelRouter - API Key Rotation', async (t) => {
+    const router = new ModelRouter();
+    router.apiKeys.gemini = ['key1', 'key2', 'key3'];
+
+    assert.strictEqual(router.getApiKey('gemini'), 'key1');
+    assert.strictEqual(router.getApiKey('gemini'), 'key2');
+    assert.strictEqual(router.getApiKey('gemini'), 'key3');
+    assert.strictEqual(router.getApiKey('gemini'), 'key1'); // Loop back
 });
 
 test('ModelRouter - executeModelRequest Mock', async (t) => {

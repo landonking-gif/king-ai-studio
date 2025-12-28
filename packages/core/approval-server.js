@@ -8,6 +8,7 @@ import path from 'path';
 import http from 'http';
 import { fileURLToPath } from 'url';
 import { EmailNotifier } from './email-notifier.js';
+import { RealtimeAPI } from './realtime-api.js';
 
 import { Database } from './database.js';
 
@@ -41,6 +42,9 @@ export class ApprovalServer {
 
         this.ensureDataDir();
         this.approvalsFile = path.join(this.dataDir, 'pending-approvals.json');
+
+        // Phase 2: Real-time API
+        this.realtimeApi = new RealtimeAPI();
     }
 
     setCommandHandler(handler) {
@@ -156,6 +160,8 @@ Or visit the approval dashboard: http://${this.host}:${this.port}/
             ).catch(console.error);
         }
 
+        // Broadcast update
+        this.realtimeApi.broadcast('approval:new', entry);
         return entry;
     }
 
@@ -169,6 +175,10 @@ Or visit the approval dashboard: http://${this.host}:${this.port}/
                     app.notes = notes;
                     await this.db.saveApproval(app);
                     this.onApproval(app);
+
+                    // Broadcast update
+                    this.realtimeApi.broadcast('approval:decided', app);
+
                     return { success: true, item: app };
                 }
             }
@@ -189,6 +199,10 @@ Or visit the approval dashboard: http://${this.host}:${this.port}/
                     app.notes = reason;
                     await this.db.saveApproval(app);
                     this.onRejection(app);
+
+                    // Broadcast update
+                    this.realtimeApi.broadcast('approval:decided', app);
+
                     return { success: true, item: app };
                 }
             }
@@ -638,6 +652,14 @@ Or visit the approval dashboard: http://${this.host}:${this.port}/
                 res.writeHead(500, { 'Content-Type': 'text/plain' });
                 return res.end('Internal server error');
             }
+
+        } else if (pathname === '/api/realtime/events') {
+            this.realtimeApi.handleConnection(req, res);
+            return;
+
+        } else if (pathname === '/api/realtime/stats') {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            return res.end(JSON.stringify(this.realtimeApi.getStats()));
 
         } else {
             res.writeHead(404, { 'Content-Type': 'application/json' });

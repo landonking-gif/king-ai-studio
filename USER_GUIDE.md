@@ -1,106 +1,106 @@
 # 👑 King AI Studio: User Guide
+
 > **The Autonomous Business Empire Builder - AWS Deployment Edition**
 
-King AI Studio is a governed, autonomous product studio designed to design, build, and run multiple businesses simultaneously. It functions as a "Governed AI CEO" that handles everything from niche research to daily operations, while keeping you in the loop for critical decisions.
+King AI Studio is a governed, autonomous product studio designed to design, build, and run multiple businesses simultaneously. It functions as a **"Governed AI CEO"** that handles everything from niche research to daily operations, while keeping you in the loop for critical decisions.
 
 ---
 
-## 🚀 Server Access & Quick Start
+## 🚀 Quick Start (The King's Way)
 
-### 1. Connecting to your AWS Server
-Your studio is hosted on a high-performance **m7i.4xlarge** AWS instance.
+The easiest way to manage your empire is using the **Master Controller** script from your local machine.
 
-**From your local computer (Windows PowerShell):**
-```powershell
-# 1. Navigate to your local folder
-cd C:\Users\dmilner.AGV-040318-PC\Downloads\landon\king-ai-studio
-
-# 2. Login to the AWS Ubuntu Server
-ssh -i "king-ai-studio.pem (1)" ubuntu@ec2-18-216-0-221.us-east-2.compute.amazonaws.com
-```
-ssh -i "C:\Users\dmilner.AGV-040318-PC\Downloads\landon\king-ai-studio\king-ai-studio (1).pem" ubuntu@ec2-98-83-219-105.compute-1.amazonaws.com
-### 2. Updating the Studio
-If you receive a notification that I have pushed a fix or a new feature, run this on the server:
-```bash
-cd ~/king-ai-studio
-# Force update (clears local log conflicts)
-git reset --hard origin/main
-```
-
-### 3. Launching the Engine (The King's Way 👑)
-The easiest way to keep your studio updated and running is to use the **Master Controller** from your local machine (Windows).
-
-From your local project folder, run:
 ```bash
 node king.js
 ```
-This script will:
-1.  **Sync** your local code/fixes to GitHub.
-2.  **SSH** into your AWS server automatically.
-3.  **Update** the server with the latest code.
-4.  **Initialize** the database and AI models.
-5.  **Restart** the Empire in a background session.
+
+This magic script will:
+1.  **Sync** your local code to the AWS server.
+2.  **Update** the environment with the correct dynamic IP.
+3.  **Deploy** the latest version.
+4.  **Auto-Open** the Real-Time Dashboard in your browser.
 
 ---
 
-### 4. Manual Launch (Advanced)
-If you prefer to run things manually or in interactive mode:
+## 🌐 Real-Time Dashboard
 
-#### **A. Interactive Mode (For Chatting/Commands)**
-```bash
-npm start
-```
+The command center for your empire. No refreshing needed — data streams live.
 
-#### **B. Daemon/Empire Mode (Background)**
-```bash
-npm run empire:daemon
-```
+### Key Sections:
+- **Empire Overview**: See all your active businesses and their current phase (Idea -> MVP -> Growth).
+- **CEO Command Center**: Chat directly with the AI CEO. Monitor its "Thinking" process in real-time.
+- **Approvals**: Review and authorize high-risk actions (Legal, Financial). Risk levels are color-coded.
+- **Analytics**: Live charts showing revenue projections and system automation levels.
 
----
-
-## 🌐 The Approval Dashboard
-You don't need to look at the terminal to manage your empire. Open your browser to the **Visual Command Center**:
-
-👉 **[http://ec2-18-218-174-196.us-east-2.compute.amazonaws.com:3847](http://ec2-18-218-174-196.us-east-2.compute.amazonaws.com:3847)**
-
-From here, you can:
-- **Approve/Reject** legal and financial tasks.
-- **Monitor** real-time logs of what the AI is thinking.
-- **Track** the progress of your business portfolio.
+**Keyboard Shortcuts:**
+- `1-5`: Switch tabs (Dashboard, Empire, Approvals, CEO, Analytics)
+- `Ctrl+K`: Focus Search
+- `Ctrl+N`: New Business Wizard
+- `Ctrl+R`: Force Data Refresh
 
 ---
 
-## � The AI "Brains" (Model Configuration)
+## 🧠 AI Capabilities & "Self-Improvement"
 
-The system is configured to use **Gemini 1.5 Pro** as its primary reasoning engine.
+Your system is now equipped with a **Singularity Engine**.
 
-### Unlocking Local Power (No-Cost Brain)
-To use the 16-core CPU of your AWS instance instead of paid APIs, you must start **Ollama** on the server:
-```bash
-# Run this once in a separate terminal window on the server
-curl -fsSL https://ollama.com/install.sh | sh
-ollama serve & 
-ollama run llama3.3:70b
-```
+### 1. Multi-Model Intelligence
+The system automatically selects the best AI model for the task:
+- **Gemini 1.5/2.0**: Primary reasoning engine (Cloud).
+- **HuggingFace (Mistral/Mixtral)**: High-speed fallbacks.
+- **Ollama (Llama 3/DeepSeek)**: Local reasoning (Free & Private) running on your AWS GPU/CPU.
+
+### 2. Recursive Self-Improvement
+The AI can **read its own code**, find errors, and **rewrite itself** to be better.
+
+**How it works:**
+1.  **Error Analyzer**: Scans logs for recurring bugs.
+2.  **Optimization**: The AI rewrites the buggy module.
+3.  **Verification**: It runs syntax checks and tests.
+4.  **Backup**: The old version is saved to `data/meta/backups` before any change.
+
+**To trigger manually:**
+Type this in the CEO Chat on the dashboard:
+> "Run a self-improvement cycle on the database module."
 
 ---
 
-## 🛡️ Safety & Approvals
-King AI Studio follows a strict **Governance Policy**. It will pause and wait for your "OK" for:
-- **Legal**: Forming LLCs, signing contracts, filing trademarks.
-- **Financial**: Making payments, subscribing to services, moving funds.
+## 🛡️ Safety & Governance
 
-Check the **Dashboard** or your **Email** (`landon.king@luxebuildmedia.com`) for approval requests.
+King AI Studio follows a strict **Policy Engine**.
+
+**Requires Approval:**
+- ⚖️ **Legal**: Forming LLCs, contracts.
+- 💰 **Financial**: Spending > $50.
+- 📢 **Public Reputation**: Posting to social media.
+
+**Auto-Approved:**
+- 🔍 Market Research.
+- 💻 Writing Code.
+- 📧 Internal Drafting.
 
 ---
 
 ## 🛠️ Troubleshooting
 
-- **"Connection Refused" when starting?** ensure you are logged into the **AWS server** and not running on your local PC.
-- **"fetch failed" or "Idea Generation Failed"?** Ollama is likely not running. Either start Ollama (Step 3 above) or ensure your `GEMINI_API_KEY` in `.env` is valid.
-- **Dashboard link not working?** The app must be running (`npm start` or `npm run empire:daemon`) for the website to stay online.
+**"System using fallback responder?"**
+- This usually means all API keys (Gemini/HF) are exhausted or the local Ollama server is down.
+- **Fix**: The system now auto-rotates keys. If it persists, run `node king.js` to restart the remote services.
+
+**"Dashboard not updating?"**
+- Check the connection status indicator in the top right.
+- If "Offline", ensure the server is running (`npm run empire:daemon` on AWS).
+
+**"How do I see what the AI changed?"**
+- Check `data/meta/learning-memory.json` or the `backups` folder to diff changes.
 
 ---
 
 ## 📊 Daily Reporting
-Every day at **6 PM Chicago Time**, the system compiles a **Daily Brief** and sends it to your email. This summarizes all business progress and lists anything that requires your attention for the next morning.
+Every day at **6 PM**, you receive an email summary of:
+- 💰 Total Profit
+- 🚀 New Businesses Launched
+- ⚠️ Pending Approvals
+
+---
+© King AI Studio

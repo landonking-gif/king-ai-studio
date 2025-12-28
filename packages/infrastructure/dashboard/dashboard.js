@@ -36,122 +36,122 @@ function initSettings() {
 
 // --- Charts ---
 function renderAnalytics() {
-        const revenueCtx = document.getElementById('revenue-growth-chart');
-        if (!revenueCtx) return;
+    const revenueCtx = document.getElementById('revenue-growth-chart');
+    if (!revenueCtx) return;
 
-        // Destroy existing chart if it exists to prevent memory leaks
-        if (window.revenueChart) window.revenueChart.destroy();
+    // Destroy existing chart if it exists to prevent memory leaks
+    if (window.revenueChart) window.revenueChart.destroy();
 
-        // Generate more realistic data based on actual business data
-        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        const revenueData = months.map((month, index) => {
-            const baseRevenue = STATE.businesses.length * 1000;
-            const growth = Math.sin(index / 3) * 2000 + Math.random() * 1000;
-            return Math.max(0, baseRevenue + growth);
-        });
+    // Generate more realistic data based on actual business data
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const revenueData = months.map((month, index) => {
+        const baseRevenue = STATE.businesses.length * 1000;
+        const growth = Math.sin(index / 3) * 2000 + Math.random() * 1000;
+        return Math.max(0, baseRevenue + growth);
+    });
 
-        window.revenueChart = new Chart(revenueCtx.getContext('2d'), {
-            type: 'line',
+    window.revenueChart = new Chart(revenueCtx.getContext('2d'), {
+        type: 'line',
+        data: {
+            labels: months,
+            datasets: [{
+                label: 'Monthly Revenue ($)',
+                data: revenueData,
+                borderColor: '#833ab4',
+                backgroundColor: 'rgba(131, 58, 180, 0.1)',
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: '#833ab4',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 4,
+                pointHoverRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: 'rgba(0,0,0,0.8)',
+                    titleColor: '#fff',
+                    bodyColor: '#fff',
+                    callbacks: {
+                        label: function (context) {
+                            return `Revenue: $${context.parsed.y.toLocaleString()}`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    grid: { color: 'rgba(255,255,255,0.05)' },
+                    border: { display: false },
+                    ticks: {
+                        callback: function (value) {
+                            return '$' + value.toLocaleString();
+                        }
+                    }
+                },
+                x: {
+                    grid: { display: false },
+                    border: { display: false }
+                }
+            },
+            interaction: {
+                intersect: false,
+                mode: 'index'
+            }
+        }
+    });
+
+    const automationCtx = document.getElementById('automation-chart');
+    if (automationCtx) {
+        if (window.automationChart) window.automationChart.destroy();
+        // Calculate automation levels based on actual data
+        const totalLogs = STATE.logs.length;
+        const errorLogs = STATE.logs.filter(l => l.type === 'error').length;
+        const successLogs = STATE.logs.filter(l => l.type === 'success' || l.type === 'milestone').length;
+        const pendingApprovals = STATE.approvals.length;
+
+        const fullyAutomated = Math.max(0, totalLogs - errorLogs - pendingApprovals);
+        const semiAutomated = pendingApprovals;
+        const manualRequired = errorLogs;
+
+        window.automationChart = new Chart(automationCtx.getContext('2d'), {
+            type: 'doughnut',
             data: {
-                labels: months,
+                labels: ['Fully Automated', 'Semi-Autonomous', 'Manual Required'],
                 datasets: [{
-                    label: 'Monthly Revenue ($)',
-                    data: revenueData,
-                    borderColor: '#833ab4',
-                    backgroundColor: 'rgba(131, 58, 180, 0.1)',
-                    fill: true,
-                    tension: 0.4,
-                    pointBackgroundColor: '#833ab4',
-                    pointBorderColor: '#fff',
-                    pointBorderWidth: 2,
-                    pointRadius: 4,
-                    pointHoverRadius: 6
+                    data: [fullyAutomated, semiAutomated, manualRequired],
+                    backgroundColor: ['#00ff88', '#5851db', '#ff4d4d'],
+                    borderWidth: 0,
+                    hoverOffset: 10
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: { display: false },
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#a0a0b8',
+                            padding: 20,
+                            usePointStyle: true
+                        }
+                    },
                     tooltip: {
                         backgroundColor: 'rgba(0,0,0,0.8)',
                         titleColor: '#fff',
-                        bodyColor: '#fff',
-                        callbacks: {
-                            label: function (context) {
-                                return `Revenue: $${context.parsed.y.toLocaleString()}`;
-                            }
-                        }
+                        bodyColor: '#fff'
                     }
                 },
-                scales: {
-                    y: {
-                        grid: { color: 'rgba(255,255,255,0.05)' },
-                        border: { display: false },
-                        ticks: {
-                            callback: function (value) {
-                                return '$' + value.toLocaleString();
-                            }
-                        }
-                    },
-                    x: {
-                        grid: { display: false },
-                        border: { display: false }
-                    }
-                },
-                interaction: {
-                    intersect: false,
-                    mode: 'index'
-                }
+                cutout: '70%'
             }
         });
-
-        const automationCtx = document.getElementById('automation-chart');
-        if (automationCtx) {
-            if (window.automationChart) window.automationChart.destroy();
-            // Calculate automation levels based on actual data
-            const totalLogs = STATE.logs.length;
-            const errorLogs = STATE.logs.filter(l => l.type === 'error').length;
-            const successLogs = STATE.logs.filter(l => l.type === 'success' || l.type === 'milestone').length;
-            const pendingApprovals = STATE.approvals.length;
-
-            const fullyAutomated = Math.max(0, totalLogs - errorLogs - pendingApprovals);
-            const semiAutomated = pendingApprovals;
-            const manualRequired = errorLogs;
-
-            window.automationChart = new Chart(automationCtx.getContext('2d'), {
-                type: 'doughnut',
-                data: {
-                    labels: ['Fully Automated', 'Semi-Autonomous', 'Manual Required'],
-                    datasets: [{
-                        data: [fullyAutomated, semiAutomated, manualRequired],
-                        backgroundColor: ['#00ff88', '#5851db', '#ff4d4d'],
-                        borderWidth: 0,
-                        hoverOffset: 10
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                color: '#a0a0b8',
-                                padding: 20,
-                                usePointStyle: true
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: 'rgba(0,0,0,0.8)',
-                            titleColor: '#fff',
-                            bodyColor: '#fff'
-                        }
-                    },
-                    cutout: '70%'
-                }
-            });
-        }
+    }
 }
 
 function renderBusinessPerformanceChart() {
@@ -465,14 +465,14 @@ function applySearchFilter() {
         STATE.filteredLogs = STATE.logs;
     } else {
         STATE.filteredBusinesses = STATE.businesses.filter(b =>
-            b.name?.toLowerCase().includes(STATE.searchQuery) ||
-            b.industry?.toLowerCase().includes(STATE.searchQuery) ||
-            b.status?.toLowerCase().includes(STATE.searchQuery)
+            (b.name && b.name.toLowerCase().includes(STATE.searchQuery)) ||
+            (b.industry && b.industry.toLowerCase().includes(STATE.searchQuery)) ||
+            (b.status && b.status.toLowerCase().includes(STATE.searchQuery))
         );
 
         STATE.filteredLogs = STATE.logs.filter(l =>
-            l.message?.toLowerCase().includes(STATE.searchQuery) ||
-            l.type?.toLowerCase().includes(STATE.searchQuery)
+            (l.message && l.message.toLowerCase().includes(STATE.searchQuery)) ||
+            (l.type && l.type.toLowerCase().includes(STATE.searchQuery))
         );
     }
 
@@ -840,7 +840,7 @@ function downloadFile(content, filename, mimeType) {
 function showToast(msg, type = 'info') {
     const toast = document.getElementById('toast');
     if (!toast) return;
-    
+
     toast.textContent = msg;
     toast.className = `toast visible ${type}`;
     setTimeout(() => toast.className = 'toast hidden', 3000);
@@ -965,7 +965,7 @@ function initModals() {
     if (openBtn) {
         openBtn.onclick = () => modal.classList.remove('hidden');
     }
-    
+
     closeBtns.forEach(b => b.onclick = (e) => {
         const parentModal = b.closest('.modal');
         if (parentModal) {
@@ -1025,7 +1025,48 @@ document.addEventListener('DOMContentLoaded', () => {
     startSync();
     setupCharts();
     monitorConnection();
+    monitorConnection();
+    initRealtime(); // Phase 2: Real-time updates
 });
+
+// --- Real-time Updates ---
+function initRealtime() {
+    if (!window.EventSource) {
+        console.warn('Browser does not support EventSource (SSE)');
+        return;
+    }
+
+    const evtSource = new EventSource(`${API_BASE}/api/realtime/events`);
+
+    evtSource.onopen = () => {
+        console.log('[Realtime] Connected to event stream');
+        STATE.connectionStatus = 'online';
+        updateConnectionStatus();
+    };
+
+    evtSource.addEventListener('connected', (e) => {
+        showToast('Real-time uplink established', 'success');
+    });
+
+    evtSource.addEventListener('approval:new', (e) => {
+        showToast('New Approval Request', 'warning');
+        fetchData();
+    });
+
+    evtSource.addEventListener('approval:decided', (e) => {
+        // Optional: parse e.data to show more details
+        fetchData();
+    });
+
+    evtSource.onerror = (err) => {
+        console.warn('[Realtime] connection error', err);
+        // EventSource automatically retries, but we update UI
+        if (evtSource.readyState === EventSource.CLOSED) {
+            STATE.connectionStatus = 'connecting';
+            updateConnectionStatus();
+        }
+    };
+}
 
 // --- Navigation & Routing ---
 function initNavigation() {
@@ -1177,19 +1218,19 @@ function updateUI() {
     // Stats
     const roiEl = document.getElementById('stat-roi');
     if (roiEl) roiEl.textContent = `$${STATE.totalProfit.toLocaleString()}`;
-    
+
     const activeEl = document.getElementById('stat-active');
     if (activeEl) activeEl.textContent = STATE.businesses.filter(b => b.status === 'running').length;
-    
+
     const tasksEl = document.getElementById('stat-tasks');
     if (tasksEl) tasksEl.textContent = STATE.logs.length.toLocaleString();
-    
+
     const pendingEl = document.getElementById('stat-pending');
     if (pendingEl) pendingEl.textContent = STATE.approvals.length;
-    
+
     const pendingCountEl = document.getElementById('pending-count');
     if (pendingCountEl) pendingCountEl.textContent = STATE.approvals.length;
-    
+
     const entityCountEl = document.getElementById('entity-count');
     if (entityCountEl) entityCountEl.textContent = STATE.businesses.length;
 
