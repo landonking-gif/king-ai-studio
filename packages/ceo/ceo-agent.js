@@ -483,25 +483,42 @@ Return ONLY JSON:
         const maxConcurrent = parseInt(process.env.MAX_CONCURRENT_BUSINESSES || '5', 10);
 
         if (activeCount >= maxConcurrent) {
-            const msg = `⚠️ Maximum concurrent businesses reached (${activeCount}/${maxConcurrent}). Halting expansion to focus on optimization.`;
+            const msg = `🛑 Business Limit Reached (${activeCount}/${maxConcurrent}).\n` +
+                `   Switching to "Deep Optimization & Maintenance" mode.\n` +
+                `   Priority: 1. King AI Chat (Reserved)\n` +
+                `             2. Improving Existing Businesses\n` +
+                `             3. System Self-Improvement`;
             await this.logProgress(msg, 'warning', true);
 
-            // Trigger self-improvement or deep work on existing business
-            if (this.activeBusiness) {
-                await this.logProgress(`🔄 Redirecting compute to active business: ${this.activeBusiness.idea}`, 'info');
-                // Could verify/execute existing tasks here or trigger self-improvement
-                if (this.refactorer) {
-                    await this.refactorer.optimizeCodebase(); // Trigger self-improvement
-                }
-            } else if (this.healer) {
-                // Triger self-healing/improvement if no active business but limit reached (e.g. zombie processes in DB)
-                // This handles the user request "improving itself"
+            // 1. Trigger System Improvement (Self-Healing/Refactoring)
+            if (this.refactorer) {
+                await this.logProgress('🧬 Initiating Recursive System Improvement...', 'action');
+                // Run in background so we don't block the chat interface
+                this.refactorer.optimizeCodebase().catch(err =>
+                    console.error('Background optimization failed:', err)
+                );
             }
 
-            return { success: false, error: 'MAX_CONCURRENT_LIMIT_REACHED' };
+            // 2. Optimize Existing Businesses
+            // Pick one random active business to deep-dive so we don't overwhelm resources
+            const runningExample = allBusinesses.find(b => b.status === 'running' || b.status === 'active');
+            if (runningExample) {
+                await this.logProgress(`🔍 Running Deep-Dive Optimization on: ${runningExample.name || runningExample.idea}`, 'action');
+                // Trigger a sub-agent for optimization specifically
+                if (this.businessAnalyzer) {
+                    this.businessAnalyzer.optimizeBusiness(runningExample.id).catch(console.error);
+                }
+            }
+
+            // 3. Explicitly return to ensure Chat is responsive
+            return {
+                success: false,
+                error: 'MAX_CONCURRENT_LIMIT_REACHED',
+                message: 'New business creation paused. System is optimizing existing assets and awaiting chat commands.'
+            };
         }
 
-        await this.logProgress(`🚀 Starting new business analysis: ${idea.description}`, 'start', true);
+        await this.logProgress(`🚀 Starting new business analysis: idea.description}`, 'start', true);
 
         // Step 1: Analyze the idea
         this.latestHighlight = "Performing deep market analysis on new idea...";

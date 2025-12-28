@@ -418,6 +418,42 @@ Return ONLY valid JSON array.`;
   }
 
   /**
+   * Run a deep-dive optimization on an existing business
+   */
+  async optimizeBusiness(businessId) {
+    const business = this.getAll().find(b => b.id === businessId);
+    if (!business) return { success: false, error: 'Business not found' };
+
+    console.log(`[BusinessAnalyzer] 🔍 Deep-Dive Optimization: ${business.id}`);
+
+    const prompt = `Perform a Deep-Dive Optimization Analysis for this business:
+    NAME: ${business.name || business.ideaDescription}
+    STATUS: ${business.status}
+    PHASE: ${business.currentPhase || 'Growth'}
+    DATA: ${JSON.stringify(business).substring(0, 1000)}
+
+    Identify 3 high-impact actions to double efficiency or revenue.
+    Return as JSON array of strings (the action items).
+    Return ONLY valid JSON.`;
+
+    try {
+      const result = await this.ai.complete(prompt, 'reasoning', { format: 'json' });
+      if (result.success) {
+        const actions = this._parseJSON(result.content);
+        this.auditLogger.logSystem('business_optimized', {
+          businessId,
+          actions
+        });
+        console.log(`   ✅ Optimization Actions Identified:`, actions);
+        return { success: true, actions };
+      }
+    } catch (e) {
+      console.error('Optimization failed:', e);
+    }
+    return { success: false, error: 'Optimization failed' };
+  }
+
+  /**
    * Execute from orchestrator
    */
   async execute(task) {
@@ -434,6 +470,8 @@ Return ONLY valid JSON array.`;
         return this.generateIdeas(task.data?.count, task.data?.criteria);
       case 'rank_ideas':
         return this.rankIdeas(task.data.ideas);
+      case 'optimize_business': // Add support for execution via task
+        return this.optimizeBusiness(task.data.businessId);
       default:
         throw new Error(`Unknown action: ${task.action}`);
     }
