@@ -132,11 +132,12 @@ class Empire {
 
             // Check AI availability. Priority: Cloud API providers -> Remote Ollama (AWS) -> Local simulation
             console.log('🔍 Checking AI availability...');
+            const ollamaStatus = await this.ai.checkOllama();
+
             if (this.ai.hasApiProviders && this.ai.hasApiProviders()) {
                 console.log('🔐 Cloud API keys detected. Preferring cloud providers for model routing.');
                 this.simulationMode = false;
             } else {
-                const ollamaStatus = await this.ai.checkOllama();
                 if (!ollamaStatus.available) {
                     console.log('⚠️ Ollama is not reachable. Entering simulation fallback mode.');
                     this.simulationMode = true;
